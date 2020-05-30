@@ -17,8 +17,8 @@
     color: #8a2be2;
     font-size: 19px;
     line-height: 24px;
-	font-style: italic;
-	border: solid 1px #8a8a8a;
+    font-style: italic;
+    border: solid 1px #8a8a8a;
 }
 
 .tetradka__body {
@@ -33,6 +33,12 @@
     background-size: 100% 100%, 20px 20px, 20px 20px;
     background-position: 0 0, -1px -1px, -1px 1px;
     height: 250px;
+	    font-family: monospace;
+    color: #8a2be2;
+    font-size: 19px;
+    line-height: 24px;
+    font-style: italic;
+
 }	  
 	  
 .kletka-pole-right {
@@ -40,6 +46,25 @@
     background-size: 100% 100%, 20px 20px, 20px 20px;
     background-position: 0 0, -1px -1px, -1px 1px;
     height: 250px;
+	    font-family: monospace;
+    color: #8a2be2;
+    font-size: 19px;
+    line-height: 24px;
+    font-style: italic;
+
+}
+.kletka-pole-yellow {
+	height:250px;
+	border:solid 1px #8a8a8a;
+	background-color:#ffffef;
+	background-image:linear-gradient(90deg, transparent 81px,#ED82AD 81px,#ED82AD 84px,transparent 84px),linear-gradient(#eee 1px,transparent 0px),linear-gradient(90deg, #eee 1px,transparent 0px);
+	background-size:100% 100%,20px 20px,20px 20px;
+	background-position:0 0,-1px -1px,-1px 1px;
+	    font-family: monospace;
+    color: #8a2be2;
+    font-size: 19px;
+    line-height: 24px;
+    font-style: italic;
 }
   </style>
 
@@ -48,13 +73,11 @@
 <body>
 	<div class="container">
 <div class="tetradka">
-  <div class="tetradka__body">
-    <p>абвгдежзиклмнопрст</p>
-    <p><strong>Ответ:</strong> гиппотенуза треугольника равна 5 см</p>
-  </div>
+  <div class="tetradka__body"><p>абвгдежзиклмнопрст</p></div>
 </div>
-		<div class="kletka-pole"><p>абвгдежзиклмнопрст</p></div>
-		<div class="kletka-pole-right"><p>абвгдежзиклмнопрст</p></div>
+<div class="kletka-pole"><p>абвгдежзиклмнопрст</p></div>
+<div class="kletka-pole-right"><p>абвгдежзиклмнопрст</p></div>
+<div class="kletka-pole-yellow"><p>абвгдежзиклмнопрст</p></div>
 </div>
 </body>
 </html>
