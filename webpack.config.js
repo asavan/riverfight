@@ -38,7 +38,7 @@ module.exports = env => {
                 // filename: 'index.html'
             }),
             new MiniCssExtractPlugin({
-                filename: devMode ? '[name].css' : '[name].[chunkhash].css'
+                filename: devMode ? '[name].css' : '[name].[contenthash].css'
             })
         ],
         devServer: {
