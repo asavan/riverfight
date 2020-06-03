@@ -4,10 +4,11 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 
-module.exports = env => {
-    const devMode = env ? !env.production : true;
+module.exports = (env, argv) => {
+    const devMode = (argv.mode !== 'production');
     return {
 
         entry: {main: "./src/index.js"},
@@ -28,6 +29,7 @@ module.exports = env => {
             minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
         },
         plugins: [
+            new CleanWebpackPlugin(),
             new WebpackMd5Hash(),
             new HtmlWebpackPlugin({
                 favicon: "./assets/boat7.svg",
