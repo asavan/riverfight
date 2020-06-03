@@ -30,6 +30,7 @@ module.exports = env => {
         plugins: [
             new WebpackMd5Hash(),
             new HtmlWebpackPlugin({
+                favicon: "./assets/boat.svg",
                 // inject: false,
                 template: "./src/index.html",
                 // template: require("html-webpack-template"),
