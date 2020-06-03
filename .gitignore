@@ -1,0 +1,12 @@
+*.jar
+*.iml
+.idea/*
+deploy
+target
+*.class
+*.log
+*.log.*
+.idea
+generated
+node_modules
+package-lock.json
