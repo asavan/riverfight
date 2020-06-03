@@ -43,6 +43,11 @@
     background-position: 0 0, -1px -1px, -1px 1px;
 }
 
+.header1 {
+    text-align:center;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+}
 
 .kletka-pole {
     background-image: linear-gradient(90deg, transparent 81px, #ED82AD 81px, #ED82AD 84px, transparent 84px), linear-gradient(#bbb 1px, transparent 0px), linear-gradient(90deg, #bbb 1px, transparent 0px);
