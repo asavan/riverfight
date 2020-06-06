@@ -1,3 +1,6 @@
 import "./css/style.css";
 
-console.log("Hello World3");
+import init from "./init";
+
+const initObj = init(document, window);
+

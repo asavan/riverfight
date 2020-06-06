@@ -36,7 +36,7 @@ module.exports = (env, argv) => {
                 // inject: false,
                 template: "./src/index.html",
                 // template: require("html-webpack-template"),
-                // hash: true,
+                minify: false,
                 filename: devMode ? "./index.html" : "../index.html"
                 // filename: 'index.html'
             }),
