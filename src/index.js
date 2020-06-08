@@ -12,7 +12,7 @@ function onReady(field) {
         str += field[i] + " ";
     }
     console.log(str);
-    game(document, window, field, fieldEnemy, () => {console.log("enemyMove")});
+    game(document, window, field, fieldEnemy, () => {console.log("enemyMove");});
 }
 
 init(document, window, onReady);
