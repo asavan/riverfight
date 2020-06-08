@@ -1,5 +1,6 @@
 :root {
     --main-inc-color: #8a2be2;
+    --enemy-inc-color: red;
 }
 
 @keyframes blink {
@@ -33,6 +34,24 @@
         opacity: 0;
         border: 0;
         margin: 0;
+    }
+}
+
+@keyframes up {
+    0% {
+        padding-top: 57px;
+    }
+    100% {
+        padding-top: 17px;
+    }
+}
+
+@keyframes show {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100%;
     }
 }
 
@@ -77,7 +96,19 @@
 }
 
 .adjust-second {
-    padding-top: 58px;
+    padding-top: 59px;
+    animation-name: show;
+    animation-duration: 1.2s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+.adjust-third {
+    animation-name: up;
+    animation-duration: 1.2s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    /*padding-top: 58px;*/
 }
 
 .frame-text {
@@ -124,11 +155,12 @@
     pointer-events: none;
     color: var(--main-inc-color);
     /*top: 2px;*/
-    bottom: 6px;
-    font-size: 28px;
+    bottom: 2px;
+    font-size: 20px;
+    /*background-color: lightcyan;*/
     text-align: center;
+    /*vertical-align: middle;*/
 }
-
 .ship.disabled {
     overflow: hidden;
     animation-name: bump;
@@ -138,12 +170,32 @@
     animation-fill-mode: forwards;
 }
 
+.message {
+    color: var(--main-inc-color);
+    font-size: 30px;
+    padding-left: 60px;
+    padding-top: 26px;
+    font-style: italic;
+}
+
 .diagonal-line {
     background: linear-gradient(45deg, rgba(0, 0, 0, 0) 49.9%, var(--main-inc-color) 49.9%, var(--main-inc-color) 60%, rgba(0, 0, 0, 0) 60%)
     fixed,
     linear-gradient(45deg, var(--main-inc-color) 10%, rgba(0, 0, 0, 0) 10%)
     fixed;
     background-size: 0.5em 0.5em
+}
+
+.diagonal-line-enemy {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0) 49.9%, var(--enemy-inc-color) 49.9%, var(--enemy-inc-color) 60%, rgba(0, 0, 0, 0) 60%)
+    fixed,
+    linear-gradient(135deg, var(--enemy-inc-color) 10%, rgba(0, 0, 0, 0) 10%)
+    fixed;
+    background-size: 0.5em 0.5em
+}
+
+.dot.enemy {
+    color: var(--enemy-inc-color);
 }
 
 .shipyard {

@@ -14,14 +14,22 @@ module.exports = (env, argv) => {
         entry: {main: "./src/index.js"},
         output: {
             path: path.resolve(__dirname, "dist"),
-            filename: "[name].[contenthash].js",
+            filename: devMode ? "[name].js" : "[name].[contenthash].js",
             // publicPath: "../"
         },
         module: {
             rules: [
                 {
                     test: /\.css$/i,
-                    use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                    use: [{
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            // you can specify a publicPath here
+                            // by default it uses publicPath in webpackOptions.output
+                            // publicPath: '../',
+                            hmr: devMode,
+                        },
+                    }, 'css-loader'],
                 }
             ]
         },
@@ -49,7 +57,7 @@ module.exports = (env, argv) => {
             historyApiFallback: true,
             compress: true,
             port: 8080,
-            // hot: true,
+            hot: true,
             open: true,
             // clientLogLevel: 'debug',
             watchContentBase: true,

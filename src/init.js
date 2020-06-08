@@ -86,7 +86,9 @@ export default function init(document, window, onReady) {
     }
 
     const river = document.querySelector(".river");
-    river.addEventListener("click", (e) => {
+    river.addEventListener("click", clickHandler);
+
+    function clickHandler(e) {
         if (currChosen == null) {
             return;
         }
@@ -105,13 +107,16 @@ export default function init(document, window, onReady) {
         currChosen.s.html.classList.add('disabled');
         currChosen = null;
         if (isReady()) {
+            fieldHtml.classList.remove('adjust-first');
+            fieldHtml.classList.add('adjust-third');
+            river.removeEventListener("click", clickHandler);
             onReady(field);
         }
 
         // console.log(e.layerX);
 
-    });
-    
+    }
+
     function isReady() {
         console.log(shipsLeft);
         return shipsLeft === 0;

@@ -3,7 +3,8 @@ import "./css/style.css";
 import init from "./init";
 import game from "./game";
 
-const fieldEx = [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1];
+const fieldEx = [1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1];
+const fieldEnemy = [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1];
 
 function onReady(field) {
     let str = "";
@@ -11,7 +12,7 @@ function onReady(field) {
         str += field[i] + " ";
     }
     console.log(str);
-    game(document, window, field);
+    game(document, window, field, fieldEnemy, () => {console.log("enemyMove")});
 }
 
 init(document, window, onReady);
