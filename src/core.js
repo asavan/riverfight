@@ -7,7 +7,15 @@ export const VERDICT = {
     IMPOSSIBLE_BY_RULES: 5
 };
 
- export function isShip(verdict) {
+export const axis = "абвгдежзиклмнопрст";
+
+export const shipsCount = {
+    3 : 1,
+    2: 2,
+    1: 3
+}
+
+function isShip(verdict) {
     if (verdict === VERDICT.NONE || verdict >= VERDICT.MISS) {
         return 0;
     }
@@ -48,27 +56,7 @@ function isSame(fieldEnemy, myEnemyField, n) {
 }
 
 function getLen(field, n) {
-    let shipLen = 1;
-    let i = n + 1;
-    while (i < field.length) {
-        if (isShip(field[i])) {
-            ++shipLen;
-        } else {
-            break;
-        }
-        ++i;
-    }
-
-    i = n - 1;
-    while (i >= 0) {
-        if (isShip(field[i])) {
-            ++shipLen;
-        } else {
-            break;
-        }
-        --i;
-    }
-    return shipLen;
+    return applyBothSides(field, n, ()=>{});
 }
 
 export function getVerdict(fieldEnemy, myEnemyField, n) {
@@ -90,3 +78,26 @@ export function getVerdict(fieldEnemy, myEnemyField, n) {
     throw "Illegal state";
 }
 
+export function applyToFirstNonNone(field, n, direction, f) {
+    let i = n + direction;
+    let count = 0;
+    while (i < field.length && i >= 0) {
+        if (isShip(field[i])) {
+            i += direction;
+            ++count;
+        } else {
+            if (field[i] === VERDICT.NONE) {
+                f(i);
+            }
+            break;
+        }
+    }
+    return count;
+}
+
+export function applyBothSides(field, n, f) {
+    let count = 1;
+    count += applyToFirstNonNone(field, n, 1, f);
+    count += applyToFirstNonNone(field, n, -1, f);
+    return count;
+}

@@ -1,26 +1,22 @@
-import {getVerdict, VERDICT, verdictToMessage} from './core.js';
-import {move, width} from './helper.js';
+import {getVerdict, VERDICT, verdictToMessage, applyBothSides} from './core.js';
+import {move, width, getTemplateByName, createField} from './helper.js';
 
-function getEmemyRiver(document) {
-    const grid = document.querySelector(".grid");
-    const t = document.querySelector('#field-template');
-    const f = t.content.cloneNode(true);
-    const enemyFieldHtml = f.firstElementChild;
-    grid.appendChild(f).firstElementChild;
+function getEmemyRiver(grid) {
+    const enemyFieldHtml = createField(grid);
     enemyFieldHtml.classList.add("adjust-second");
     return enemyFieldHtml.querySelector(".river");
 }
 
-function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river, document) {
-    let t;
+function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
     let res = fieldEnemy[n];
     myEnemyField[n] = res;
     const verdict = getVerdict(fieldEnemy, myEnemyField, n);
     myEnemyField[n] = verdict;
+    let t;
     if (res) {
-        t = document.querySelector('#ship-template');
+        t = getTemplateByName('#ship-template');
     } else {
-        t = document.querySelector('#dot-template2');
+        t = getTemplateByName('#dot-template2');
     }
     const f = t.content.cloneNode(true);
     const dot = f.firstElementChild;
@@ -42,6 +38,19 @@ function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river, document) {
     return {html: dot, res: res, verdict: verdict};
 }
 
+function putDotHtml2(n, river, isEnemy) {
+    let t = getTemplateByName('#dot-template');
+    const f = t.content.cloneNode(true);
+    const dot = f.firstElementChild;
+    if (isEnemy) {
+        dot.classList.add('enemy');
+    }
+    river.appendChild(f);
+    dot.style.left = (n * width) + 'px';
+    dot.style.width = width + 'px';
+}
+
+
 function loose() {
     setTimeout(() => {
         alert("Ты проиграл");
@@ -56,7 +65,8 @@ function victory() {
 
 export default function game(document, window, field, fieldEnemy, onEnemyMove) {
     let isEnemyPlayer = false;
-    const river = getEmemyRiver(document);
+    const grid = document.querySelector(".grid");
+    const river = getEmemyRiver(grid);
     const myRiver = document.querySelector(".river");
 
     const player = {
@@ -103,7 +113,7 @@ export default function game(document, window, field, fieldEnemy, onEnemyMove) {
 
     function fire(n) {
         const user = isEnemyPlayer ? player : enemy;
-        const res = putDotHtml(n, isEnemyPlayer, user.realField, user.guessedField, user.htmlRiver, document);
+        const res = putDotHtml(n, isEnemyPlayer, user.realField, user.guessedField, user.htmlRiver);
         const message = verdictToMessage(res.verdict) + "!";
         printLetterByLetter(message, 70, isEnemyPlayer);
         console.log(message);
@@ -119,6 +129,9 @@ export default function game(document, window, field, fieldEnemy, onEnemyMove) {
             }
         } else {
             user.onOpponentHit(res.verdict);
+            if (res.verdict === VERDICT.KILL) {
+                applyBothSides(user.guessedField, n,  (ind) => {putDotHtml2(ind, user.htmlRiver, isEnemyPlayer)});
+            }
         }
     }
 

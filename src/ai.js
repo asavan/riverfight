@@ -1,7 +1,6 @@
-import { VERDICT, isShip } from './core.js';
+import { VERDICT, applyBothSides, applyToFirstNonNone } from './core.js';
 
 function randomInteger(min, max) {
-    // случайное число от min до (max+1)
     let rand = min + Math.random() * (max - min);
     return Math.floor(rand);
 }
@@ -10,7 +9,6 @@ function randomIndex(len) {
     return randomInteger(0, len);
 }
 
-
 function chooseRandomIndex(field) {
     let noneCount = 0;
     for (let i = 0; i < field.length; i++) {
@@ -18,23 +16,31 @@ function chooseRandomIndex(field) {
             ++noneCount;
         }
     }
-    return randomIndex(noneCount + 1);
+    return randomIndex(noneCount);
 }
+
+// let prevIndex = -1;
 
 function getRandomIndex(field) {
     let index = chooseRandomIndex(field);
-    let j = 0;
-    console.table(index);
-    for (; j < field.length; j++) {
-        if (field[j] === VERDICT.NONE) {
+    let i = 0;
+    console.table("rnd index " + index);
+    for (; i < field.length; i++) {
+        if (field[i] === VERDICT.NONE) {
             --index;
         }
-        if (index === 0) {
+        if (index < 0) {
             break;
         }
     }
-    console.table(index, j);
-    return j;
+    if (i >= field.length || i < 0) {
+        console.table("Error out", i, field);
+    }
+    // if (prevIndex === i) {
+    //     console.table("Error repeated", i, field);
+    // }
+    // prevIndex = i;
+    return i;
 }
 
 function randomDirection() {
@@ -45,8 +51,17 @@ function randomDirection() {
     return dir;
 }
 
-export default function ai(len) {
-    const fieldEnemy = [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1];
+export function generateAiField(ind) {
+    const fields = [ [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1],
+        [0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1]];
+    if (ind < 0) {
+        ind = randomIndex(fields.length);
+    }
+    return fields[ind];
+}
+
+export function ai(len, fieldNum) {
+    const fieldEnemy = generateAiField(fieldNum);
     const field = new Array(len).fill(VERDICT.NONE);
     let lastMove = -1;
     let prevDirection = 0;
@@ -57,99 +72,31 @@ export default function ai(len) {
         field[lastMove] = currVerdict;
         if (currVerdict === VERDICT.HIT) {
             prevDirection = randomDirection();
-            if (prevDirection > 0) {
-                let i = lastMove + prevDirection;
-                while (i < field.length) {
-                    if (isShip(field[i])) {
-                        ++i;
-                    } else {
-                        if (field[i] === VERDICT.NONE) {
-                            return i;
-                        }
-                        break;
-                    }
-                }
-                prevDirection *= -1;
-            } else {
-                let i = lastMove + prevDirection;
-                while (i >= 0) {
-                    if (isShip(field[i])) {
-                        --i;
-                    } else {
-                        if (field[i] === VERDICT.NONE) {
-                            return i;
-                        }
-                        break;
-                    }
-                }
-                prevDirection *= -1;
-                i = lastMove + prevDirection;
-                while (i < field.length) {
-                    if (isShip(field[i])) {
-                        ++i;
-                    } else {
-                        if (field[i] === VERDICT.NONE) {
-                            return i;
-                        }
-                        break;
-                    }
-                }
+            let ind = -1;
+            applyToFirstNonNone(field, lastMove, prevDirection, (j) => {ind = j;});
+            if (ind >= 0) {
+                return ind;
+            }
+            prevDirection *= -1;
+            applyToFirstNonNone(field, lastMove, prevDirection, (j) => {ind = j;});
+            if (ind >= 0) {
+                return ind;
             }
             console.table("Err1", currVerdict, prevDirection, lastMove, field );
             return getRandomIndex(field);
             // throw "Illegal state";
         }
         if (currVerdict === VERDICT.KILL) {
-            let i = lastMove + 1;
-            while (i < field.length) {
-                if (isShip(field[i])) {
-                    field[i] = currVerdict;
-                    ++i;
-                } else {
-                    field[i] = VERDICT.IMPOSSIBLE_BY_RULES;
-                    break;
-                }
-            }
-            i = lastMove - 1;
-            while (i >= 0) {
-                if (isShip(field[i])) {
-                    field[i] = currVerdict;
-                    --i;
-                } else {
-                    field[i] = VERDICT.IMPOSSIBLE_BY_RULES;
-                    break;
-                }
-            }
+            applyBothSides(field, lastMove, (ind) => {field[ind] = VERDICT.IMPOSSIBLE_BY_RULES;})
+            prevDirection = 0;
             return getRandomIndex(field);
-
         } else if (currVerdict === VERDICT.MISS) {
             if (prevDirection !== 0) {
                 prevDirection *= -1;
-                if (prevDirection > 0) {
-                    let i = lastMove + prevDirection;
-                    while (i < field.length) {
-                        if (isShip(field[i])) {
-                            ++i;
-                        } else {
-                            if (field[i] === VERDICT.NONE) {
-                                return i;
-                            }
-                            break;
-                        }
-                    }
-                    prevDirection *= -1;
-                } else {
-                    let i = lastMove + prevDirection;
-                    while (i >= 0) {
-                        if (isShip(field[i])) {
-                            --i;
-                        } else {
-                            if (field[i] === VERDICT.NONE) {
-                                return i;
-                            }
-                            break;
-                        }
-                    }
+                let ind = -1;
+                applyToFirstNonNone(field, lastMove, prevDirection, (j) => {ind = j;});
+                if (ind >= 0) {
+                    return ind;
                 }
                 console.table("Err", currVerdict, prevDirection, lastMove, field );
                 return getRandomIndex(field);

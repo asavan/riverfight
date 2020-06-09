@@ -1,9 +1,16 @@
+import {move, width, getClickIndex, createField} from './helper.js';
+import {shipsCount, axis} from './core.js';
+
 export default function init(document, window, onReady) {
+
+    function getShipyard(document, grid) {
+        const s = document.createElement('div');
+        s.classList.add("shipyard");
+        grid.appendChild(s);
+        return s;
+    }
+
     let currChosen = null;
-    const axis = "абвгдежзиклмнопрст";
-    // const totalLength = axis.length;
-    console.log(axis.length);
-    const width = 20;
     let shipsLeft = 0;
 
     const field = new Array(axis.length).fill(0);
@@ -48,9 +55,10 @@ export default function init(document, window, onReady) {
     }
 
     const ships = [];
-    const shipyard = document.querySelector(".shipyard");
-    const fieldHtml = document.querySelector(".field");
+    const grid = document.querySelector(".grid");
+    const fieldHtml = createField(grid);
     fieldHtml.classList.add('adjust-first');
+    const shipyard = getShipyard(document, grid);
 
     function ship(length) {
         const s = document.createElement('div');
@@ -65,6 +73,12 @@ export default function init(document, window, onReady) {
         ++shipsLeft;
     }
 
+    for (let [key, value] of Object.entries(shipsCount)) {
+        for (let i = 0; i < value; i++) {
+            console.log("add ship", `${key}`);
+        }
+    }
+
     addShip(3);
     for (let i = 0; i < 2; i++) {
         addShip(2);
@@ -74,25 +88,26 @@ export default function init(document, window, onReady) {
         addShip(1);
     }
 
+    function choose(shipsKey, n) {
+        currChosen = {s: shipsKey, n: n};
+        for (const shipsKey1 of ships) {
+            shipsKey1.html.classList.remove('choosen');
+        }
+        shipsKey.html.classList.add('choosen');
+    }
+
     for (const shipsKey of ships) {
         shipsKey.html.addEventListener("click", (e) => {
-            const n = Math.floor(e.offsetX / width);
-            currChosen = {s: shipsKey, n: n};
-            for (const shipsKey1 of ships) {
-                shipsKey1.html.classList.remove('choosen');
-            }
-            shipsKey.html.classList.add('choosen');
+            const n = getClickIndex(e);
+            // console.log("move " + n);
+            choose(shipsKey, n);
         });
     }
 
     const river = document.querySelector(".river");
     river.addEventListener("click", clickHandler);
 
-    function clickHandler(e) {
-        if (currChosen == null) {
-            return;
-        }
-        const n = Math.floor((e.offsetX + 1) / width);
+    function putShip(n) {
         const currentPos = n - currChosen.n;
         if (!place(field, currentPos, currChosen.s.length)) {
             return;
@@ -112,13 +127,16 @@ export default function init(document, window, onReady) {
             river.removeEventListener("click", clickHandler);
             onReady(field);
         }
+    }
 
-        // console.log(e.layerX);
-
+    function clickHandler(e) {
+        if (currChosen == null) {
+            return;
+        }
+        move(e, putShip);
     }
 
     function isReady() {
-        console.log(shipsLeft);
         return shipsLeft === 0;
     }
 
