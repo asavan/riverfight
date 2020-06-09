@@ -194,7 +194,7 @@
     background-size: 0.5em 0.5em
 }
 
-.dot.enemy {
+.enemy {
     color: var(--enemy-inc-color);
 }
 
