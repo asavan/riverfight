@@ -7,6 +7,8 @@ function getEmemyRiver(grid) {
     return enemyFieldHtml.querySelector(".river");
 }
 
+function stub() {}
+
 function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
     let res = fieldEnemy[n];
     myEnemyField[n] = res;
@@ -73,7 +75,7 @@ export default function game(document, window, field, fieldEnemy, onEnemyMove) {
         realField : field,
         guessedField: new Array(field.length).fill(VERDICT.NONE),
         htmlRiver: myRiver,
-        onOpponentMiss:  () => { console.log("player hit");},
+        onOpponentMiss: stub,
         onOpponentHit: onEnemyMove,
         isEnemy: false
     };
@@ -83,7 +85,7 @@ export default function game(document, window, field, fieldEnemy, onEnemyMove) {
         guessedField: new Array(field.length).fill(VERDICT.NONE),
         htmlRiver: river,
         onOpponentMiss: onEnemyMove,
-        onOpponentHit: () => { console.log("player hit");},
+        onOpponentHit: stub,
         isEnemy: true
     };
 
@@ -116,7 +118,7 @@ export default function game(document, window, field, fieldEnemy, onEnemyMove) {
         const res = putDotHtml(n, isEnemyPlayer, user.realField, user.guessedField, user.htmlRiver);
         const message = verdictToMessage(res.verdict) + "!";
         printLetterByLetter(message, 70, isEnemyPlayer);
-        console.log(message);
+        // console.log(message);
 
         if (res.verdict === VERDICT.MISS) {
             isEnemyPlayer = !isEnemyPlayer;

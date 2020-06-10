@@ -24,7 +24,7 @@ function chooseRandomIndex(field) {
 function getRandomIndex(field) {
     let index = chooseRandomIndex(field);
     let i = 0;
-    console.table("rnd index " + index);
+    // console.table("rnd index " + index);
     for (; i < field.length; i++) {
         if (field[i] === VERDICT.NONE) {
             --index;
@@ -56,7 +56,8 @@ export function generateAiField(ind) {
         [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1],
         [0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0],
         [0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1],
-        [1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1]
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1]
     ];
     if (ind < 0) {
         ind = randomIndex(fields.length);
@@ -123,7 +124,7 @@ export function ai(len, fieldNum) {
     }
 
     function guessPublic(currVerdict) {
-        console.log(currVerdict);
+        // console.log(currVerdict);
         lastMove = guess(field, currVerdict);
         return lastMove;
     }

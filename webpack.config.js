@@ -6,7 +6,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const {GenerateSW} = require('workbox-webpack-plugin');
 
 
 module.exports = (env, argv) => {
@@ -52,10 +52,11 @@ module.exports = (env, argv) => {
                 __USE_SERVICE_WORKERS__ : !devMode
                 // filename: 'index.html'
             }),
+            // new webpack.HotModuleReplacementPlugin(),
             new MiniCssExtractPlugin({
                 filename: devMode ? '[name].css' : '[name].[contenthash].css'
             }),
-            ...(devMode ? [] : [new WorkboxPlugin.GenerateSW({
+            ...(devMode ? [] : [new GenerateSW({
                 swDest: '../sw.js',
                 // these options encourage the ServiceWorkers to get in there fast
                 // and not allow any straggling "old" SWs to hang around
@@ -67,14 +68,14 @@ module.exports = (env, argv) => {
             })
         ],
         devServer: {
-            contentBase: path.resolve(__dirname, "dist"),
+            // contentBase: path.resolve(__dirname, "src"),
             historyApiFallback: true,
             compress: true,
             port: 8080,
             hot: true,
             open: true,
             // clientLogLevel: 'debug',
-            watchContentBase: true,
+            // watchContentBase: true,
         }
     }
 };

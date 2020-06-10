@@ -151,8 +151,6 @@ body {
     height: 20px;
     width: 360px;
     position: relative;
-    /*right: 7px;*/
-    /*bottom: 19px;*/
     border-bottom: solid 1px var(--main-inc-color);
     border-left: solid 1px var(--main-inc-color);
     background-image: linear-gradient(var(--main-inc-color) 1px, transparent 0px), linear-gradient(90deg, var(--main-inc-color) 1px, transparent 0px);

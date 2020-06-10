@@ -96,7 +96,7 @@ export default function init(document, window, onReady) {
         });
     }
 
-    const river = document.querySelector(".river");
+    const river = fieldHtml.querySelector(".river");
     river.addEventListener("click", clickHandler);
 
     function putShip(n) {
