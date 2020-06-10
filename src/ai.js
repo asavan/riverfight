@@ -1,4 +1,4 @@
-import { VERDICT, applyBothSides, applyToFirstNonNone } from './core.js';
+import {VERDICT, applyBothSides, applyToFirstNonNone} from './core.js';
 
 function randomInteger(min, max) {
     let rand = min + Math.random() * (max - min);
@@ -52,8 +52,12 @@ function randomDirection() {
 }
 
 export function generateAiField(ind) {
-    const fields = [ [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1],
-        [0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1]];
+    const fields = [
+        [0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1],
+        [0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0],
+        [0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1]
+    ];
     if (ind < 0) {
         ind = randomIndex(fields.length);
     }
@@ -65,6 +69,7 @@ export function ai(len, fieldNum) {
     const field = new Array(len).fill(VERDICT.NONE);
     let lastMove = -1;
     let prevDirection = 0;
+
     function guess(field, currVerdict) {
         if (lastMove < 0) {
             return getRandomIndex(field);
@@ -73,32 +78,40 @@ export function ai(len, fieldNum) {
         if (currVerdict === VERDICT.HIT) {
             prevDirection = randomDirection();
             let ind = -1;
-            applyToFirstNonNone(field, lastMove, prevDirection, (j) => {ind = j;});
+            applyToFirstNonNone(field, lastMove, prevDirection, (j) => {
+                ind = j;
+            });
             if (ind >= 0) {
                 return ind;
             }
             prevDirection *= -1;
-            applyToFirstNonNone(field, lastMove, prevDirection, (j) => {ind = j;});
+            applyToFirstNonNone(field, lastMove, prevDirection, (j) => {
+                ind = j;
+            });
             if (ind >= 0) {
                 return ind;
             }
-            console.table("Err1", currVerdict, prevDirection, lastMove, field );
+            console.table("Err1", currVerdict, prevDirection, lastMove, field);
             return getRandomIndex(field);
             // throw "Illegal state";
         }
         if (currVerdict === VERDICT.KILL) {
-            applyBothSides(field, lastMove, (ind) => {field[ind] = VERDICT.IMPOSSIBLE_BY_RULES;})
+            applyBothSides(field, lastMove, (ind) => {
+                field[ind] = VERDICT.IMPOSSIBLE_BY_RULES;
+            })
             prevDirection = 0;
             return getRandomIndex(field);
         } else if (currVerdict === VERDICT.MISS) {
             if (prevDirection !== 0) {
                 prevDirection *= -1;
                 let ind = -1;
-                applyToFirstNonNone(field, lastMove, prevDirection, (j) => {ind = j;});
+                applyToFirstNonNone(field, lastMove, prevDirection, (j) => {
+                    ind = j;
+                });
                 if (ind >= 0) {
                     return ind;
                 }
-                console.table("Err", currVerdict, prevDirection, lastMove, field );
+                console.table("Err", currVerdict, prevDirection, lastMove, field);
                 return getRandomIndex(field);
 
                 // throw "Illegal state";
@@ -118,6 +131,7 @@ export function ai(len, fieldNum) {
     function getFieldEnemy() {
         return fieldEnemy;
     }
+
     return {
         getFieldEnemy: getFieldEnemy,
         guess: guessPublic

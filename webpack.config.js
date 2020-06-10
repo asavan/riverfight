@@ -4,7 +4,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const webpack = require('webpack');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 
 module.exports = (env, argv) => {
@@ -15,7 +17,8 @@ module.exports = (env, argv) => {
         output: {
             path: path.resolve(__dirname, "dist"),
             filename: devMode ? "[name].js" : "[name].[contenthash].js",
-            // publicPath: "../"
+            publicPath: devMode ? "/" : "./dist/"
+            // publicPath: "./dist/"
         },
         module: {
             rules: [
@@ -45,11 +48,22 @@ module.exports = (env, argv) => {
                 template: "./src/index.html",
                 // template: require("html-webpack-template"),
                 minify: false,
-                filename: devMode ? "./index.html" : "../index.html"
+                filename: devMode ? "./index.html" : "../index.html",
+                __USE_SERVICE_WORKERS__ : !devMode
                 // filename: 'index.html'
             }),
             new MiniCssExtractPlugin({
                 filename: devMode ? '[name].css' : '[name].[contenthash].css'
+            }),
+            ...(devMode ? [] : [new WorkboxPlugin.GenerateSW({
+                swDest: '../sw.js',
+                // these options encourage the ServiceWorkers to get in there fast
+                // and not allow any straggling "old" SWs to hang around
+                clientsClaim: true,
+                skipWaiting: true,
+            })]),
+            new webpack.DefinePlugin({
+                __USE_SERVICE_WORKERS__: !devMode
             })
         ],
         devServer: {

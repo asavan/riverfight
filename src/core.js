@@ -10,9 +10,9 @@ export const VERDICT = {
 export const axis = "абвгдежзиклмнопрст";
 
 export const shipsCount = {
-    3 : 1,
-    2: 2,
-    1: 3
+    0 : {len : 3, count : 1},
+    1: {len : 2, count : 2},
+    2: {len : 1, count : 3}
 }
 
 function isShip(verdict) {

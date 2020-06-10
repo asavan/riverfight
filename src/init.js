@@ -73,19 +73,11 @@ export default function init(document, window, onReady) {
         ++shipsLeft;
     }
 
-    for (let [key, value] of Object.entries(shipsCount)) {
-        for (let i = 0; i < value; i++) {
-            console.log("add ship", `${key}`);
+    for (let [order, shipInfo] of Object.entries(shipsCount)) {
+        for (let i = 0; i < shipInfo.count; i++) {
+            addShip(shipInfo.len);
+            // console.log("add ship", `${value.len}`);
         }
-    }
-
-    addShip(3);
-    for (let i = 0; i < 2; i++) {
-        addShip(2);
-    }
-
-    for (let i = 0; i < 3; i++) {
-        addShip(1);
     }
 
     function choose(shipsKey, n) {

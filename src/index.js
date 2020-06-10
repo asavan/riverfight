@@ -13,7 +13,7 @@ function onReady(field) {
         console.log(n);
         setTimeout(() => {
             g.fireEnemy(n);
-        }, 500);
+        }, 700);
 
     }
 
@@ -25,3 +25,10 @@ function fake() {
 
 init(document, window, onReady);
 // fake();
+
+if (__USE_SERVICE_WORKERS__) {
+    console.log("Service workers!");
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js',  {scope: './'});
+    }
+}
