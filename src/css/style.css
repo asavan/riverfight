@@ -54,10 +54,10 @@ body {
 
 @keyframes up {
     0% {
-        padding-top: 73px;
+        padding-top: 93px;
     }
     100% {
-        padding-top: 13px;
+        padding-top: 53px;
     }
 }
 
@@ -89,7 +89,7 @@ body {
     display: grid;
     grid-template-columns: 2fr 1fr;
     width: 710px;
-    padding-top: 40px;
+    /*padding-top: 40px;*/
 }
 
 .container {
@@ -100,14 +100,14 @@ body {
 
 .field {
     padding-left: 60px;
-    /*padding-top: 57px;*/
+    /*padding-top: 60px;*/
     /*position: relative;*/
     /*background-color: antiquewhite;*/
     /*margin-top: 25px;*/
 }
 
 .adjust-first {
-    padding-top: 73px;
+    padding-top: 93px;
 }
 
 .adjust-second {
@@ -224,7 +224,7 @@ body {
     /*background-color: lightcyan;*/
     /*margin: 20px;*/
     padding-left: 25px;
-    padding-bottom: 23px;
+    padding-top: 19px;
     /*position: relative;*/
 }
 
@@ -252,4 +252,42 @@ body {
     background-image: linear-gradient(90deg, transparent 81px, #ED82AD 81px, #ED82AD 84px, transparent 84px), linear-gradient(#eee 1px, transparent 0px), linear-gradient(90deg, #eee 1px, transparent 0px);
     background-size: 100% 100%, 20px 20px, 20px 20px;
     background-position: 0 0, -1px -1px, -1px 1px;
+}
+
+@media (max-width: 450px) {
+    .grid {
+        width: calc(100vw - 10px);
+        grid-template-columns: 1fr;
+    }
+    .field {
+        padding-left: 0;
+    }
+    .tetradka {
+        margin: 5px;
+    }
+    .before-line {
+        width: calc(100vw - 10px);
+    }
+    .header1 {
+        font-size: 1.5em;
+        padding-top: 9px;
+        letter-spacing: 0.3em;
+    }
+    .shipyard {
+        display: flex;
+        /*justify-content: space-between;*/
+        padding-left: 19px;
+        padding-top: 21px;
+        /*margin-right: 20px;*/
+    }
+    .ship {
+        margin-right: 18px;
+        margin-top: 0;
+    }
+    .ship.disabled {
+        pointer-events: none;
+        animation: none;
+        border-color: transparent;
+    }
+
 }
