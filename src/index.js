@@ -3,6 +3,7 @@ import "./css/style.css";
 import init from "./init";
 import game from "./game";
 import {ai, generateAiField} from "./ai";
+import {connection} from "./connection";
 
 function onReady(field) {
     // console.log(field);

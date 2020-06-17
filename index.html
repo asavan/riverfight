@@ -6,7 +6,7 @@
     <meta name="description" content="River fight">
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="icon" href="./dist/boat7.svg"><link href="./dist/main.cc092b296777eab58c81.css" rel="stylesheet"></head>
+<link rel="icon" href="./dist/boat7.svg"><link href="./dist/main.a2e72e976795e1db6818.css" rel="stylesheet"></head>
 
 <body>
 <template id="field-template">
@@ -44,5 +44,22 @@
         </div>
     </div>
 </div>
-<script src="./dist/main.187aaf71dc3dd58b61fa.js"></script></body>
+<div class="webrtc">
+    <button id="ws-connect">Connect to WebSocket</button>
+
+    <form id="idform" action="">
+        <input type="text" id="user" placeholder="e.g. Alice">
+        <button id="setid">Set your name</button>
+    </form>
+    <form id="dcform" action="">
+        <input type="text" id="connectTo" placeholder="e.g. Bob">
+        <button id="dc-connect">Connect to</button>
+    </form>
+    <form id="sendform" action="">
+        <input type="text" id="message">
+        <button id="send">Send Text over DataChannel</button>
+    </form>
+</div>
+
+<script src="./dist/main.8ef4234f9f1da7008855.js"></script></body>
 </html>
