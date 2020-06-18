@@ -65,8 +65,22 @@ function victory() {
     }, 700);
 }
 
-export default function game(document, window, field, fieldEnemy, onEnemyMove) {
-    let isEnemyPlayer = false;
+export default function game(document, window, field, fieldEnemy, color) {
+    const handlers = {
+        'playerMove': stub,
+        'enemyMove': stub,
+        'aiMove': stub
+    }
+    function on(name, f) {
+        handlers[name] = f;
+    }
+
+    function onEnemyMove(param) {
+        console.log(param);
+        return handlers['aiMove'](param);
+    }
+
+    let isEnemyPlayer = color !== 'blue';
     const grid = document.querySelector(".grid");
     const river = getEmemyRiver(grid);
     const myRiver = document.querySelector(".river");
@@ -142,26 +156,37 @@ export default function game(document, window, field, fieldEnemy, onEnemyMove) {
             return;
         }
         fire(n);
+        handlers['enemyMove'](n);
+    }
+
+    function firePlayer(n) {
+        if (isEnemyPlayer) {
+            return;
+        }
+        fire(n);
+        handlers['playerMove'](n);
     }
 
     function clickHandlerMy(e) {
         if (isEnemyPlayer) {
             return;
         }
-        move(e, fire);
+        move(e, firePlayer);
     }
 
     function clickHandlerEnemy(e) {
         if (!isEnemyPlayer) {
             return;
         }
-        move(e, fire);
+        move(e, fireEnemy);
     }
 
-    myRiver.addEventListener("click", clickHandlerEnemy);
+    // myRiver.addEventListener("click", clickHandlerEnemy);
     river.addEventListener("click", clickHandlerMy);
     return {
-        fireEnemy: fireEnemy
+        fireEnemy: fireEnemy,
+        firePlayer: firePlayer,
+        on: on
     }
 
     // putDotHtml(0);

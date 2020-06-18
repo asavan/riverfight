@@ -1,4 +1,7 @@
 const WebSocket = require("ws");
+// import WebSocket from "ws";
+// const settings = require("./src/settings");
+// import settings from "./src/settings.js";
 const wss = new WebSocket.Server({port: 8088});
 const wsList = [];
 
