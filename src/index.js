@@ -6,6 +6,7 @@ import game from "./game";
 import {ai, generateAiField} from "./ai";
 import connection from "./connection";
 import protocol from "./protocol";
+import {defer} from "./helper";
 
 function onReady(field) {
     // console.log(field);
@@ -31,20 +32,21 @@ function netGame() {
     const color = urlParams.get('color') || 'blue';
 
     let isOpponentReady = false;
-    connection.connect(host, settings.wsPort, color);
+    try {
+        connection.connect(host, settings.wsPort, color);
+    } catch (e) {
+        console.log(e);
+    }
 
     const myField = init(document);
-    let promiseResolve;
     let g = null;
-    const enemyFieldPromise = new Promise(function (resolve, reject) {
-        promiseResolve = resolve;
-    });
+    const enemyFieldPromise = defer();
 
     connection.on('recv', (data) => {
         protocol.parser(data, 'field', (enemyField) => {
             console.log("enemy field ready");
             isOpponentReady = true;
-            promiseResolve(enemyField);
+            enemyFieldPromise.resolve(enemyField);
         });
         protocol.parser(data, 'move', (n) => {
             console.log("Enemy try to move " + n);
