@@ -66,6 +66,7 @@ function victory() {
 }
 
 export default function game(document, window, field, fieldEnemy, color) {
+    console.log("game begin!");
     const handlers = {
         'playerMove': stub,
         'enemyMove': stub,
@@ -76,7 +77,6 @@ export default function game(document, window, field, fieldEnemy, color) {
     }
 
     function onEnemyMove(param) {
-        console.log(param);
         return handlers['aiMove'](param);
     }
 

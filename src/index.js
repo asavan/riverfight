@@ -19,56 +19,69 @@ function onReady(field) {
             g.fireEnemy(n);
         }, 700);
     }
+
     g.on('aiMove', onAiMove);
 }
 
 function netGame() {
-    // console.log(field);
     const host = window.location.hostname;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+    const useAi = !urlParams.get('color');
     const color = urlParams.get('color') || 'blue';
 
+    let isOpponentReady = false;
     connection.connect(host, settings.wsPort, color);
 
     const myField = init(document);
     let promiseResolve;
     let g = null;
-    const enemyFieldPromise = new Promise(function(resolve, reject) {
+    const enemyFieldPromise = new Promise(function (resolve, reject) {
         promiseResolve = resolve;
     });
 
     connection.on('recv', (data) => {
-        console.log("recieved", data);
-
         protocol.parser(data, 'field', (enemyField) => {
-            console.log("enemyFieldReady", enemyField);
+            console.log("enemy field ready");
+            isOpponentReady = true;
             promiseResolve(enemyField);
         });
         protocol.parser(data, 'move', (n) => {
             console.log("Enemy try to move " + n);
-            g.fireEnemy(n)
+            g.fireEnemy(n);
         });
-        // g.fireEnemy(protocol.parser(data));
     });
 
-    myField.then((field) => connection.sendMessage(protocol.toField(field)))
+    myField.then((field) => {
+        const isConnected = connection.sendMessage(protocol.toField(field));
+        if ((useAi && !isOpponentReady) || !isConnected) {
+            const aiBot = ai(field.length, -1);
+            g = game(document, window, field, aiBot.getFieldEnemy(), color);
+            function onAiMove(verdict) {
+                const n = aiBot.guess(verdict);
+                // console.log("ai move " + n);
+                setTimeout(() => {
+                    g.fireEnemy(n);
+                }, 700);
+            }
 
-    Promise.all([myField, enemyFieldPromise]).then(values => {
-        console.log(values);
-        g = game(document, window, values[0], values[1], color);
-        g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
+            g.on('aiMove', onAiMove);
+        } else {
+            enemyFieldPromise.then((enemyField) => {
+                g = game(document, window, field, enemyField, color);
+                g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
+            });
+        }
     });
-}
 
-function ppp() {
-    const g = game(document, window, field, f, color);
-    protocol.parser(data, 'move', (n) => {g.fireEnemy(n)});
-    g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
+    // Promise.all([myField, enemyFieldPromise]).then(values => {
+    //     console.log(values);
+    //     g = game(document, window, values[0], values[1], color);
+    //     g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
+    // });
 }
 
 function fake() {
-    // console.log(field);
     const aiBot = ai(generateAiField(1).length, 1);
     const host = window.location.hostname;
     const queryString = window.location.search;
@@ -82,18 +95,15 @@ function fake() {
     function onAiMove(verdict) {
         const n = aiBot.guess(verdict);
         console.log("ai move " + n);
-        // setTimeout(() => {
-        //     g.fireEnemy(n);
-        //     connection.sendMessage(n);
-        // }, 700);
     }
+
     g.on('aiMove', onAiMove);
 
     connection.on('recv', (data) => {
         console.log("recieved", data);
-
-        protocol.parser(data, 'move', (n) => {g.fireEnemy(n)});
-        // g.fireEnemy(protocol.parser(data));
+        protocol.parser(data, 'move', (n) => {
+            g.fireEnemy(n);
+        });
     });
     g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
 }

@@ -66,8 +66,8 @@ export function getVerdict(fieldEnemy, myEnemyField, n) {
     }
     const enemyLen = getLen(fieldEnemy, n);
     const myEnemyLen = getLen(myEnemyField, n);
-    console.log(fieldEnemy, n, enemyLen);
-    console.log(myEnemyField, n, myEnemyLen);
+    // console.log(fieldEnemy, n, enemyLen);
+    // console.log(myEnemyField, n, myEnemyLen);
     if (myEnemyLen === enemyLen) {
         if (isSame(fieldEnemy, myEnemyField, n)) {
             return VERDICT.WIN;

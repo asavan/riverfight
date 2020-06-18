@@ -266,20 +266,25 @@ body {
         width: calc(100vw - 10px);
         grid-template-columns: 1fr;
     }
+
     .field {
         padding-left: 0;
     }
+
     .tetradka {
         margin: 5px;
     }
+
     .before-line {
         width: calc(100vw - 10px);
     }
+
     .header1 {
         font-size: 1.5em;
         padding-top: 9px;
         letter-spacing: 0.3em;
     }
+
     .shipyard {
         display: flex;
         /*justify-content: space-between;*/
@@ -287,10 +292,12 @@ body {
         padding-top: 21px;
         /*margin-right: 20px;*/
     }
+
     .ship {
         margin-right: 18px;
         margin-top: 0;
     }
+
     .ship.disabled {
         pointer-events: none;
         animation: none;
@@ -298,54 +305,3 @@ body {
     }
 
 }
-
-.webrtc {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    min-height:100%;
-    height: 100%;
-    line-height: 1.5em;
-    padding: 1em;
-    color: #ddd;
-    background-color: #455;
-}
-
-button,
-input{
-    font-size: 1em;
-    padding: 0.5em 1em;
-}
-
-
-
-div.message-rtc{
-    margin: 0.5em 0.5em;
-    border-radius: 0.3em;
-    padding: 0.5em 1em;
-    background-color: #eee;
-    box-shadow: 0 0 1em rgba(0,0,0,0.3);
-    width: 20em;
-    color: #444;
-}
-
-div.message-rtc.from{
-    margin: 0.3em 2em;
-}
-
-body{
-}
-.main{
-    display: inline-block;
-    padding: 2em;
-    margin-bottom: 5em;
-}
-
-#wslog{
-    box-shadow: inset 0 1em 2em -1em rgba(30,50,40,0.5),
-    inset 0 -1em 2em -1em rgba(30,50,40,0.5);
-    height: 15em;
-    width: 100%;
-    line-height: 1em;
-    overflow-y: auto;
-    word-wrap: break-word;
-}
-

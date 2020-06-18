@@ -1,22 +1,6 @@
-// $("#setid").click(setMyId);
-// $("#dc-connect").click(connectTo);
-// $("#send").click(sendDirect);
-
 let ws = null;
 let user = "";
 let user2 = "";
-
-// const rtcfield = $('.webrtc');
-// const idform = $("#idform");
-// const dcform = $("#dcform");
-// const sendform = $("#sendform");
-// const wsconnect = $("#ws-connect");
-
-// idform.hide();
-// dcform.hide();
-// sendform.hide();
-
-// wsconnect.click(connect);
 
 const colors = ['blue', 'red'];
 
@@ -25,7 +9,7 @@ function stub(message) {
 }
 
 const handlers = {
-    'recv' : stub
+    'recv': stub
 }
 
 function on(name, f) {
@@ -98,8 +82,12 @@ function connect(host, wsPort, color) {
 var config = {"iceServers": []};
 // var connection = {};
 
-var peerConnection;
-var dataChannel;
+let dataChannel = null;
+let isConnected = false;
+
+function connectedStatus() {
+    return isConnected;
+}
 
 
 function connectToSecond() {
@@ -117,9 +105,16 @@ function connectToSecond() {
 }
 
 function sendMessage(messageBody) {
+    if (!dataChannel) {
+        return false;
+    }
+    if (!isConnected) {
+        console.log("Not connected");
+        return false;
+    }
+    // console.log("Sending over datachannel: " + messageBody);
     dataChannel.send(messageBody);
-    // rtcfield.append('Me: <div class="message-rtc">' + messageBody + '</div>');
-    console.log("Sending over datachannel: " + messageBody);
+    return isConnected;
 }
 
 function openDataChannel(ws) {
@@ -132,12 +127,16 @@ function openDataChannel(ws) {
     dataChannel = peerConnection.createDataChannel("datachannel", {reliable: false});
 
     dataChannel.onopen = function () {
-        console.log("------ DATACHANNEL OPENED ------")
+        console.log("------ DATACHANNEL OPENED ------");
+        isConnected = true;
         // sendform.show();
     };
+
     dataChannel.onclose = function () {
-        console.log("------ DC closed! ------")
+        console.log("------ DC closed! ------");
+        isConnected = false;
     };
+
     dataChannel.onerror = function () {
         console.log("DC ERROR!!!")
     };
@@ -203,4 +202,4 @@ function processIce(iceCandidate, peerConnection) {
     })
 }
 
-export default {connect, sendMessage: sendMessage, on};
+export default {connect, sendMessage, on, connectedStatus};
