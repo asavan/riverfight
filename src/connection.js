@@ -1,3 +1,5 @@
+import settings from "./settings";
+
 let ws = null;
 let user = "";
 let user2 = "";
@@ -45,34 +47,24 @@ function connect(host, wsPort, color) {
         // wsconnect.show();
     }
     ws.onmessage = function (e) {
+
+        const json = JSON.parse(e.data);
+        if (json.to !== user) {
+            // console.log("same user");
+            return;
+        }
         console.log("Websocket message received: " + e.data);
 
-        var json = JSON.parse(e.data);
-
         if (json.action === "candidate") {
-            if (json.to === user) {
-                processIce(json.data, peerConnection);
-            }
+            processIce(json.data, peerConnection);
         } else if (json.action === "offer") {
             // incoming offer
-            if (json.to === user) {
-                user2 = json.from;
-                peerConnection = processOffer(json.data)
-            }
+            user2 = json.from;
+            peerConnection = processOffer(json.data)
         } else if (json.action === "answer") {
             // incoming answer
-            if (json.to === user) {
-                processAnswer(json.data, peerConnection);
-            }
+            processAnswer(json.data, peerConnection);
         }
-        // else if(json.action == "id"){
-        //    userId = json.data;
-        // } else if(json.action=="newUser"){
-        //     if(userId!=null && json.data!=userId){
-
-        //     }
-        // }
-
     }
     ws.onerror = function (e) {
         console.log("Websocket error");
@@ -93,14 +85,14 @@ function connectedStatus() {
 function connectToSecond() {
     const peerConnection = openDataChannel(ws);
 
-    const sdpConstraints = {offerToReceiveAudio: true, offerToReceiveVideo: false};
-    peerConnection.createOffer(sdpConstraints).then(function (sdp) {
-        peerConnection.setLocalDescription(sdp);
-        sendNegotiation("offer", sdp, ws);
-        console.log("------ SEND OFFER ------");
-    }, function (err) {
-        console.log(err)
-    });
+    const sdpConstraints = {offerToReceiveAudio: false, offerToReceiveVideo: false};
+    peerConnection.createOffer(sdpConstraints)
+        .then(offer => peerConnection.setLocalDescription(offer))
+        .then(() => {
+            console.log("------ SEND OFFER ------");
+            sendNegotiation("offer", peerConnection.localDescription, ws);
+        })
+        .catch((err) => console.log(err));
     return peerConnection;
 }
 
@@ -124,7 +116,15 @@ function openDataChannel(ws) {
         sendNegotiation("candidate", e.candidate, ws);
     }
 
-    dataChannel = peerConnection.createDataChannel("datachannel", {reliable: false});
+    dataChannel = peerConnection.createDataChannel("my channel", {negotiated: true, id: settings.negotiatedId});
+    dataChannel.onmessage = function (e) {
+        console.log("DC from [" + user2 + "]:" + e.data);
+        handlers['recv'](e.data);
+        console.log("received: " + e.data);
+    };
+
+
+    // dataChannel = peerConnection.createDataChannel("datachannel", {reliable: false});
 
     dataChannel.onopen = function () {
         console.log("------ DATACHANNEL OPENED ------");
@@ -141,32 +141,20 @@ function openDataChannel(ws) {
         console.log("DC ERROR!!!")
     };
 
-    peerConnection.ondatachannel = function (ev) {
-        console.log('peerConnection.ondatachannel event fired.');
-        ev.channel.onopen = function () {
-            console.log('Data channel is open and ready to be used.');
-        };
-        ev.channel.onmessage = function (e) {
-            console.log("DC from [" + user2 + "]:" + e.data);
-            handlers['recv'](e.data);
-        }
-    };
-
     return peerConnection;
 }
 
 function sendNegotiation(type, sdp, ws) {
     const json = {from: user, to: user2, action: type, data: sdp};
-    ws.send(JSON.stringify(json));
     console.log("Sending [" + user + "] to [" + user2 + "]: " + JSON.stringify(sdp));
+    return ws.send(JSON.stringify(json));
 }
 
 function processOffer(offer) {
     const peerConnection = openDataChannel(ws);
-    peerConnection.setRemoteDescription(new RTCSessionDescription(offer)).catch(e => {
-        console.log(e)
-    });
-
+    // peerConnection.setRemoteDescription(new RTCSessionDescription(offer)).catch(e => {
+    //     console.log(e)
+    // });
     const sdpConstraints = {
         'mandatory':
             {
@@ -175,31 +163,28 @@ function processOffer(offer) {
             }
     };
 
-    peerConnection.createAnswer(sdpConstraints).then(function (sdp) {
-        return peerConnection.setLocalDescription(sdp).then(function () {
-            sendNegotiation("answer", sdp, ws);
-            console.log("------ SEND ANSWER ------");
-        })
-    }, function (err) {
-        console.log(err)
-    });
     console.log("------ PROCESSED OFFER ------");
+    peerConnection.setRemoteDescription(offer)
+        .then(() => peerConnection.createAnswer())
+        .then(answer => peerConnection.setLocalDescription(answer))
+        .then(() => {
+            console.log("------ TRY SEND ANSWER ------");
+            return sendNegotiation("answer", peerConnection.localDescription, ws);
+        })
+        .catch((err) => console.log(err));
     return peerConnection;
 }
 
 function processAnswer(answer, peerConnection) {
-
-    peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
     console.log("------ PROCESSED ANSWER ------");
-    return true;
+    return peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 }
 
 function processIce(iceCandidate, peerConnection) {
     console.log("------ PROCESSED ISE ------", iceCandidate);
-    peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidate)).catch(e => {
-        debugger
+    return peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidate)).catch(e => {
         console.log(e)
-    })
+    });
 }
 
 export default {connect, sendMessage, on, connectedStatus};

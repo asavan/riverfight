@@ -1,5 +1,6 @@
 export default {
     debug: true,
     wsPort : 8088,
-    gameMode: 'ai'
+    gameMode: 'ai',
+    negotiatedId: 3
 }
