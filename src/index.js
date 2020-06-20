@@ -67,6 +67,7 @@ function netGame() {
         const isConnected = connection.sendMessage(protocol.toField(field));
         if (useAi && !isConnected) {
             const aiBot = ai(field.length, -1);
+            hideElem(code);
             initObj.onOpponentReady();
             g = game(document, window, field, aiBot.getFieldEnemy(), color);
 

@@ -125,6 +125,7 @@ function openDataChannel(ws) {
     dataChannel.onopen = function () {
         console.log("------ DATACHANNEL OPENED ------");
         isConnected = true;
+        ws.close();
         handlers['open']();
         // sendform.show();
     };
