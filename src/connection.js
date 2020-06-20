@@ -12,7 +12,9 @@ function stub(message) {
 
 const handlers = {
     'recv': stub,
-    'open': stub
+    'open': stub,
+    'socket_open': stub,
+    'socket_close': stub,
 }
 
 function on(name, f) {
@@ -36,6 +38,7 @@ function connect(host, wsPort, color) {
 
     ws.onopen = function (e) {
         console.log("Websocket opened");
+        handlers['socket_open']();
         // wsconnect.hide();
         user = color;
         user2 = getOtherColor(color);
@@ -45,6 +48,7 @@ function connect(host, wsPort, color) {
     }
     ws.onclose = function (e) {
         console.log("Websocket closed");
+        handlers['socket_close']();
         // wsconnect.show();
     }
     ws.onmessage = function (e) {

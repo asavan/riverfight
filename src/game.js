@@ -74,6 +74,7 @@ export default function game(document, window, field, fieldEnemy, color) {
         'enemyMove': stub,
         'aiMove': stub
     }
+
     function on(name, f) {
         handlers[name] = f;
     }
@@ -82,13 +83,17 @@ export default function game(document, window, field, fieldEnemy, color) {
         return handlers['aiMove'](param);
     }
 
+    function start() {
+
+    }
+
     let isEnemyPlayer = color !== 'blue';
     const grid = document.querySelector(".grid");
     const river = getEmemyRiver(grid);
     const myRiver = document.querySelector(".river");
 
     const player = {
-        realField : field,
+        realField: field,
         guessedField: new Array(field.length).fill(VERDICT.NONE),
         htmlRiver: myRiver,
         onOpponentMiss: stub,
@@ -97,7 +102,7 @@ export default function game(document, window, field, fieldEnemy, color) {
     };
 
     const enemy = {
-        realField : fieldEnemy,
+        realField: fieldEnemy,
         guessedField: new Array(field.length).fill(VERDICT.NONE),
         htmlRiver: river,
         onOpponentMiss: onEnemyMove,
@@ -124,7 +129,9 @@ export default function game(document, window, field, fieldEnemy, color) {
             i++;
             if (i > message.length) {
                 clearInterval(printingInterval);
-                printingInterval = setTimeout(()=> {messageAnchor.innerHTML = ""}, 2000);
+                printingInterval = setTimeout(() => {
+                    messageAnchor.innerHTML = ""
+                }, 2000);
             }
         }, speed);
     }
@@ -148,7 +155,9 @@ export default function game(document, window, field, fieldEnemy, color) {
         } else {
             user.onOpponentHit(res.verdict);
             if (res.verdict === VERDICT.KILL) {
-                applyBothSides(user.guessedField, n,  (ind) => {putDotHtml2(ind, user.htmlRiver, isEnemyPlayer)});
+                applyBothSides(user.guessedField, n, (ind) => {
+                    putDotHtml2(ind, user.htmlRiver, isEnemyPlayer)
+                });
             }
         }
     }

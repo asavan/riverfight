@@ -8,6 +8,7 @@ import connection from "./connection";
 import protocol from "./protocol";
 import {defer, hideElem} from "./helper";
 import qr from "./qrcode";
+import {VERDICT} from "./core";
 
 function onReady(field) {
     // console.log(field);
@@ -29,20 +30,32 @@ function netGame() {
     const host = window.location.hostname;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    let useAi = !urlParams.get('color');
+    let useAi = !urlParams.get('color') || urlParams.get('color') === 'red';
     const color = urlParams.get('color') || 'blue';
+    const forceAi = !!urlParams.get('forceAi');
+    let code = null;
+
+    connection.on('socket_open', () => {
+        if (forceAi) {
+            return;
+        }
+        code = qr.render(window.location.origin);
+    });
+
+    connection.on('socket_close', () => {
+        hideElem(code);
+    });
 
     let isOpponentReady = false;
     try {
         connection.connect(host, settings.wsPort, color);
     } catch (e) {
+        useAi = true;
         console.log(e);
     }
 
     const myField = init(document);
-    const code = qr.render(window.location.origin);
     connection.on('open', () => {
-        hideElem(code);
         useAi = false;
     });
     let g = null;
@@ -64,8 +77,8 @@ function netGame() {
 
     myField.then((initObj) => {
         const field = initObj.field;
-        const isConnected = connection.sendMessage(protocol.toField(field));
-        if (useAi && !isConnected) {
+        const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
+        if (useAi || forceAi) {
             const aiBot = ai(field.length, -1);
             hideElem(code);
             initObj.onOpponentReady();
@@ -80,9 +93,15 @@ function netGame() {
             }
 
             g.on('aiMove', onAiMove);
+            onAiMove(VERDICT.MISS);
         } else {
             enemyFieldPromise.then((enemyField) => {
-                const isConnected2 = connection.sendMessage(protocol.toField(field));
+                if (!opponentAlreadyConnected) {
+                    const opponentAlreadyConnected2 = connection.sendMessage(protocol.toField(field));
+                    if (opponentAlreadyConnected2) {
+                        console.log("Smth strange");
+                    }
+                }
                 initObj.onOpponentReady();
                 g = game(document, window, field, enemyField, color);
                 g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
