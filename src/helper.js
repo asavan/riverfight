@@ -16,6 +16,17 @@ export function getTemplateByName(name) {
     return document.querySelector(name);
 }
 
+export function hide(selector) {
+    const el = document.querySelector(selector);
+    hideElem(el);
+}
+
+export function hideElem(el) {
+    if (el) {
+        el.classList.add('hidden');
+    }
+}
+
 export function createField(grid) {
     const t = getTemplateByName('#field-template');
     const f = t.content.cloneNode(true);

@@ -11,7 +11,8 @@ function stub(message) {
 }
 
 const handlers = {
-    'recv': stub
+    'recv': stub,
+    'open': stub
 }
 
 function on(name, f) {
@@ -77,11 +78,6 @@ var config = {"iceServers": []};
 let dataChannel = null;
 let isConnected = false;
 
-function connectedStatus() {
-    return isConnected;
-}
-
-
 function connectToSecond() {
     const peerConnection = openDataChannel(ws);
 
@@ -129,6 +125,7 @@ function openDataChannel(ws) {
     dataChannel.onopen = function () {
         console.log("------ DATACHANNEL OPENED ------");
         isConnected = true;
+        handlers['open']();
         // sendform.show();
     };
 
@@ -187,4 +184,4 @@ function processIce(iceCandidate, peerConnection) {
     });
 }
 
-export default {connect, sendMessage, on, connectedStatus};
+export default {connect, sendMessage, on};

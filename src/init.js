@@ -100,6 +100,12 @@ export default function init(document) {
         const river = fieldHtml.querySelector(".river");
         river.addEventListener("click", clickHandler);
 
+        function onOpponentReady() {
+            fieldHtml.classList.remove('adjust-first');
+            fieldHtml.classList.add('adjust-third');
+            river.removeEventListener("click", clickHandler);
+        }
+
         function putShip(n) {
             const currentPos = n - currChosen.n;
             if (!place(field, currentPos, currChosen.s.length)) {
@@ -115,10 +121,8 @@ export default function init(document) {
             currChosen.s.html.classList.add('disabled');
             currChosen = null;
             if (isReady()) {
-                fieldHtml.classList.remove('adjust-first');
-                fieldHtml.classList.add('adjust-third');
-                river.removeEventListener("click", clickHandler);
-                resolve(field);
+                // onOpponentReady();
+                resolve({field, onOpponentReady});
             }
         }
 

@@ -1,5 +1,7 @@
 import {getVerdict, VERDICT, verdictToMessage, applyBothSides} from './core.js';
 import {move, width, getTemplateByName, createField} from './helper.js';
+import settings from "./settings";
+
 
 function getEmemyRiver(grid) {
     const enemyFieldHtml = createField(grid);
@@ -181,7 +183,9 @@ export default function game(document, window, field, fieldEnemy, color) {
         move(e, fireEnemy);
     }
 
-    // myRiver.addEventListener("click", clickHandlerEnemy);
+    if (settings.currentMode === 'hotseat') {
+        myRiver.addEventListener("click", clickHandlerEnemy);
+    }
     river.addEventListener("click", clickHandlerMy);
     return {
         fireEnemy: fireEnemy,

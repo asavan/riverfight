@@ -14,7 +14,7 @@ html {
 
 body {
     height: 90%;
-    /*display: flex;*/
+    display: flex;
     /*flex-wrap: wrap;*/
     /*justify-content: space-around;*/
 }
@@ -261,6 +261,11 @@ body {
     background-position: 0 0, -1px -1px, -1px 1px;
 }
 
+.qrcode {
+    width: 300px;
+    height: 300px;
+}
+
 @media (max-width: 450px) {
     .grid {
         width: calc(100vw - 10px);
@@ -304,4 +309,18 @@ body {
         border-color: transparent;
     }
 
+    body {
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        /*justify-content: space-around;*/
+    }
+
+    .container {
+        /*width: 300px;*/
+        height: 50%;
+    }
+
+
 }
+
