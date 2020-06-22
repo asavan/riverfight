@@ -1,5 +1,5 @@
 import {getVerdict, VERDICT, verdictToMessage, applyBothSides} from './core.js';
-import {move, width, getTemplateByName, createField} from './helper.js';
+import {move, width, getTemplateByName, createField, printLetterByLetter} from './helper.js';
 import settings from "./settings";
 
 
@@ -69,6 +69,7 @@ function victory() {
 
 export default function game(document, window, field, fieldEnemy, color) {
     console.log("game begin!");
+    printLetterByLetter("Игра началась", 70, false, 2000);
     const handlers = {
         'playerMove': stub,
         'enemyMove': stub,
@@ -87,6 +88,7 @@ export default function game(document, window, field, fieldEnemy, color) {
 
     }
 
+    // TODO
     let isEnemyPlayer = color !== 'blue';
     const grid = document.querySelector(".grid");
     const river = getEmemyRiver(grid);
@@ -110,37 +112,11 @@ export default function game(document, window, field, fieldEnemy, color) {
         isEnemy: true
     };
 
-    let printingInterval = null;
-
-    function printLetterByLetter(message, speed, isEnemyPlayer) {
-        let i = 0;
-        const messageAnchor = document.querySelector('.message');
-        if (isEnemyPlayer) {
-            messageAnchor.classList.add('enemy');
-        } else {
-            messageAnchor.classList.remove('enemy');
-        }
-        if (printingInterval) {
-            messageAnchor.innerHTML = "";
-            clearInterval(printingInterval);
-        }
-        printingInterval = setInterval(function () {
-            messageAnchor.innerHTML += message.charAt(i);
-            i++;
-            if (i > message.length) {
-                clearInterval(printingInterval);
-                printingInterval = setTimeout(() => {
-                    messageAnchor.innerHTML = ""
-                }, 2000);
-            }
-        }, speed);
-    }
-
     function fire(n) {
         const user = isEnemyPlayer ? player : enemy;
         const res = putDotHtml(n, isEnemyPlayer, user.realField, user.guessedField, user.htmlRiver);
         const message = verdictToMessage(res.verdict) + "!";
-        printLetterByLetter(message, 70, isEnemyPlayer);
+        printLetterByLetter(message, 70, isEnemyPlayer, 2000);
         // console.log(message);
 
         if (res.verdict === VERDICT.MISS) {

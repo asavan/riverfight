@@ -55,4 +55,29 @@ export function defer() {
     return promise;
 }
 
+let printingInterval = null;
 
+export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLastSymbol) {
+    let i = 0;
+    const messageAnchor = document.querySelector('.message');
+    if (isEnemyPlayer) {
+        messageAnchor.classList.add('enemy');
+    } else {
+        messageAnchor.classList.remove('enemy');
+    }
+    if (printingInterval) {
+        messageAnchor.innerHTML = "";
+        clearInterval(printingInterval);
+    }
+    printingInterval = setInterval(function () {
+        if (i < message.length) {
+            messageAnchor.innerHTML += message.charAt(i);
+            ++i;
+        } else {
+            clearInterval(printingInterval);
+            printingInterval = setTimeout(() => {
+                messageAnchor.innerHTML = ""
+            }, waitAfterLastSymbol);
+        }
+    }, speed);
+}

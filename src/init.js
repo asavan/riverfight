@@ -77,7 +77,6 @@ export default function init(document) {
         for (let [order, shipInfo] of Object.entries(shipsCount)) {
             for (let i = 0; i < shipInfo.count; i++) {
                 addShip(shipInfo.len);
-                // console.log("add ship", `${value.len}`);
             }
         }
 
@@ -92,7 +91,6 @@ export default function init(document) {
         for (const shipsKey of ships) {
             shipsKey.html.addEventListener("click", (e) => {
                 const n = getClickIndex(e);
-                // console.log("move " + n);
                 choose(shipsKey, n);
             });
         }
@@ -121,7 +119,6 @@ export default function init(document) {
             currChosen.s.html.classList.add('disabled');
             currChosen = null;
             if (isReady()) {
-                // onOpponentReady();
                 resolve({field, onOpponentReady});
             }
         }

@@ -1,10 +1,9 @@
 import settings from "./settings";
+import {getOtherColor} from "./core";
 
 let ws = null;
 let user = "";
 let user2 = "";
-
-const colors = ['blue', 'red'];
 
 function stub(message) {
     console.log("Stub " + message);
@@ -21,16 +20,6 @@ function on(name, f) {
     handlers[name] = f;
 }
 
-function getOtherColor(color) {
-    for (const colorOther of colors) {
-        if (color === colorOther) {
-            continue;
-        }
-        return colorOther;
-    }
-    return "";
-}
-
 function connect(host, wsPort, color) {
     ws = new WebSocket("ws://" + host + ":" + wsPort);
 
@@ -39,7 +28,6 @@ function connect(host, wsPort, color) {
     ws.onopen = function (e) {
         console.log("Websocket opened");
         handlers['socket_open']();
-        // wsconnect.hide();
         user = color;
         user2 = getOtherColor(color);
         if (user === 'blue') {
@@ -49,8 +37,8 @@ function connect(host, wsPort, color) {
     ws.onclose = function (e) {
         console.log("Websocket closed");
         handlers['socket_close']();
-        // wsconnect.show();
     }
+
     ws.onmessage = function (e) {
 
         const json = JSON.parse(e.data);
@@ -118,20 +106,14 @@ function openDataChannel(ws) {
 
     dataChannel = peerConnection.createDataChannel("my channel", {negotiated: true, id: settings.negotiatedId});
     dataChannel.onmessage = function (e) {
-        console.log("DC from [" + user2 + "]:" + e.data);
         handlers['recv'](e.data);
-        console.log("received: " + e.data);
     };
-
-
-    // dataChannel = peerConnection.createDataChannel("datachannel", {reliable: false});
 
     dataChannel.onopen = function () {
         console.log("------ DATACHANNEL OPENED ------");
         isConnected = true;
         ws.close();
         handlers['open']();
-        // sendform.show();
     };
 
     dataChannel.onclose = function () {

@@ -103,3 +103,15 @@ export function applyBothSides(field, n, f) {
     count += applyToFirstNonNone(field, n, -1, f);
     return count;
 }
+
+const colors = ['blue', 'red'];
+
+export function getOtherColor(color) {
+    for (const colorOther of colors) {
+        if (color === colorOther) {
+            continue;
+        }
+        return colorOther;
+    }
+    return "";
+}
