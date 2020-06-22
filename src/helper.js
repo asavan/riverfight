@@ -81,3 +81,7 @@ export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLast
         }
     }, speed);
 }
+
+export function showGameMessage(message) {
+    printLetterByLetter(message, 70, false, 2000);
+}

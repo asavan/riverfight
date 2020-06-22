@@ -1,0 +1,5 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "xyz.atenalp.riverfight.android",
+    "sha256_cert_fingerprints": ["12:86:B3:2C:72:CC:90:A1:C2:1C:B2:E5:F3:52:27:81:93:80:22:6D:48:5E:E3:B2:EF:84:98:2B:F7:4C:80:57"] }
+}]

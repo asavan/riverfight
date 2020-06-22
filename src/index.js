@@ -86,7 +86,7 @@ function netGame() {
     }
 
 
-    myField.then((initObj) => {
+    myField.myFieldPromise.then((initObj) => {
         const field = initObj.field;
         if (useAi) {
             hideElem(code);
