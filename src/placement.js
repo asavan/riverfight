@@ -2,7 +2,7 @@ import {move, width, getClickIndex, createField, showGameMessage} from './helper
 import {shipsCount, axis} from './core.js';
 import {defer} from "./helper";
 
-export default function init(document) {
+export default function placement(document) {
     const myFieldPromise = defer();
 
     function getShipyard(document, grid) {
@@ -108,13 +108,13 @@ export default function init(document) {
     function putShip(n) {
         if (currChosen == null) {
             showGameMessage("Выберите корабль");
-            return;
+            return false;
         }
 
         const currentPos = n - currChosen.n;
         if (!place(field, currentPos, currChosen.s.length)) {
             showGameMessage("Тесно!");
-            return;
+            return false;
         }
 
         const s = document.createElement('div');
@@ -128,6 +128,7 @@ export default function init(document) {
         if (isReady()) {
             myFieldPromise.resolve({field, onOpponentReady});
         }
+        return true;
     }
 
     function clickHandler(e) {

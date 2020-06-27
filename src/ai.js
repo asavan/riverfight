@@ -24,7 +24,6 @@ function chooseRandomIndex(field) {
 function getRandomIndex(field) {
     let index = chooseRandomIndex(field);
     let i = 0;
-    // console.table("rnd index " + index);
     for (; i < field.length; i++) {
         if (field[i] === VERDICT.NONE) {
             --index;
@@ -33,9 +32,9 @@ function getRandomIndex(field) {
             break;
         }
     }
-    if (i >= field.length || i < 0) {
-        console.table("Error out", i, field);
-    }
+    // if (i >= field.length || i < 0) {
+    //     console.table("Error out", i, field);
+    // }
     // if (prevIndex === i) {
     //     console.table("Error repeated", i, field);
     // }
@@ -95,7 +94,6 @@ export function ai(len, fieldNum) {
             }
             console.table("Err1", currVerdict, prevDirection, lastMove, field);
             return getRandomIndex(field);
-            // throw "Illegal state";
         }
         if (currVerdict === VERDICT.KILL) {
             applyBothSides(field, lastMove, (ind) => {
@@ -115,17 +113,14 @@ export function ai(len, fieldNum) {
                 }
                 console.table("Err", currVerdict, prevDirection, lastMove, field);
                 return getRandomIndex(field);
-
-                // throw "Illegal state";
             }
             return getRandomIndex(field);
         }
 
-        return 1;
+        return getRandomIndex(field);
     }
 
     function guessPublic(currVerdict) {
-        // console.log(currVerdict);
         lastMove = guess(field, currVerdict);
         return lastMove;
     }

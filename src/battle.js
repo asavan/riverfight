@@ -67,7 +67,7 @@ function victory() {
     }, 700);
 }
 
-export default function game(document, window, field, fieldEnemy, color) {
+export default function battle(document, window, field, fieldEnemy, color) {
     console.log("game begin!");
     printLetterByLetter("Игра началась", 70, false, 2000);
     const handlers = {
@@ -113,11 +113,15 @@ export default function game(document, window, field, fieldEnemy, color) {
     };
 
     function fire(n) {
+        if (n >= field.length) {
+            n = field.length - 1;
+        } else if (n < 0) {
+            n = 0;
+        }
         const user = isEnemyPlayer ? player : enemy;
         const res = putDotHtml(n, isEnemyPlayer, user.realField, user.guessedField, user.htmlRiver);
         const message = verdictToMessage(res.verdict) + "!";
         printLetterByLetter(message, 70, isEnemyPlayer, 2000);
-        // console.log(message);
 
         if (res.verdict === VERDICT.MISS) {
             isEnemyPlayer = !isEnemyPlayer;
@@ -177,6 +181,4 @@ export default function game(document, window, field, fieldEnemy, color) {
         firePlayer: firePlayer,
         on: on
     }
-
-    // putDotHtml(0);
 }
