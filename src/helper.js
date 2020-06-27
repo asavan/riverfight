@@ -85,3 +85,5 @@ export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLast
 export function showGameMessage(message) {
     printLetterByLetter(message, 70, false, 2000);
 }
+
+export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));

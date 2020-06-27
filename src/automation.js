@@ -1,6 +1,5 @@
 import {generateAiField} from "./ai.js";
-
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+import {delay} from "./helper.js";
 
 function findPlaceToShip(field, len) {
     let start = -1;
@@ -27,7 +26,6 @@ function findPlaceToShip(field, len) {
             }
         }
     }
-    // console.log(start, end, len);
     return start;
 }
 
@@ -55,8 +53,9 @@ export function placementAutomation(p) {
                 const res = p.putShip(putTo);
                 if (res) {
                     fillZeroes(field, putTo, shipsKey.length);
+                } else {
+                    console.log(field, putTo, shipsKey.length);
                 }
-                console.log(shipsKey.length, putTo, field);
                 await delay(200);
             }
 
