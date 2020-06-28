@@ -20,8 +20,8 @@ function on(name, f) {
     handlers[name] = f;
 }
 
-function connect(host, wsPort, color) {
-    ws = new WebSocket("ws://" + host + ":" + wsPort);
+function connect(socketUrl, color) {
+    ws = new WebSocket(socketUrl);
 
     let peerConnection = null;
 

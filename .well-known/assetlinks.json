@@ -2,5 +2,6 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target" : { "namespace": "android_app", "package_name": "xyz.atenalp.riverfight.android",
     "sha256_cert_fingerprints": ["12:86:B3:2C:72:CC:90:A1:C2:1C:B2:E5:F3:52:27:81:93:80:22:6D:48:5E:E3:B2:EF:84:98:2B:F7:4C:80:57",
-	"CC:16:07:AA:2C:00:F3:1D:7B:65:A9:34:D8:88:09:E2:33:6C:A1:4C:AC:AD:77:9C:BF:BC:2F:15:65:E4:6A:F4"] }
+	"CC:16:07:AA:2C:00:F3:1D:7B:65:A9:34:D8:88:09:E2:33:6C:A1:4C:AC:AD:77:9C:BF:BC:2F:15:65:E4:6A:F4",
+    "42:58:AF:E3:C6:F8:F3:01:E7:33:84:A5:F7:4A:35:C9:34:14:3C:2B:67:B6:5A:5C:6E:A4:4E:BC:5C:73:B4:4D"] }
 }]

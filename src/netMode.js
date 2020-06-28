@@ -8,6 +8,16 @@ import protocol from "./protocol";
 import aiActions from "./aiMode.js";
 import battle from "./battle";
 
+function getWebSocketUrl(socketUrl, host) {
+    if (window.location.protocol === 'https:') {
+        if (socketUrl) {
+            return "wss://" + socketUrl;
+        }
+        return null;
+    }
+    return "ws://" + host + ":" + settings.wsPort
+}
+
 export default function netGame() {
     const host = window.location.hostname;
     const queryString = window.location.search;
@@ -15,6 +25,8 @@ export default function netGame() {
     const color = urlParams.get('color') || 'blue';
     const forceAi = !!urlParams.get('forceAi');
     let useAi = !urlParams.get('color') || urlParams.get('color') === 'red' || forceAi;
+    const socketUrl = getWebSocketUrl(urlParams.get('wh'), host);
+    let staticHost = urlParams.get('sh') || window.location.href;
     let code = null;
     let isOpponentReady = false;
     let g = null;
@@ -23,10 +35,10 @@ export default function netGame() {
 
     const myField = placement(document);
 
-    let useNetwork = !forceAi && window.location.protocol !== 'https:';
+    let useNetwork = !forceAi && !!socketUrl;
     if (useNetwork) {
         connection.on('socket_open', () => {
-            const url = new URL(window.location.href);
+            const url = new URL(staticHost);
             url.searchParams.set('color', getOtherColor(color));
             code = qr.render(url.toString());
         });
@@ -36,7 +48,7 @@ export default function netGame() {
         });
 
         try {
-            connection.connect(host, settings.wsPort, color);
+            connection.connect(socketUrl, color);
         } catch (e) {
             useAi = true;
             console.log(e);
@@ -88,6 +100,7 @@ export default function netGame() {
     function getBattle() {
         return battlePromise;
     }
+
     return {myField, getBattle};
 
 }
