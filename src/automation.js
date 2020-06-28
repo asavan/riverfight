@@ -1,5 +1,6 @@
 import {generateAiField} from "./ai.js";
 import {delay} from "./helper.js";
+import {ai} from "./ai";
 
 function findPlaceToShip(field, len) {
     let start = -1;
@@ -35,30 +36,45 @@ function fillZeroes(field, putTo, length) {
     }
 }
 
+async function placeShips(p, field) {
+    const ships = p.ships;
+    for (const shipsKey of ships) {
+        p.choose(shipsKey, 0);
+        await delay(500);
+        const putTo = findPlaceToShip(field, shipsKey.length);
+        const res = p.putShip(putTo);
+        if (res) {
+            fillZeroes(field, putTo, shipsKey.length);
+        } else {
+            console.log(field, putTo, shipsKey.length);
+        }
+        await delay(200);
+    }
+}
+
 export function placementAutomation(p) {
     const secretCodeElem = document.querySelector(".secret-code");
 
     let clickCount = 0;
+    let placementDone = false;
+    let aiInited = false;
     const field = generateAiField(-1);
 
     const secretClickHandler = async function (e) {
         ++clickCount;
         if (clickCount >= 3) {
             clickCount = 0;
-            const ships = p.ships;
-            for (const shipsKey of ships) {
-                p.choose(shipsKey, 0);
-                await delay(500);
-                const putTo = findPlaceToShip(field, shipsKey.length);
-                const res = p.putShip(putTo);
-                if (res) {
-                    fillZeroes(field, putTo, shipsKey.length);
-                } else {
-                    console.log(field, putTo, shipsKey.length);
-                }
-                await delay(200);
+            if (!placementDone) {
+                await placeShips(p, field);
+                placementDone = true;
+            } else {
+                aiInited = true;
             }
 
+        }
+        // TODO доделать
+        if (aiInited) {
+            const aiBot = ai(field.length);
         }
     }
     secretCodeElem.addEventListener("click", secretClickHandler);

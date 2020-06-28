@@ -172,13 +172,15 @@ export default function battle(document, window, field, fieldEnemy, color) {
         move(e, fireEnemy);
     }
 
-    if (settings.currentMode === 'hotseat') {
+    function enableHotSeat() {
         myRiver.addEventListener("click", clickHandlerEnemy);
     }
+
     river.addEventListener("click", clickHandlerMy);
     return {
         fireEnemy: fireEnemy,
         firePlayer: firePlayer,
-        on: on
+        on: on,
+        enableHotSeat: enableHotSeat
     }
 }

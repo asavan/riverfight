@@ -1,4 +1,4 @@
-import {ai} from "./ai";
+import {ai, generateAiField} from "./ai";
 import battle from "./battle";
 import {VERDICT} from "./core";
 
@@ -6,9 +6,10 @@ export default function aiActions(field, initObj, color) {
     if (initObj) {
         initObj.onOpponentReady();
     }
-    const aiBot = ai(field.length, -1);
+    const fieldEnemy = generateAiField(-1);
+    const aiBot = ai(field.length);
     const gameColor = color || 'blue';
-    const g = battle(document, window, field, aiBot.getFieldEnemy(), gameColor);
+    const g = battle(document, window, field, fieldEnemy, gameColor);
 
     function onAiMove(verdict) {
         const n = aiBot.guess(verdict);

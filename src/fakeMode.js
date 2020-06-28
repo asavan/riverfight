@@ -5,12 +5,13 @@ import settings from "./settings";
 import protocol from "./protocol";
 
 export default function fake() {
-    const aiBot = ai(generateAiField(1).length, 1);
+    const field = generateAiField(1);
+    const aiBot = ai(field.length);
     const host = window.location.hostname;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const color = urlParams.get('color') || 'blue';
-    const g = battle(document, window, generateAiField(1), aiBot.getFieldEnemy(), color);
+    const g = battle(document, window, field, field, color);
 
     console.log(host);
     connection.connect(host, settings.wsPort, color);

@@ -19,9 +19,12 @@ export default function netGame() {
     let isOpponentReady = false;
     let g = null;
     const enemyFieldPromise = defer();
+    const battlePromise = defer();
 
+    const myField = placement(document);
 
-    if (!forceAi) {
+    let useNetwork = !forceAi && window.location.protocol !== 'https:';
+    if (useNetwork) {
         connection.on('socket_open', () => {
             const url = new URL(window.location.href);
             url.searchParams.set('color', getOtherColor(color));
@@ -38,10 +41,7 @@ export default function netGame() {
             useAi = true;
             console.log(e);
         }
-    }
 
-    const myField = placement(document);
-    if (!forceAi) {
         connection.on('open', () => {
             useAi = false;
         });
@@ -61,12 +61,12 @@ export default function netGame() {
         });
     }
 
-
     myField.myFieldPromise.then((initObj) => {
         const field = initObj.field;
         if (useAi) {
             hideElem(code);
             g = aiActions(field, initObj, color);
+            battlePromise.resolve(g);
         } else {
             printLetterByLetter("Ждем оппонента", 70, false, 100000);
             const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
@@ -80,12 +80,13 @@ export default function netGame() {
                 initObj.onOpponentReady();
                 g = battle(document, window, field, enemyField, color);
                 g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
+                battlePromise.resolve(g);
             });
         }
     });
 
     function getBattle() {
-        return g;
+        return battlePromise;
     }
     return {myField, getBattle};
 

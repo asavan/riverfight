@@ -65,8 +65,7 @@ export function generateAiField(ind) {
     return fields[ind];
 }
 
-export function ai(len, fieldNum) {
-    const fieldEnemy = generateAiField(fieldNum);
+export function ai(len) {
     const field = new Array(len).fill(VERDICT.NONE);
     let lastMove = -1;
     let prevDirection = 0;
@@ -125,12 +124,7 @@ export function ai(len, fieldNum) {
         return lastMove;
     }
 
-    function getFieldEnemy() {
-        return fieldEnemy;
-    }
-
     return {
-        getFieldEnemy: getFieldEnemy,
         guess: guessPublic
     }
 }
