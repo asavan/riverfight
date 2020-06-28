@@ -30,9 +30,7 @@ function connect(socketUrl, color) {
         handlers['socket_open']();
         user = color;
         user2 = getOtherColor(color);
-        if (user === 'blue') {
-            peerConnection = connectToSecond(ws);
-        }
+        sendNegotiation("connected", {color: user}, ws);
     }
     ws.onclose = function (e) {
         console.log("Websocket closed");
@@ -42,7 +40,7 @@ function connect(socketUrl, color) {
     ws.onmessage = function (e) {
 
         const json = JSON.parse(e.data);
-        if (json.to !== user) {
+        if (json.from === user) {
             // console.log("same user");
             return;
         }
@@ -57,6 +55,10 @@ function connect(socketUrl, color) {
         } else if (json.action === "answer") {
             // incoming answer
             processAnswer(json.data, peerConnection);
+        } else if (json.action === "connected") {
+            peerConnection = connectToSecond();
+        } else {
+            console.log("Unknown type " + json.action);
         }
     }
     ws.onerror = function (e) {
