@@ -79,3 +79,16 @@ export function placementAutomation(p) {
     }
     secretCodeElem.addEventListener("click", secretClickHandler);
 }
+
+
+export function enableSecretMenu(p) {
+    const secretCodeElem = document.querySelector(".secret-code2");
+    let clickCount = 0;
+    const secretClickHandler = async function (e) {
+        ++clickCount;
+        if (clickCount >= 3) {
+            window.location.href = "https://asavan.github.io/";
+        }
+    }
+    secretCodeElem.addEventListener("click", secretClickHandler);
+}
