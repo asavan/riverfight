@@ -10,10 +10,13 @@ import battle from "./battle";
 
 function getWebSocketUrl(socketUrl, host) {
     if (window.location.protocol === 'https:') {
-        if (socketUrl) {
-            return "wss://" + socketUrl;
-        }
+        // if (socketUrl) {
+        //     return "wss://" + socketUrl;
+        // }
         return null;
+    }
+    if (socketUrl) {
+        return "ws://" + socketUrl;
     }
     return "ws://" + host + ":" + settings.wsPort
 }
