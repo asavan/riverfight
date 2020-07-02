@@ -1,6 +1,5 @@
 import {getVerdict, VERDICT, verdictToMessage, applyBothSides} from './core.js';
 import {move, width, getTemplateByName, createField, printLetterByLetter} from './helper.js';
-import settings from "./settings";
 
 
 function getEmemyRiver(grid) {
@@ -67,19 +66,35 @@ export default function battle(document, window, field, fieldEnemy, color) {
         'gameover': stub
     }
 
+    function showEndMessage(message, subMsg) {
+        const overlay = document.getElementsByClassName("overlay")[0];
+        const close = document.getElementsByClassName("close")[0];
+
+        close.addEventListener("click", function (e) {
+            e.preventDefault();
+            overlay.classList.remove("show");
+        }, false);
+
+
+        const h2 = overlay.querySelectorAll('h2')[0];
+        h2.textContent = message;
+        const content = overlay.querySelectorAll('.content')[0];
+        content.textContent = "";
+        if (subMsg) {
+            content.textContent = subMsg;
+        }
+        overlay.classList.add('show');
+    }
+
 
     function loose() {
-        handlers['gameover'](true);
-        setTimeout(() => {
-            alert("Ты проиграл");
-        }, 700);
+        handlers['gameover'](false);
+        showEndMessage("Ты проиграл", "В другой раз повезет");
     }
 
     function victory() {
         handlers['gameover'](true);
-        setTimeout(() => {
-            alert("Победа");
-        }, 700);
+        showEndMessage("Победа", "А ты хорош!");
     }
 
 

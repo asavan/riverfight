@@ -288,6 +288,60 @@ body {
     cursor: pointer;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 500ms;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.overlay.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    width: 80%;
+    position: relative;
+    transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+    margin-top: 0;
+    color: #333;
+    font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+.popup .close:hover {
+    color: royalblue;
+}
+
+.popup .content {
+    max-height: 30%;
+    overflow: auto;
+}
+
+
 @media (max-width: 450px) {
     .grid {
         width: calc(100vw - 10px);
@@ -308,7 +362,7 @@ body {
 
     .header1 {
         font-size: 1.5em;
-        padding-top: 9px;
+        padding-top: 13px;
         letter-spacing: 0.3em;
     }
 
@@ -316,8 +370,12 @@ body {
         display: flex;
         /*justify-content: space-between;*/
         padding-left: 19px;
-        padding-top: 21px;
+        padding-top: 20px;
         /*margin-right: 20px;*/
+    }
+
+    .adjust-second {
+        padding-top: 53px;
     }
 
     .ship {
