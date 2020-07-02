@@ -412,7 +412,23 @@ function render(url) {
     const svg = qrcode.svg();
     const element = document.querySelector(".qrcode");
     element.innerHTML = svg;
+    bigPicture(element);
     return element;
 }
+
+function bigPicture(elem) {
+    let clicked = false;
+    const clickHandler = function() {
+        clicked = !clicked;
+        if (clicked) {
+            elem.classList.add("big");
+        } else {
+            elem.classList.remove("big");
+        }
+    }
+    elem.addEventListener("click", clickHandler);
+
+}
+
 
 export default {render};

@@ -103,6 +103,13 @@ body {
     height: 100%;
 }
 
+.qrcode.big {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 823px;
+}
+
 .field {
     padding-left: 60px;
     /*padding-top: 60px;*/
@@ -320,5 +327,11 @@ body {
         height: 50%;
     }
 
+    .qrcode.big {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(100vw - 10px);
+    }
 
 }
