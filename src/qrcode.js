@@ -427,7 +427,6 @@ function bigPicture(elem) {
         }
     }
     elem.addEventListener("click", clickHandler);
-
 }
 
 

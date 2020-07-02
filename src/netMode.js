@@ -1,4 +1,4 @@
-import {defer, hideElem, printLetterByLetter} from "./helper";
+import {defer, removeElem, printLetterByLetter} from "./helper";
 import connection from "./connection";
 import {getOtherColor} from "./core";
 import qr from "./qrcode";
@@ -47,7 +47,7 @@ export default function netGame() {
         });
 
         connection.on('socket_close', () => {
-            hideElem(code);
+            removeElem(code);
         });
 
         try {
@@ -79,7 +79,7 @@ export default function netGame() {
     myField.myFieldPromise.then((initObj) => {
         const field = initObj.field;
         if (useAi) {
-            hideElem(code);
+            removeElem(code);
             g = aiActions(field, initObj, color);
             battlePromise.resolve(g);
         } else {

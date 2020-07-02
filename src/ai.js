@@ -47,7 +47,7 @@ function randomDirection() {
     if (dir === 0) {
         return -1;
     }
-    return dir;
+    return 1;
 }
 
 export function generateAiField(ind) {
@@ -76,7 +76,10 @@ export function ai(len) {
         }
         field[lastMove] = currVerdict;
         if (currVerdict === VERDICT.HIT) {
-            prevDirection = randomDirection();
+            if (prevDirection === 0) {
+                prevDirection = randomDirection();
+            }
+
             let ind = -1;
             applyToFirstNonNone(field, lastMove, prevDirection, (j) => {
                 ind = j;

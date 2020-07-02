@@ -21,6 +21,10 @@ body {
     display: none;
 }
 
+.hidden2 {
+    display: none;
+}
+
 @keyframes blink {
     50% {
         border-color: transparent;
@@ -270,6 +274,18 @@ body {
 .qrcode {
     width: 300px;
     height: 300px;
+}
+
+.install {
+    margin-top: 20px;
+    max-width: 456px;
+    background-color: royalblue;
+    text-align: center;
+    font: bold 24px/100px Tahoma, sans;
+    height: calc((100vw - 56px) / 4);
+    max-height: 100px;
+    width: 100%;
+    cursor: pointer;
 }
 
 @media (max-width: 450px) {

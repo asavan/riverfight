@@ -55,17 +55,6 @@ function putDotHtml2(n, river, isEnemy) {
 }
 
 
-function loose() {
-    setTimeout(() => {
-        alert("Ты проиграл");
-    }, 700);
-}
-
-function victory() {
-    setTimeout(() => {
-        alert("Победа");
-    }, 700);
-}
 
 export default function battle(document, window, field, fieldEnemy, color) {
     console.log("game begin!");
@@ -73,8 +62,26 @@ export default function battle(document, window, field, fieldEnemy, color) {
     const handlers = {
         'playerMove': stub,
         'enemyMove': stub,
-        'aiMove': stub
+        'meMove': stub,
+        'aiMove': stub,
+        'gameover': stub
     }
+
+
+    function loose() {
+        handlers['gameover'](true);
+        setTimeout(() => {
+            alert("Ты проиграл");
+        }, 700);
+    }
+
+    function victory() {
+        handlers['gameover'](true);
+        setTimeout(() => {
+            alert("Победа");
+        }, 700);
+    }
+
 
     function on(name, f) {
         handlers[name] = f;
@@ -83,6 +90,11 @@ export default function battle(document, window, field, fieldEnemy, color) {
     function onEnemyMove(param) {
         return handlers['aiMove'](param);
     }
+
+    function onMeMove(param) {
+        return handlers['meMove'](param);
+    }
+
 
     function start() {
 
@@ -98,7 +110,7 @@ export default function battle(document, window, field, fieldEnemy, color) {
         realField: field,
         guessedField: new Array(field.length).fill(VERDICT.NONE),
         htmlRiver: myRiver,
-        onOpponentMiss: stub,
+        onOpponentMiss: onMeMove,
         onOpponentHit: onEnemyMove,
         isEnemy: false
     };
@@ -108,7 +120,7 @@ export default function battle(document, window, field, fieldEnemy, color) {
         guessedField: new Array(field.length).fill(VERDICT.NONE),
         htmlRiver: river,
         onOpponentMiss: onEnemyMove,
-        onOpponentHit: stub,
+        onOpponentHit: onMeMove,
         isEnemy: true
     };
 

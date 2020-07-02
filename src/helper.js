@@ -27,6 +27,12 @@ export function hideElem(el) {
     }
 }
 
+export function removeElem(el) {
+    if (el) {
+        el.remove();
+    }
+}
+
 export function createField(grid) {
     const t = getTemplateByName('#field-template');
     const f = t.content.cloneNode(true);
