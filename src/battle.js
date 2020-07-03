@@ -173,16 +173,16 @@ export default function battle(document, window, field, fieldEnemy, color) {
         if (!isEnemyPlayer) {
             return;
         }
-        fire(n);
         handlers['enemyMove'](n);
+        fire(n);
     }
 
     function firePlayer(n) {
         if (isEnemyPlayer) {
             return;
         }
-        fire(n);
         handlers['playerMove'](n);
+        fire(n);
     }
 
     function clickHandlerMy(e) {
@@ -202,12 +202,16 @@ export default function battle(document, window, field, fieldEnemy, color) {
     function enableHotSeat() {
         myRiver.addEventListener("click", clickHandlerEnemy);
     }
+    function surrender() {
+        // TODO surrender on AI crash
+    }
 
     river.addEventListener("click", clickHandlerMy);
     return {
         fireEnemy: fireEnemy,
         firePlayer: firePlayer,
         on: on,
-        enableHotSeat: enableHotSeat
+        enableHotSeat: enableHotSeat,
+        color: color
     }
 }

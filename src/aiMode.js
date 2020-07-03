@@ -20,6 +20,9 @@ export default function aiActions(field, initObj, color) {
     }
 
     g.on('aiMove', onAiMove);
-    onAiMove(VERDICT.MISS);
+    g.on('enemyMove', (n) => aiBot.setLastMove(n));
+    if (color === 'red') {
+        onAiMove(VERDICT.MISS);
+    }
     return g;
 }

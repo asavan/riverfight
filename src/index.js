@@ -5,17 +5,22 @@ import {startGame} from "./starter.js";
 import {placementAutomation, enableSecretMenu} from "./automation.js";
 
 const game = startGame(settings.currentMode);
-enableSecretMenu();
+enableSecretMenu(game);
 if (game && game.myField) {
-    placementAutomation(game.myField);
+    placementAutomation(game.myField, game);
 }
 
-game.getBattle().then(g => {
-    g.on("gameover", (res) => {
-        const btnAdd = document.querySelector('.butInstall');
-        btnAdd.classList.remove("hidden2");
+try {
+    game.getBattle().then(g => {
+        g.on("gameover", (res) => {
+            const btnAdd = document.querySelector('.butInstall');
+            btnAdd.classList.remove("hidden2");
+        });
     });
-});
+
+} catch (e) {
+    console.log(e);
+}
 
 function install(window, document) {
     const btnAdd = document.querySelector('.butInstall');

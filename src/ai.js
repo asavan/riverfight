@@ -16,6 +16,10 @@ function chooseRandomIndex(field) {
             ++noneCount;
         }
     }
+    if (noneCount === 0) {
+        throw "Illegal state";
+        // return -1;
+    }
     return randomIndex(noneCount);
 }
 
@@ -32,9 +36,9 @@ function getRandomIndex(field) {
             break;
         }
     }
-    // if (i >= field.length || i < 0) {
-    //     console.table("Error out", i, field);
-    // }
+    if (i >= field.length || i < 0) {
+        console.table("Error out", i, field);
+    }
     // if (prevIndex === i) {
     //     console.table("Error repeated", i, field);
     // }
@@ -65,14 +69,19 @@ export function generateAiField(ind) {
     return fields[ind];
 }
 
-export function ai(len) {
-    const field = new Array(len).fill(VERDICT.NONE);
+export function ai(len, color) {
+    let field = new Array(len).fill(VERDICT.NONE);
     let lastMove = -1;
     let prevDirection = 0;
+    let prevIndex = -1;
+    let selfColor = color;
 
     function guess(field, currVerdict) {
         if (lastMove < 0) {
             return getRandomIndex(field);
+        }
+        if (lastMove >= field.length) {
+            throw "Illegal state";
         }
         field[lastMove] = currVerdict;
         if (currVerdict === VERDICT.HIT) {
@@ -100,7 +109,7 @@ export function ai(len) {
         if (currVerdict === VERDICT.KILL) {
             applyBothSides(field, lastMove, (ind) => {
                 field[ind] = VERDICT.IMPOSSIBLE_BY_RULES;
-            })
+            });
             prevDirection = 0;
             return getRandomIndex(field);
         } else if (currVerdict === VERDICT.MISS) {
@@ -114,6 +123,8 @@ export function ai(len) {
                     return ind;
                 }
                 console.table("Err", currVerdict, prevDirection, lastMove, field);
+                // should never happen;
+                prevDirection = 0;
                 return getRandomIndex(field);
             }
             return getRandomIndex(field);
@@ -123,11 +134,32 @@ export function ai(len) {
     }
 
     function guessPublic(currVerdict) {
-        lastMove = guess(field, currVerdict);
-        return lastMove;
+        const move = guess(field, currVerdict);
+        if (move >= field.length || move < 0) {
+            console.log(lastMove, prevDirection, field, move, currVerdict);
+            throw "Illegal state1";
+        }
+        if (move === prevIndex) {
+            console.error("Same index", move);
+        }
+        prevIndex = move;
+        // console.log(selfColor, lastMove, prevDirection, field);
+        return move;
+    }
+
+    function setFieldAndDirection(f, d, lastM) {
+        field = f;
+        prevDirection = d;
+        lastMove = lastM;
+    }
+
+    function setLastMove(n) {
+        lastMove = n;
     }
 
     return {
-        guess: guessPublic
+        guess: guessPublic,
+        setFieldAndDirection,
+        setLastMove
     }
 }

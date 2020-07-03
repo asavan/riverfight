@@ -1,6 +1,7 @@
 import {generateAiField} from "./ai.js";
 import {delay} from "./helper.js";
 import {ai} from "./ai";
+import {VERDICT} from "./core";
 
 function findPlaceToShip(field, len) {
     let start = -1;
@@ -52,7 +53,7 @@ async function placeShips(p, field) {
     }
 }
 
-export function placementAutomation(p) {
+export function placementAutomation(p, game) {
     const secretCodeElem = document.querySelector(".secret-code");
 
     let clickCount = 0;
@@ -62,32 +63,68 @@ export function placementAutomation(p) {
 
     const secretClickHandler = async function (e) {
         ++clickCount;
-        if (clickCount >= 3) {
+        if (clickCount > 3) {
             clickCount = 0;
             if (!placementDone) {
                 await placeShips(p, field);
                 placementDone = true;
             } else {
+                if (!aiInited) {
+                    playerAi(game);
+                }
                 aiInited = true;
             }
 
-        }
-        // TODO доделать
-        if (aiInited) {
-            const aiBot = ai(field.length);
         }
     }
     secretCodeElem.addEventListener("click", secretClickHandler);
 }
 
 
-export function enableSecretMenu(p) {
+function playerAi(game) {
+    return game.getBattle().then(g => {
+        const field = generateAiField(-1);
+        const aiBot = ai(field.length, g.color);
+
+        function onAiMove1(verdict) {
+            const n = aiBot.guess(verdict);
+            // console.log("ai move " + n);
+            setTimeout(() => {
+                g.firePlayer(n);
+            }, 1000);
+        }
+
+        g.on('meMove', onAiMove1);
+        g.on('playerMove', (n) => {
+            console.log("Player move " + n);
+            aiBot.setLastMove(n)
+        });
+        onAiMove1(VERDICT.MISS);
+        return true;
+    });
+}
+
+export function enableSecretMenu(game) {
     const secretCodeElem = document.querySelector(".secret-code2");
     let clickCount = 0;
+    let aiInited = false;
     const secretClickHandler = async function (e) {
         ++clickCount;
-        if (clickCount >= 3) {
+        if (clickCount >= 10) {
             window.location.href = "https://asavan.github.io/";
+        }
+        if (clickCount > 3) {
+            if (aiInited) {
+                return ;
+            }
+            if (game) {
+                if (aiInited) {
+                    console.log("inited");
+                    return false;
+                }
+                aiInited = true;
+                playerAi(game);
+            }
         }
     }
     secretCodeElem.addEventListener("click", secretClickHandler);
