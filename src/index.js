@@ -4,22 +4,34 @@ import settings from "./settings.js";
 import {startGame} from "./starter.js";
 import {placementAutomation, enableSecretMenu} from "./automation.js";
 
-const game = startGame(settings.currentMode);
-enableSecretMenu(game);
-if (game && game.myField) {
-    placementAutomation(game.myField, game);
+function starter() {
+    const game = startGame(settings.currentMode);
+    enableSecretMenu(game);
+    if (game && game.myField) {
+        placementAutomation(game.myField, game);
+    }
+
+    try {
+        game.getBattle().then(g => {
+            g.on("gameover", (res) => {
+                const btnAdd = document.querySelector('.butInstall');
+                btnAdd.classList.remove("hidden2");
+            });
+        });
+
+    } catch (e) {
+        console.log(e);
+    }
 }
 
-try {
-    game.getBattle().then(g => {
-        g.on("gameover", (res) => {
-            const btnAdd = document.querySelector('.butInstall');
-            btnAdd.classList.remove("hidden2");
+function launch(f) {
+    if( document.readyState !== 'loading' ) {
+        f();
+    } else {
+        document.addEventListener("DOMContentLoaded", function (event) {
+            f();
         });
-    });
-
-} catch (e) {
-    console.log(e);
+    }
 }
 
 function install(window, document) {
@@ -49,6 +61,9 @@ function install(window, document) {
     });
     return btnAdd;
 }
+
+
+launch(starter);
 
 if (__USE_SERVICE_WORKERS__) {
     if ('serviceWorker' in navigator) {

@@ -8,6 +8,7 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const {GenerateSW} = require('workbox-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const getLocalExternalIP = () => [].concat(...Object.values(os.networkInterfaces()))
     .filter(details => details.family === 'IPv4' && !details.internal)
@@ -42,7 +43,14 @@ module.exports = (env, argv) => {
             ]
         },
         optimization: {
-            minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+            minimizer: [new TerserJSPlugin({
+                terserOptions: {
+                    mangle: true,
+                    compress: {
+                        drop_console: true
+                    }
+                }
+            }), new OptimizeCSSAssetsPlugin({})],
         },
         plugins: [
             new CleanWebpackPlugin(),
@@ -54,8 +62,12 @@ module.exports = (env, argv) => {
                 // template: require("html-webpack-template"),
                 minify: false,
                 filename: devMode ? "./index.html" : "../index.html",
-                __USE_SERVICE_WORKERS__ : !devMode
+                __USE_SERVICE_WORKERS__: !devMode,
+                inject: 'head'
                 // filename: 'index.html'
+            }),
+            new ScriptExtHtmlWebpackPlugin({
+                defaultAttribute: 'async'
             }),
             // new webpack.HotModuleReplacementPlugin(),
             new MiniCssExtractPlugin({

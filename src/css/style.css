@@ -243,6 +243,7 @@ body {
 
 .secret-code {
     cursor: crosshair;
+    user-select: none;
 }
 
 .header1 {
@@ -277,15 +278,16 @@ body {
 }
 
 .install {
-    margin-top: 20px;
-    max-width: 456px;
-    background-color: royalblue;
+    margin-top: 10px;
+    background-color: var(--main-inc-color);
     text-align: center;
     font: bold 24px/100px Tahoma, sans;
-    height: calc((100vw - 56px) / 4);
+    height: 100px;
     max-height: 100px;
     width: 100%;
     cursor: pointer;
+    padding: 0;
+    border: none;
 }
 
 .overlay {
