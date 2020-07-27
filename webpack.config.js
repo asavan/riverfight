@@ -15,7 +15,7 @@ const getLocalExternalIP = () => [].concat(...Object.values(os.networkInterfaces
     .pop().address
 
 module.exports = (env, argv) => {
-    const devMode = (argv.mode !== 'production');
+    const devMode = !argv || (argv.mode !== 'production');
     let addr = getLocalExternalIP() || '0.0.0.0';
     return {
 
