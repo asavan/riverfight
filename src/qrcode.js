@@ -417,17 +417,7 @@ function render(url) {
 }
 
 function bigPicture(elem) {
-    let clicked = false;
-    const clickHandler = function() {
-        clicked = !clicked;
-        if (clicked) {
-            elem.classList.add("big");
-        } else {
-            elem.classList.remove("big");
-        }
-    }
-    elem.addEventListener("click", clickHandler);
+    elem.addEventListener("click", () => elem.classList.toggle("big"));
 }
-
 
 export default {render};
