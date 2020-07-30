@@ -1,7 +1,7 @@
 import {defer, removeElem, printLetterByLetter} from "./helper";
 import connection from "./connection";
 import {getOtherColor} from "./core";
-import qr from "./qrcode";
+import qrRender from "./qrcode.js";
 import settings from "./settings";
 import placement from "./placement";
 import protocol from "./protocol";
@@ -43,7 +43,7 @@ export default function netGame() {
         connection.on('socket_open', () => {
             const url = new URL(staticHost);
             url.searchParams.set('color', getOtherColor(color));
-            code = qr.render(url.toString());
+            code = qrRender(url.toString(), document.querySelector(".qrcode"));
         });
 
         connection.on('socket_close', () => {

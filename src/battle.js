@@ -110,11 +110,6 @@ export default function battle(document, window, field, fieldEnemy, color) {
         return handlers['meMove'](param);
     }
 
-
-    function start() {
-
-    }
-
     // TODO
     let isEnemyPlayer = color !== 'blue';
     const grid = document.querySelector(".grid");

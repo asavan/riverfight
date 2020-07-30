@@ -34,7 +34,7 @@ export default function fake() {
     g.on('aiMove', onAiMove);
 
     connection.on('recv', (data) => {
-        console.log("recieved", data);
+        console.log("received", data);
         protocol.parser(data, 'move', (n) => {
             g.fireEnemy(n);
         });

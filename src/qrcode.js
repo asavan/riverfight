@@ -403,21 +403,20 @@ QRCode.prototype.svg = function(opt) {
     return svg;
 };
 
-function render(url) {
+function bigPicture(elem) {
+    elem.addEventListener("click", () => elem.classList.toggle("big"));
+}
+
+function render(url, element) {
     const qrcode = new QRCode({
         content: url,
         container: "svg-viewbox", //Responsive use
         join: true //Crisp rendering and 4-5x reduced file size
     });
     const svg = qrcode.svg();
-    const element = document.querySelector(".qrcode");
     element.innerHTML = svg;
     bigPicture(element);
     return element;
 }
 
-function bigPicture(elem) {
-    elem.addEventListener("click", () => elem.classList.toggle("big"));
-}
-
-export default {render};
+export default render;
