@@ -79,7 +79,7 @@ body {
     }
 }
 
-.choosen { /*or other element you want*/
+.choosen {
     animation: blink .5s step-end infinite alternate;
 }
 
@@ -148,8 +148,6 @@ body {
     line-height: 24px;
     /*font-style: italic;*/
     font-family: monospace;
-    /*letter-spacing: 10px;*/
-    /*margin-bottom: 29px;*/
 }
 
 .frame-text span {
@@ -183,7 +181,6 @@ body {
 
 .ship_river {
     height: 19px;
-    /*border: solid 1px var(--main-inc-color);*/
     position: absolute;
     pointer-events: none;
     top: 0
@@ -191,16 +188,12 @@ body {
 
 .dot {
     height: 19px;
-    /*border: solid 1px var(--main-inc-color);*/
     position: absolute;
     pointer-events: none;
     color: var(--main-inc-color);
-    /*top: 2px;*/
     bottom: 2px;
     font-size: 20px;
-    /*background-color: lightcyan;*/
     text-align: center;
-    /*vertical-align: middle;*/
 }
 
 .ship.disabled {
@@ -370,10 +363,8 @@ body {
 
     .shipyard {
         display: flex;
-        /*justify-content: space-between;*/
         padding-left: 19px;
         padding-top: 20px;
-        /*margin-right: 20px;*/
     }
 
     .adjust-second {
@@ -395,11 +386,9 @@ body {
         height: 100%;
         display: flex;
         flex-wrap: wrap;
-        /*justify-content: space-around;*/
     }
 
     .container {
-        /*width: 300px;*/
         height: 50%;
     }
 
@@ -409,5 +398,4 @@ body {
         left: 0;
         width: calc(100vw - 10px);
     }
-
 }

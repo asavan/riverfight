@@ -4,9 +4,9 @@ const os = require('os');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const WebpackMd5Hash = require('webpack-md5-hash');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const HashOutput = require('webpack-plugin-hash-output');
 const {GenerateSW} = require('workbox-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
@@ -22,7 +22,7 @@ module.exports = (env, argv) => {
         entry: {main: "./src/index.js"},
         output: {
             path: path.resolve(__dirname, "dist"),
-            filename: devMode ? "[name].js" : "[name].[contenthash].js",
+            filename: devMode ? "[name].js" : "[name].[chunkhash].js",
             publicPath: devMode ? "/" : "./dist/"
             // publicPath: "./dist/"
         },
@@ -54,14 +54,13 @@ module.exports = (env, argv) => {
         },
         plugins: [
             new CleanWebpackPlugin(),
-            new WebpackMd5Hash(),
+            new HashOutput(),
             new HtmlWebpackPlugin({
                 favicon: "./assets/boat7.svg",
                 template: "./src/index.html",
                 minify: false,
                 filename: devMode ? "./index.html" : "../index.html",
-                __USE_SERVICE_WORKERS__: !devMode,
-                inject: 'head'
+                inject: 'head',
                 // filename: 'index.html'
             }),
             new ScriptExtHtmlWebpackPlugin({
