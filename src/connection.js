@@ -14,13 +14,14 @@ const handlers = {
     'open': stub,
     'socket_open': stub,
     'socket_close': stub,
+    'server_message': stub,
 }
 
 function on(name, f) {
     handlers[name] = f;
 }
 
-function connect(socketUrl, color) {
+function connect(socketUrl, color, serverOnly) {
     ws = new WebSocket(socketUrl);
 
     let peerConnection = null;
@@ -28,9 +29,11 @@ function connect(socketUrl, color) {
     ws.onopen = function (e) {
         console.log("Websocket opened");
         handlers['socket_open']();
-        user = color;
-        user2 = getOtherColor(color);
-        sendNegotiation("connected", {color: user}, ws);
+        if (!serverOnly) {
+            user = color;
+            user2 = getOtherColor(color);
+            sendNegotiation("connected", {color: user}, ws);
+        }
     }
     ws.onclose = function (e) {
         console.log("Websocket closed");
@@ -46,6 +49,11 @@ function connect(socketUrl, color) {
         }
         console.log("Websocket message received: " + e.data);
 
+        if (serverOnly) {
+            handlers['server_message'](e.data);
+            return;
+        }
+
         if (json.action === "candidate") {
             processIce(json.data, peerConnection);
         } else if (json.action === "offer") {
@@ -57,6 +65,8 @@ function connect(socketUrl, color) {
             processAnswer(json.data, peerConnection);
         } else if (json.action === "connected") {
             peerConnection = connectToSecond();
+        } else if (json.action === "close") {
+            console.log("close " + json.from);
         } else {
             console.log("Unknown type " + json.action);
         }
@@ -114,6 +124,7 @@ function openDataChannel(ws) {
     dataChannel.onopen = function () {
         console.log("------ DATACHANNEL OPENED ------");
         isConnected = true;
+        sendNegotiation("close", {}, ws);
         ws.close();
         handlers['open']();
     };

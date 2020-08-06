@@ -3,16 +3,8 @@ import battle from "./battle";
 import connection from "./connection";
 import settings from "./settings";
 import protocol from "./protocol";
+import {getWebSocketUrl} from "./helper";
 
-function getWebSocketUrl(host) {
-    let prefix = "ws://";
-    if (window.location.protocol === 'https:') {
-        prefix = "wss://";
-    }
-
-    // return prefix + host + ":" + wsPort
-    return prefix + host;
-}
 
 export default function fake() {
     const field = generateAiField(1);
@@ -24,7 +16,7 @@ export default function fake() {
     const g = battle(document, window, field, field, color);
 
     console.log(host);
-    connection.connect(getWebSocketUrl(host + ":" + settings.wsPort), color);
+    connection.connect(getWebSocketUrl(null, host, settings), color, false);
 
     function onAiMove(verdict) {
         const n = aiBot.guess(verdict);

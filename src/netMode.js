@@ -1,31 +1,20 @@
-import {defer, removeElem, printLetterByLetter} from "./helper";
+import {defer, removeElem, printLetterByLetter, getWebSocketUrl} from "./helper";
 import connection from "./connection";
 import {getOtherColor} from "./core";
 import qrRender from "./qrcode.js";
-import settings from "./settings";
 import placement from "./placement";
 import protocol from "./protocol";
 import aiActions from "./aiMode.js";
 import battle from "./battle";
 
-function getWebSocketUrl(socketUrl, host) {
-    if (window.location.protocol === 'https:') {
-        return null;
-    }
-    if (socketUrl) {
-        return "ws://" + socketUrl;
-    }
-    return "ws://" + host + ":" + settings.wsPort
-}
-
-export default function netGame() {
+export default function netGame(window, document, settings) {
     const host = window.location.hostname;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const color = urlParams.get('color') || 'blue';
     const forceAi = !!urlParams.get('forceAi');
     let useAi = !urlParams.get('color') || urlParams.get('color') === 'red' || forceAi;
-    const socketUrl = getWebSocketUrl(urlParams.get('wh'), host);
+    const socketUrl = getWebSocketUrl(urlParams.get('wh'), host, settings);
     let staticHost = urlParams.get('sh') || window.location.href;
     let code = null;
     let isOpponentReady = false;
@@ -35,12 +24,15 @@ export default function netGame() {
 
     const myField = placement(document);
 
+    // TODO try not remove elements
+    removeElem(document.querySelector(".qr2"));
+
     let useNetwork = !forceAi && !!socketUrl;
     if (useNetwork) {
         connection.on('socket_open', () => {
             const url = new URL(staticHost);
             url.searchParams.set('color', getOtherColor(color));
-            code = qrRender(url.toString(), document.querySelector(".qrcode"));
+            code = qrRender(url.toString(), document.querySelector(".qr1"));
         });
 
         connection.on('socket_close', () => {
@@ -48,7 +40,7 @@ export default function netGame() {
         });
 
         try {
-            connection.connect(socketUrl, color);
+            connection.connect(socketUrl, color, false);
         } catch (e) {
             useAi = true;
             console.log(e);

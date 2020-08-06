@@ -92,4 +92,24 @@ export function showGameMessage(message) {
     printLetterByLetter(message, 70, false, 2000);
 }
 
+export function getWebSocketUrl(socketUrl, host, settings) {
+    if (window.location.protocol === 'https:') {
+        return null;
+    }
+    if (socketUrl) {
+        return "ws://" + socketUrl;
+    }
+    return "ws://" + host + ":" + settings.wsPort
+}
+
+export function launch(window, document, f) {
+    if( document.readyState !== 'loading' ) {
+        f(window, document);
+    } else {
+        document.addEventListener("DOMContentLoaded", function (event) {
+            f(window, document);
+        });
+    }
+}
+
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
