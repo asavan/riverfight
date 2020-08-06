@@ -1,8 +1,8 @@
 import connection from "./connection.js";
-import {getWebSocketUrl, hideElem, removeElem} from "./helper";
+import {getWebSocketUrl, removeElem} from "./helper.js";
 import qrRender from "./qrcode.js";
 
-const serverColor = 'black';
+const SERVER_COLOR = 'black';
 
 function colorizePath(elem, color) {
     if (!elem) {
@@ -16,7 +16,7 @@ function colorizePath(elem, color) {
 
 function oneQrCode(url, code, color, qrcontainer, document) {
     const element = document.createElement('div');
-    element.classList.add("qrcode");
+    element.classList.add('qrcode');
     qrcontainer.appendChild(element);
     url.searchParams.set('color', color);
     qrRender(url.toString(), element);
@@ -34,26 +34,26 @@ export default function server(window, document, settings) {
     {
         const url = new URL(staticHost);
         url.searchParams.delete('currentMode');
-        const qrcontainer = document.querySelector(".qrcontainerserver");
+        const qrcontainer = document.querySelector('.qrcontainerserver');
         oneQrCode(url, code, 'blue', qrcontainer, document);
         oneQrCode(url, code, 'red', qrcontainer, document);
     }
 
     connection.on('socket_open', () => {
-        colorizePath(code['blue'], "royalblue");
+        colorizePath(code['blue'], 'royalblue');
     });
 
     connection.on('server_message', (message) => {
         const json = JSON.parse(message);
-        if (json.action === "connected") {
-            colorizePath(code[json.from], serverColor);
-        } else if (json.action === "close") {
+        if (json.action === 'connected') {
+            colorizePath(code[json.from], SERVER_COLOR);
+        } else if (json.action === 'close') {
             removeElem(code[json.from]);
         }
     });
 
     try {
-        connection.connect(socketUrl, serverColor, true);
+        connection.connect(socketUrl, SERVER_COLOR, true);
     } catch (e) {
         console.log(e);
     }

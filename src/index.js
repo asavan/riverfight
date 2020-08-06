@@ -2,8 +2,8 @@ import "./css/style.css";
 
 import settings from "./settings.js";
 import {startGame} from "./starter.js";
-import install from "./install_as_app";
-import {launch} from "./helper";
+import install from "./install_as_app.js";
+import {launch} from "./helper.js";
 
 function starter(window, document) {
     const queryString = window.location.search;
