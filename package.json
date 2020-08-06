@@ -4,10 +4,10 @@
   "private": true,
   "description": "A web part of the game",
   "scripts": {
-    "dev-web-soket": "node ws-server.js",
+    "ws": "node ws-server.js",
     "dev": "webpack --mode development --watch",
     "start": "webpack-dev-server --mode development --color",
-    "all": "npm-run-all -p -r dev-web-soket start",
+    "all": "npm-run-all -p -r ws start",
     "build": "webpack --mode production"
   },
   "devDependencies": {

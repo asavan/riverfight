@@ -24,15 +24,16 @@ export default function netGame(window, document, settings) {
 
     const myField = placement(document);
 
-    // TODO try not remove elements
-    removeElem(document.querySelector(".qr2"));
-
     let useNetwork = !forceAi && !!socketUrl;
     if (useNetwork) {
         connection.on('socket_open', () => {
             const url = new URL(staticHost);
             url.searchParams.set('color', getOtherColor(color));
-            code = qrRender(url.toString(), document.querySelector(".qr1"));
+            const qrcontainer = document.querySelector(".qrcontainer");
+            const element = document.createElement('div');
+            element.classList.add("qrcode");
+            qrcontainer.appendChild(element);
+            code = qrRender(url.toString(), element);
         });
 
         connection.on('socket_close', () => {

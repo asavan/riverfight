@@ -14,11 +14,14 @@ function colorizePath(elem, color) {
     }
 }
 
-function oneQrCode(url, code, color, element) {
+function oneQrCode(url, code, color, qrcontainer, document) {
+    const element = document.createElement('div');
+    element.classList.add("qrcode");
+    qrcontainer.appendChild(element);
     url.searchParams.set('color', color);
-    const codeElem = qrRender(url.toString(), element);
-    colorizePath(codeElem, color);
-    code[color] = codeElem;
+    qrRender(url.toString(), element);
+    colorizePath(element, color);
+    code[color] = element;
 }
 
 export default function server(window, document, settings) {
@@ -28,12 +31,16 @@ export default function server(window, document, settings) {
     const socketUrl = getWebSocketUrl(urlParams.get('wh'), host, settings);
     let staticHost = urlParams.get('sh') || window.location.href;
     let code = {};
-    hideElem(document.querySelector(".container"));
-    connection.on('socket_open', () => {
+    {
         const url = new URL(staticHost);
         url.searchParams.delete('currentMode');
-        oneQrCode(url, code, 'blue', document.querySelector(".qr1"));
-        oneQrCode(url, code, 'red', document.querySelector(".qr2"));
+        const qrcontainer = document.querySelector(".qrcontainerserver");
+        oneQrCode(url, code, 'blue', qrcontainer, document);
+        oneQrCode(url, code, 'red', qrcontainer, document);
+    }
+
+    connection.on('socket_open', () => {
+        colorizePath(code['blue'], "royalblue");
     });
 
     connection.on('server_message', (message) => {
