@@ -1,4 +1,4 @@
-import {getVerdict, VERDICT, verdictToMessage, applyBothSides} from './core.js';
+import {getVerdict, VERDICT, verdictToMessage, applyBothSides, isEnemyStartFirst} from './core.js';
 import {move, width, getTemplateByName, createField, printLetterByLetter} from './helper.js';
 
 
@@ -111,7 +111,7 @@ export default function battle(document, window, field, fieldEnemy, color) {
     }
 
     // TODO
-    let isEnemyPlayer = color !== 'blue';
+    let isEnemyPlayer = isEnemyStartFirst(color);
     const grid = document.querySelector(".grid");
     const river = getEmemyRiver(grid);
     const myRiver = document.querySelector(".river");

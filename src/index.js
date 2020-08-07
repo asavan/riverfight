@@ -9,6 +9,7 @@ function starter(window, document) {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     settings.currentMode = urlParams.get('currentMode') || settings.currentMode;
+    settings.color = urlParams.get('color') || settings.color;
     startGame(window, document, settings);
 }
 

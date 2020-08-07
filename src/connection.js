@@ -1,9 +1,9 @@
-import settings from "./settings";
-import {getOtherColor} from "./core";
+import {getOtherColor} from "./core.js";
 
 let ws = null;
 let user = "";
 let user2 = "";
+let localSettings = null;
 
 function stub(message) {
     console.log("Stub " + message);
@@ -21,7 +21,8 @@ function on(name, f) {
     handlers[name] = f;
 }
 
-function connect(socketUrl, color, serverOnly) {
+function connect(socketUrl, color, serverOnly, settings) {
+    localSettings = settings;
     ws = new WebSocket(socketUrl);
 
     let peerConnection = null;
@@ -116,7 +117,7 @@ function openDataChannel(ws) {
         sendNegotiation("candidate", e.candidate, ws);
     }
 
-    dataChannel = peerConnection.createDataChannel("my channel", {negotiated: true, id: settings.negotiatedId});
+    dataChannel = peerConnection.createDataChannel("my channel", {negotiated: true, id: localSettings.negotiatedId});
     dataChannel.onmessage = function (e) {
         handlers['recv'](e.data);
     };

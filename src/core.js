@@ -115,3 +115,7 @@ export function getOtherColor(color) {
     }
     return "";
 }
+
+export function isEnemyStartFirst(color) {
+    return color === 'red';
+}

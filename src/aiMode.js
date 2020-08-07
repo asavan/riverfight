@@ -1,15 +1,14 @@
-import {ai, generateAiField} from "./ai";
-import battle from "./battle";
-import {VERDICT} from "./core";
+import {ai, generateAiField} from "./ai.js";
+import battle from "./battle.js";
+import {VERDICT, isEnemyStartFirst} from "./core.js";
 
-export default function aiActions(field, initObj, color) {
+export default function aiActions(window, document, field, initObj, color) {
     if (initObj) {
         initObj.onOpponentReady();
     }
     const fieldEnemy = generateAiField(-1);
     const aiBot = ai(field.length);
-    const gameColor = color || 'blue';
-    const g = battle(document, window, field, fieldEnemy, gameColor);
+    const g = battle(document, window, field, fieldEnemy, color);
 
     function onAiMove(verdict) {
         const n = aiBot.guess(verdict);
@@ -21,7 +20,7 @@ export default function aiActions(field, initObj, color) {
 
     g.on('aiMove', onAiMove);
     g.on('enemyMove', (n) => aiBot.setLastMove(n));
-    if (color === 'red') {
+    if (isEnemyStartFirst(color)) {
         onAiMove(VERDICT.MISS);
     }
     return g;

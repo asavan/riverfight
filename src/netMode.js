@@ -1,17 +1,17 @@
-import {defer, removeElem, printLetterByLetter, getWebSocketUrl} from "./helper";
-import connection from "./connection";
-import {getOtherColor} from "./core";
+import {defer, removeElem, printLetterByLetter, getWebSocketUrl} from "./helper.js";
+import connection from "./connection.js";
+import {getOtherColor} from "./core.js";
 import qrRender from "./qrcode.js";
-import placement from "./placement";
-import protocol from "./protocol";
+import placement from "./placement.js";
+import protocol from "./protocol.js";
 import aiActions from "./aiMode.js";
-import battle from "./battle";
+import battle from "./battle.js";
 
 export default function netGame(window, document, settings) {
     const host = window.location.hostname;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const color = urlParams.get('color') || 'blue';
+    const color = settings.color;
     const forceAi = !!urlParams.get('forceAi');
     let useAi = !urlParams.get('color') || urlParams.get('color') === 'red' || forceAi;
     const socketUrl = getWebSocketUrl(urlParams.get('wh'), host, settings);
@@ -41,7 +41,7 @@ export default function netGame(window, document, settings) {
         });
 
         try {
-            connection.connect(socketUrl, color, false);
+            connection.connect(socketUrl, color, false, settings);
         } catch (e) {
             useAi = true;
             console.log(e);
@@ -70,7 +70,7 @@ export default function netGame(window, document, settings) {
         const field = initObj.field;
         if (useAi) {
             removeElem(code);
-            g = aiActions(field, initObj, color);
+            g = aiActions(window, document, field, initObj, color);
             battlePromise.resolve(g);
         } else {
             printLetterByLetter("Ждем оппонента", 70, false, 100000);
