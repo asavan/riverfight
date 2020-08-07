@@ -1,3 +1,5 @@
+"use strict";
+
 export const VERDICT = {
     NONE: 0,
     HIT: 1,

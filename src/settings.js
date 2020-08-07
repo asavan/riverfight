@@ -1,3 +1,5 @@
+"use strict";
+
 export default {
     modes: ["net", "fake", "ai", "hotseat", "server"],
     currentMode: "net",

@@ -1,3 +1,5 @@
+"use strict";
+
 import {ai, generateAiField} from "./ai.js";
 import battle from "./battle.js";
 import {VERDICT, isEnemyStartFirst} from "./core.js";

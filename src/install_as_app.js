@@ -1,4 +1,5 @@
 "use strict";
+
 export default function install(window, document) {
     const btnAdd = document.querySelector('.butInstall');
     let deferredPrompt;

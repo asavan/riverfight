@@ -1,3 +1,5 @@
+"use strict";
+
 function parser(data, method, callback) {
     const obj = JSON.parse(data);
     const res = obj[obj.method];

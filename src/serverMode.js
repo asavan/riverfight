@@ -1,5 +1,7 @@
+"use strict";
+
 import connection from "./connection.js";
-import {getWebSocketUrl, removeElem} from "./helper.js";
+import {getSocketUrl, getStaticUrl, removeElem} from "./helper.js";
 import qrRender from "./qrcode.js";
 
 const SERVER_COLOR = 'black';
@@ -25,11 +27,8 @@ function oneQrCode(url, code, color, qrcontainer, document) {
 }
 
 export default function server(window, document, settings) {
-    const host = window.location.hostname;
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const socketUrl = getWebSocketUrl(urlParams.get('wh'), host, settings);
-    let staticHost = urlParams.get('sh') || window.location.href;
+    const socketUrl = getSocketUrl(window.location, settings);
+    let staticHost = getStaticUrl(window.location, settings);
     let code = {};
     {
         const url = new URL(staticHost);

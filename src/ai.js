@@ -1,3 +1,5 @@
+"use strict";
+
 import {VERDICT, applyBothSides, applyToFirstNonNone} from './core.js';
 
 function randomInteger(min, max) {

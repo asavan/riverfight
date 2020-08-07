@@ -1,4 +1,6 @@
-import {defer, removeElem, printLetterByLetter, getWebSocketUrl} from "./helper.js";
+"use strict";
+
+import {defer, removeElem, printLetterByLetter, getSocketUrl, getStaticUrl} from "./helper.js";
 import connection from "./connection.js";
 import {getOtherColor} from "./core.js";
 import qrRender from "./qrcode.js";
@@ -8,14 +10,10 @@ import aiActions from "./aiMode.js";
 import battle from "./battle.js";
 
 export default function netGame(window, document, settings) {
-    const host = window.location.hostname;
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
     const color = settings.color;
-    const forceAi = !!urlParams.get('forceAi');
-    let useAi = !urlParams.get('color') || urlParams.get('color') === 'red' || forceAi;
-    const socketUrl = getWebSocketUrl(urlParams.get('wh'), host, settings);
-    let staticHost = urlParams.get('sh') || window.location.href;
+    let useAi = true;
+    const socketUrl = getSocketUrl(window.location, settings);
+    let staticHost = getStaticUrl(window.location, settings);
     let code = null;
     let isOpponentReady = false;
     let g = null;
@@ -24,7 +22,7 @@ export default function netGame(window, document, settings) {
 
     const myField = placement(document);
 
-    let useNetwork = !forceAi && !!socketUrl;
+    let useNetwork = !!socketUrl;
     if (useNetwork) {
         connection.on('socket_open', () => {
             const url = new URL(staticHost);
@@ -95,5 +93,4 @@ export default function netGame(window, document, settings) {
     }
 
     return {myField, getBattle};
-
 }

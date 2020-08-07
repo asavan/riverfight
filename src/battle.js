@@ -1,3 +1,5 @@
+"use strict";
+
 import {getVerdict, VERDICT, verdictToMessage, applyBothSides, isEnemyStartFirst} from './core.js';
 import {move, width, getTemplateByName, createField, printLetterByLetter} from './helper.js';
 

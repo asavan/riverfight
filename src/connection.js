@@ -1,3 +1,5 @@
+"use strict";
+
 import {getOtherColor} from "./core.js";
 
 let ws = null;

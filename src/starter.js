@@ -1,7 +1,8 @@
+"use strict";
+
 import placement from "./placement.js";
 import aiActions from "./aiMode.js";
 import netGame from "./netMode.js";
-import fake from "./fakeMode.js";
 import server from "./serverMode.js";
 import {defer} from "./helper.js";
 import {enableSecretMenu, placementAutomation} from "./automation.js";
@@ -47,9 +48,6 @@ function startGame(window, document, settings) {
         case "ai":
             game = simpleAiGame(window, document, settings);
             automationAndInstall(game, document);
-            break;
-        case "fake":
-            fake(window, document, settings);
             break;
         case "net":
             game = netGame(window, document, settings);

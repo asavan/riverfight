@@ -1,6 +1,7 @@
-import {move, width, getClickIndex, createField, showGameMessage} from './helper.js';
+"use strict";
+
+import {move, width, getClickIndex, createField, showGameMessage, defer} from './helper.js';
 import {shipsCount, axis} from './core.js';
-import {defer} from "./helper";
 
 export default function placement(document) {
     const myFieldPromise = defer();

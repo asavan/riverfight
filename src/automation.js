@@ -1,7 +1,8 @@
-import {generateAiField} from "./ai.js";
+"use strict";
+
+import {generateAiField, ai} from "./ai.js";
 import {delay} from "./helper.js";
-import {ai} from "./ai";
-import {VERDICT} from "./core";
+import {VERDICT} from "./core.js";
 
 function findPlaceToShip(field, len) {
     let start = -1;

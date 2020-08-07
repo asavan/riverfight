@@ -1,3 +1,5 @@
+"use strict";
+
 import "./css/style.css";
 
 import settings from "./settings.js";
@@ -8,8 +10,9 @@ import {launch} from "./helper.js";
 function starter(window, document) {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    settings.currentMode = urlParams.get('currentMode') || settings.currentMode;
-    settings.color = urlParams.get('color') || settings.color;
+    for (const [key, value] of urlParams) {
+        settings[key] = value;
+    }
     startGame(window, document, settings);
 }
 

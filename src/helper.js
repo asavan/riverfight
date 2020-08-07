@@ -1,3 +1,5 @@
+"use strict";
+
 import {axis} from './core.js';
 
 export const width = 20;
@@ -92,14 +94,22 @@ export function showGameMessage(message) {
     printLetterByLetter(message, 70, false, 2000);
 }
 
-export function getWebSocketUrl(socketUrl, host, settings) {
-    if (window.location.protocol === 'https:') {
+export function getWebSocketUrl(protocol, socketUrl, host, settings) {
+    if (protocol === 'https:') {
         return null;
     }
     if (socketUrl) {
         return "ws://" + socketUrl;
     }
     return "ws://" + host + ":" + settings.wsPort
+}
+
+export function getSocketUrl(location, settings) {
+    return getWebSocketUrl(location.protocol, settings.wh, location.hostname, settings)
+}
+
+export function getStaticUrl(location, settings) {
+    return settings.sh || location.href;
 }
 
 export function launch(window, document, f) {
