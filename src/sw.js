@@ -10,9 +10,10 @@ self.addEventListener('activate', function (evt) {
 });
 
 self.addEventListener('fetch', function (evt) {
-    evt.respondWith(networkOrCache(evt.request).catch(function () {
-        return useFallback();
-    }));
+    evt.respondWith(networkOrCache(evt.request));
+    //     .catch(function () {
+    //     return useFallback();
+    // }));
 });
 
 
@@ -33,7 +34,7 @@ function useFallback() {
 
 function fromCache(request) {
     return caches.open(CACHE).then(function (cache) {
-        return cache.match(request).then(function (matching) {
+        return cache.match(request,  {ignoreSearch: true}).then(function (matching) {
             return matching || Promise.reject('request-not-in-cache');
         });
     });
