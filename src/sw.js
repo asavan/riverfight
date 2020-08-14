@@ -45,6 +45,12 @@ function precache() {
         return cache.addAll([
             "./",
             "./manifest.json",
+            "./assets/maskable_icon.png",
+            "./assets/192.png",
+            "./assets/512.png",
+            "./assets/boat7.svg",
+            "./assets/bloop.mp3",
+            "./assets/windows-98-sound-tada.mp3",
             ...filesToCache
         ]);
     });

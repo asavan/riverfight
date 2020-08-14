@@ -9,7 +9,6 @@ const webpack = require('webpack');
 const HashOutput = require('webpack-plugin-hash-output');
 const {InjectManifest} = require('workbox-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 
 
 const getLocalExternalIP = () => [].concat(...Object.values(os.networkInterfaces()))
@@ -58,7 +57,6 @@ module.exports = (env, argv) => {
             new CleanWebpackPlugin(),
             new HashOutput(),
             new HtmlWebpackPlugin({
-                favicon: "./assets/boat7.svg",
                 template: "./src/index.html",
                 minify: false,
                 filename: devMode ? "./index.html" : "../index.html",
@@ -75,11 +73,6 @@ module.exports = (env, argv) => {
                 swDest: '../sw.js',
                 swSrc: './src/sw.js'
             })]),
-            new CopyPlugin({
-                patterns: [
-                    { from: 'assets' }
-                ],
-            }),
             new webpack.DefinePlugin({
                 __USE_SERVICE_WORKERS__: !devMode
             })

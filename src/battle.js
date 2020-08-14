@@ -123,6 +123,7 @@ export default function battle(document, window, field, fieldEnemy, settings) {
     const river = getEmemyRiver(grid);
     const myRiver = document.querySelector(".river");
     const bloop = document.getElementById("bloop");
+    const tada = document.getElementById("tada");
 
     const player = {
         realField: field,
@@ -158,8 +159,8 @@ export default function battle(document, window, field, fieldEnemy, settings) {
             user.onOpponentMiss(res.verdict);
         } else if (res.verdict === VERDICT.WIN) {
             if (!isEnemyPlayer) {
-                if (settings.useSound && !isEnemyPlayer) {
-                    playSound(bloop);
+                if (settings.useSound) {
+                    playSound(tada);
                 }
                 victory();
             } else {
