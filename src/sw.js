@@ -1,4 +1,4 @@
-const CACHE = 'offline-fallback';
+const CACHE = 'offline-fallback2';
 self.addEventListener('install', function (evt) {
     evt.waitUntil(precache().then(function () {
         return self.skipWaiting();
@@ -6,7 +6,17 @@ self.addEventListener('install', function (evt) {
 });
 
 self.addEventListener('activate', function (evt) {
-    evt.waitUntil(self.clients.claim());
+    caches.keys().then(function (cacheNames) {
+        return Promise.all(
+            cacheNames.map(function (cacheName) {
+                if (cacheName !== CACHE) {
+                    return caches.delete(cacheName);
+                }
+            })
+        );
+    }).then(function () {
+        evt.waitUntil(self.clients.claim());
+    });
 });
 
 self.addEventListener('fetch', function (evt) {
@@ -27,25 +37,24 @@ function networkOrCache(request) {
 }
 
 function useFallback() {
-    return caches.open(CACHE).then(function(cache) {
+    return caches.open(CACHE).then(function (cache) {
         return cache.match('./');
     });
 }
 
 function fromCache(request) {
     return caches.open(CACHE).then(function (cache) {
-        return cache.match(request,  {ignoreSearch: true}).then(function (matching) {
+        return cache.match(request, {ignoreSearch: true}).then(function (matching) {
             return matching || Promise.reject('request-not-in-cache');
         });
     });
 }
 
 function precache() {
-    const filesToCache  = self.__WB_MANIFEST.map((e) => e.url);
+    const filesToCache = self.__WB_MANIFEST.map((e) => e.url);
     return caches.open(CACHE).then(function (cache) {
         return cache.addAll([
             "./",
-            "./index.html",
             "./manifest.json",
             "./assets/maskable_icon.png",
             "./assets/192.png",
