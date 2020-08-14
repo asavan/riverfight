@@ -7,8 +7,10 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const HashOutput = require('webpack-plugin-hash-output');
-const {GenerateSW} = require('workbox-webpack-plugin');
+const {InjectManifest} = require('workbox-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+
 
 const getLocalExternalIP = () => [].concat(...Object.values(os.networkInterfaces()))
     .filter(details => details.family === 'IPv4' && !details.internal)
@@ -69,13 +71,15 @@ module.exports = (env, argv) => {
             new MiniCssExtractPlugin({
                 filename: devMode ? '[name].css' : '[name].[contenthash].css'
             }),
-            ...(devMode ? [] : [new GenerateSW({
+            ...(devMode ? [] : [new InjectManifest({
                 swDest: '../sw.js',
-                // these options encourage the ServiceWorkers to get in there fast
-                // and not allow any straggling "old" SWs to hang around
-                clientsClaim: true,
-                skipWaiting: true,
+                swSrc: './src/sw.js'
             })]),
+            new CopyPlugin({
+                patterns: [
+                    { from: 'assets' }
+                ],
+            }),
             new webpack.DefinePlugin({
                 __USE_SERVICE_WORKERS__: !devMode
             })

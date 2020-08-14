@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="Calque_1" sodipodi:docname="Bateau.svg" inkscape:version="0.48.4 r9939" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1543.33px"
+	 height="676.67px" viewBox="0 0 1543.33 676.67" enable-background="new 0 0 1543.33 676.67" xml:space="preserve">
+<title  id="title3032">Bateau</title>
+<sodipodi:namedview  id="namedview51" inkscape:current-layer="Calque_1" inkscape:window-y="0" inkscape:window-x="0" inkscape:window-height="480" inkscape:window-width="640" inkscape:pageshadow="2" inkscape:pageopacity="0" inkscape:window-maximized="0" inkscape:cy="33.8335" inkscape:cx="77.166496" guidetolerance="10" gridtolerance="10" inkscape:zoom="2.2743031" objecttolerance="10" showgrid="false" borderopacity="1" bordercolor="#666666" pagecolor="#ffffff">
+	</sodipodi:namedview>
+<g id="g5">
+	<path id="path7" fill="#020202" d="M1519.58,466.67H18.33c0,0,41.88,80.31,66.25,105c23.75,24.06,126.25,90,126.25,90h1237.501
+		l27.5-62.5c0,0,32.319-46.83,37.5-62.5C1519.091,519.22,1519.58,466.67,1519.58,466.67z"/>
+	<polygon id="polygon9" fill="#020202" points="430.83,451.67 958.33,451.67 1048.33,351.67 548.33,351.67 	"/>
+	<path id="path11" fill="#020202" d="M1000.83,451.67l100-100h217.501v-50h80v50h77.5c0,0,19.459,38.55,23.13,51.88
+		c3.21,11.68,4.38,48.13,4.38,48.13H1000.83V451.67z"/>
+	<polygon id="polygon13" fill="#020202" points="1153.33,341.67 1293.33,341.67 1293.33,13.34 1267.18,13.34 1223.33,250.42 	"/>
+	<rect id="rect15" x="1401.46" y="502.09" fill="#FFFFFF" width="30.211" height="20"/>
+	<rect id="rect17" x="1327.71" y="502.09" fill="#FFFFFF" width="30.211" height="20"/>
+	<rect id="rect19" x="1252.08" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect21" x="1177.091" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect23" x="1105.211" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect25" x="1030.841" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect27" x="956.461" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect29" x="881.461" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect31" x="806.461" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect33" x="731.461" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect35" x="654.591" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect37" x="582.711" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect39" x="508.961" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect41" x="433.961" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect43" x="358.341" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect45" x="282.71" y="502.09" fill="#FFFFFF" width="30.211" height="20"/>
+	<rect id="rect47" x="208.96" y="502.09" fill="#FFFFFF" width="30.21" height="20"/>
+	<rect id="rect49" x="1105.211" y="376.67" fill="#FCFAFA" width="102.079" height="50"/>
+</g>
+</svg>

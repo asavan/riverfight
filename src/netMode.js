@@ -68,7 +68,7 @@ export default function netGame(window, document, settings) {
         const field = initObj.field;
         if (useAi) {
             removeElem(code);
-            g = aiActions(window, document, field, initObj, color);
+            g = aiActions(window, document, field, initObj, settings);
             battlePromise.resolve(g);
         } else {
             printLetterByLetter("Ждем оппонента", 70, false, 100000);
@@ -81,7 +81,7 @@ export default function netGame(window, document, settings) {
                     }
                 }
                 initObj.onOpponentReady();
-                g = battle(document, window, field, enemyField, color);
+                g = battle(document, window, field, enemyField, settings);
                 g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
                 battlePromise.resolve(g);
             });

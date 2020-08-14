@@ -55,10 +55,15 @@ function putDotHtml2(n, river, isEnemy) {
     dot.style.width = width + 'px';
 }
 
+const playSound = (elem) => {
+    if (!elem) return;
+    elem.play();
+}
 
 
-export default function battle(document, window, field, fieldEnemy, color) {
+export default function battle(document, window, field, fieldEnemy, settings) {
     console.log("game begin!");
+    let color = settings.color;
     printLetterByLetter("Игра началась", 70, false, 2000);
     const handlers = {
         'playerMove': stub,
@@ -117,6 +122,7 @@ export default function battle(document, window, field, fieldEnemy, color) {
     const grid = document.querySelector(".grid");
     const river = getEmemyRiver(grid);
     const myRiver = document.querySelector(".river");
+    const bloop = document.getElementById("bloop");
 
     const player = {
         realField: field,
@@ -152,6 +158,9 @@ export default function battle(document, window, field, fieldEnemy, color) {
             user.onOpponentMiss(res.verdict);
         } else if (res.verdict === VERDICT.WIN) {
             if (!isEnemyPlayer) {
+                if (settings.useSound && !isEnemyPlayer) {
+                    playSound(bloop);
+                }
                 victory();
             } else {
                 loose();
@@ -162,6 +171,9 @@ export default function battle(document, window, field, fieldEnemy, color) {
                 applyBothSides(user.guessedField, n, (ind) => {
                     putDotHtml2(ind, user.htmlRiver, isEnemyPlayer)
                 });
+                if (settings.useSound && !isEnemyPlayer) {
+                    playSound(bloop);
+                }
             }
         }
     }
