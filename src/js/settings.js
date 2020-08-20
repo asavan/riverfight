@@ -7,5 +7,5 @@ export default {
     wsPort : 8088,
     negotiatedId: 3,
     color: 'blue',
-    useSound: true
+    useSound: false
 }

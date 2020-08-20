@@ -10,3 +10,4 @@ target
 generated
 node_modules
 package-lock.json
+android
