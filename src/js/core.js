@@ -24,23 +24,6 @@ function isShip(verdict) {
     return 1;
 }
 
-export function verdictToMessage(verdict) {
-    if (verdict === VERDICT.HIT) {
-        return "Ранил";
-    }
-
-    if (verdict === VERDICT.KILL) {
-        return "Убил";
-    }
-
-    if (verdict === VERDICT.MISS) {
-        return "Мимо";
-    }
-    if (verdict === VERDICT.WIN) {
-        return "Победа";
-    }
-}
-
 function isSame(fieldEnemy, myEnemyField, n) {
     if (fieldEnemy.length !== myEnemyField.length) {
         throw "Illegal state";

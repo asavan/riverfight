@@ -1,6 +1,6 @@
 "use strict";
 
-import {getVerdict, VERDICT, verdictToMessage, applyBothSides, isEnemyStartFirst} from './core.js';
+import {getVerdict, VERDICT, applyBothSides, isEnemyStartFirst} from './core.js';
 import {move, width, getTemplateByName, createField, printLetterByLetter} from './helper.js';
 
 
@@ -60,11 +60,40 @@ const playSound = (elem) => {
     elem.play();
 }
 
+const firstMessage = function (isEnemyPlayer) {
+    let append;
+    if (isEnemyPlayer) {
+        append = "Сейчас прилетит!";
+    } else {
+        append = "Ходи!";
+    }
+    return "Игра началась. " + append;
+}
+
+function verdictToMessage(verdict, isEnemyPlayer) {
+    if (verdict === VERDICT.HIT) {
+        return "Ранил";
+    }
+
+    if (verdict === VERDICT.KILL) {
+        return "Убил";
+    }
+
+    if (verdict === VERDICT.MISS) {
+        return "Мимо";
+    }
+    if (verdict === VERDICT.WIN) {
+        return isEnemyPlayer ? "Потрачено" : "Победа";
+    }
+}
+
 
 export default function battle(document, window, field, fieldEnemy, settings) {
     console.log("game begin!");
     let color = settings.color;
-    printLetterByLetter("Игра началась", 70, false, 2000);
+    let isEnemyPlayer = isEnemyStartFirst(color);
+
+    printLetterByLetter(firstMessage(isEnemyPlayer), 70, isEnemyPlayer, 100000);
     const handlers = {
         'playerMove': stub,
         'enemyMove': stub,
@@ -117,8 +146,6 @@ export default function battle(document, window, field, fieldEnemy, settings) {
         return handlers['meMove'](param);
     }
 
-    // TODO
-    let isEnemyPlayer = isEnemyStartFirst(color);
     const grid = document.querySelector(".grid");
     const river = getEmemyRiver(grid);
     const myRiver = document.querySelector(".river");
@@ -151,8 +178,8 @@ export default function battle(document, window, field, fieldEnemy, settings) {
         }
         const user = isEnemyPlayer ? player : enemy;
         const res = putDotHtml(n, isEnemyPlayer, user.realField, user.guessedField, user.htmlRiver);
-        const message = verdictToMessage(res.verdict) + "!";
-        printLetterByLetter(message, 70, isEnemyPlayer, 2000);
+        const message = verdictToMessage(res.verdict, isEnemyPlayer) + "!";
+        printLetterByLetter(message, 70, isEnemyPlayer, 100000);
 
         if (res.verdict === VERDICT.MISS) {
             isEnemyPlayer = !isEnemyPlayer;
