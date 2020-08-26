@@ -13,7 +13,7 @@ function starter(window, document) {
     for (const [key, value] of urlParams) {
         settings[key] = value;
     }
-    startGame(window, document, settings);
+    startGame(window, document, settings, urlParams);
 }
 
 launch(window, document, starter);

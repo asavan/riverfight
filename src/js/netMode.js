@@ -9,7 +9,7 @@ import protocol from "./protocol.js";
 import aiActions from "./aiMode.js";
 import battle from "./battle.js";
 
-export default function netGame(window, document, settings) {
+export default function netGame(window, document, settings, urlParams) {
     const color = settings.color;
     let useAi = true;
     const socketUrl = getSocketUrl(window.location, settings);
@@ -26,6 +26,9 @@ export default function netGame(window, document, settings) {
     if (useNetwork) {
         connection.on('socket_open', () => {
             const url = new URL(staticHost);
+            url.search = urlParams;
+            url.searchParams.delete('wh');
+            url.searchParams.delete('sh');
             url.searchParams.set('color', getOtherColor(color));
             const qrcontainer = document.querySelector(".qrcontainer");
             const element = document.createElement('div');

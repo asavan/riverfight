@@ -41,7 +41,7 @@ function automationAndInstall(game, document) {
     }
 }
 
-function startGame(window, document, settings) {
+function startGame(window, document, settings, urlParams) {
     const mode = settings.currentMode;
     let game = null;
     switch (mode) {
@@ -50,7 +50,7 @@ function startGame(window, document, settings) {
             automationAndInstall(game, document);
             break;
         case "net":
-            game = netGame(window, document, settings);
+            game = netGame(window, document, settings, urlParams);
             automationAndInstall(game, document);
             break;
         case "server":
