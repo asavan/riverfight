@@ -1,7 +1,5 @@
 "use strict";
 
-import {getOtherColor} from "./core.js";
-
 let ws = null;
 let user = "";
 let user2 = "";
@@ -23,18 +21,19 @@ function on(name, f) {
     handlers[name] = f;
 }
 
-function connect(socketUrl, color, serverOnly, settings) {
+function connect(socketUrl, color, secondColor, settings) {
     localSettings = settings;
     ws = new WebSocket(socketUrl);
 
     let peerConnection = null;
+    const serverOnly = !color || !secondColor;
 
     ws.onopen = function (e) {
         console.log("Websocket opened");
         handlers['socket_open']();
         if (!serverOnly) {
             user = color;
-            user2 = getOtherColor(color);
+            user2 = secondColor;
             sendNegotiation("connected", {color: user}, ws);
         }
     }
@@ -61,7 +60,7 @@ function connect(socketUrl, color, serverOnly, settings) {
             processIce(json.data, peerConnection);
         } else if (json.action === "offer") {
             // incoming offer
-            user2 = json.from;
+            // user2 = json.from;
             peerConnection = processOffer(json.data)
         } else if (json.action === "answer") {
             // incoming answer

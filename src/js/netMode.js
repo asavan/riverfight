@@ -42,7 +42,7 @@ export default function netGame(window, document, settings, urlParams) {
         });
 
         try {
-            connection.connect(socketUrl, color, false, settings);
+            connection.connect(socketUrl, color, getOtherColor(color), settings);
         } catch (e) {
             useAi = true;
             console.log(e);
