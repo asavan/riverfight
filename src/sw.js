@@ -6,17 +6,19 @@ self.addEventListener('install', function (evt) {
 });
 
 self.addEventListener('activate', function (evt) {
-    caches.keys().then(function (cacheNames) {
-        return Promise.all(
-            cacheNames.map(function (cacheName) {
-                if (cacheName !== CACHE) {
-                    return caches.delete(cacheName);
-                }
-            })
-        );
-    }).then(function () {
-        evt.waitUntil(self.clients.claim());
-    });
+    evt.waitUntil(
+        caches.keys().then(function (cacheNames) {
+            return Promise.all(
+                cacheNames.map(function (cacheName) {
+                    if (cacheName !== CACHE) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        }).then(function () {
+            return self.clients.claim();
+        })
+    );
 });
 
 self.addEventListener('fetch', function (evt) {
