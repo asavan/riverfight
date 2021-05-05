@@ -105,7 +105,7 @@ body {
 }
 
 .qrcode.big {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 823px;
@@ -265,20 +265,26 @@ body {
     width: 300px;
     height: 300px;
     display: inline-block;
+}
+
+.qrcontainer{
     position: fixed;
+    display: inline-block;
+    width: 300px;
 }
 
 @media (min-width: 1180px) {
-    .qrcode {
+    .qrcontainer {
         top: 0;
         right: 0;
     }
 }
 
 @media (max-width: 1090px) {
-    .qrcode {
-        left: 50%;
-        transform: translate(-50%, 0);
+    .qrcontainer {
+        left: 0;
+        right: 0;
+        margin: 5% auto;
         bottom: 0;
     }
 }
@@ -401,7 +407,7 @@ body {
     }
 
     .qrcode.big {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         width: calc(100vw - 10px);

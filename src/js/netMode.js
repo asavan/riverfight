@@ -9,6 +9,20 @@ import protocol from "./protocol.js";
 import aiActions from "./aiMode.js";
 import battle from "./battle.js";
 
+function addQrToPage(staticHost, document, urlParams, color) {
+    const url = new URL(staticHost);
+    url.search = urlParams;
+    url.searchParams.delete('wh');
+    url.searchParams.delete('sh');
+    url.searchParams.set('color', getOtherColor(color));
+    const qrcontainer = document.querySelector(".qrcontainer");
+    const element = document.createElement('div');
+    element.classList.add("qrcode");
+    qrcontainer.appendChild(element);
+    return qrRender(url.toString(), element);
+}
+
+
 export default function netGame(window, document, settings, urlParams) {
     const color = settings.color;
     let useAi = true;
@@ -22,19 +36,15 @@ export default function netGame(window, document, settings, urlParams) {
 
     const myField = placement(document);
 
-    let useNetwork = !!socketUrl;
+    let useNetwork = !!socketUrl && !settings.showqrfake;
+
+    if (settings.showqrfake) {
+        code = addQrToPage(staticHost, document, urlParams, color);
+    }
+
     if (useNetwork) {
         connection.on('socket_open', () => {
-            const url = new URL(staticHost);
-            url.search = urlParams;
-            url.searchParams.delete('wh');
-            url.searchParams.delete('sh');
-            url.searchParams.set('color', getOtherColor(color));
-            const qrcontainer = document.querySelector(".qrcontainer");
-            const element = document.createElement('div');
-            element.classList.add("qrcode");
-            qrcontainer.appendChild(element);
-            code = qrRender(url.toString(), element);
+            code = addQrToPage(staticHost, document, urlParams, color);
         });
 
         connection.on('socket_close', () => {
