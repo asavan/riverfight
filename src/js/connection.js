@@ -42,17 +42,16 @@ function connect(socketUrl, color, secondColor, settings) {
         handlers['socket_close']();
     }
 
-    ws.onmessage = function (e) {
-
-        const json = JSON.parse(e.data);
+    function processText(text) {
+        const json = JSON.parse(text);
         if (json.from === user) {
             // console.log("same user");
             return;
         }
-        console.log("Websocket message received: " + e.data);
+        console.log("Websocket message received: " + text);
 
         if (serverOnly) {
-            handlers['server_message'](e.data);
+            handlers['server_message'](text);
             return;
         }
 
@@ -71,6 +70,18 @@ function connect(socketUrl, color, secondColor, settings) {
             console.log("close " + json.from);
         } else {
             console.log("Unknown type " + json.action);
+        }
+    }
+
+    ws.onmessage = function (e) {
+        if (e.data instanceof Blob) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                processText(reader.result);
+            };
+            reader.readAsText(e.data);
+        } else {
+            processText(e.data);
         }
     }
     ws.onerror = function (e) {
