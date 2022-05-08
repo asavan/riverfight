@@ -1,30 +1,32 @@
-const path = require("path");
-const os = require('os');
+import path from 'path'
+import os from 'os'
+import { fileURLToPath } from 'url';
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
+import webpack from 'webpack'
 
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const TerserJSPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const webpack = require('webpack');
-const {InjectManifest} = require('workbox-webpack-plugin');
+
+import TerserJSPlugin from 'terser-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import {CleanWebpackPlugin} from 'clean-webpack-plugin';
+import {InjectManifest} from 'workbox-webpack-plugin';
 
 
 const getLocalExternalIP = () => [].concat(...Object.values(os.networkInterfaces()))
-    .filter(details => details.family === 'IPv4' && !details.internal)
-    .pop().address
+    .filter(details => (details.family === 'IPv4' || details.family === 4) && !details.internal)
+    .pop()?.address
 
-module.exports = (env, argv) => {
+const webConfig = (env, argv) => {
     const devMode = !argv || (argv.mode !== 'production');
     let addr = getLocalExternalIP() || '0.0.0.0';
+    const dirname = path.dirname(fileURLToPath(import.meta.url));
     return {
 
         entry: {main: "./src/index.js"},
         output: {
-            path: path.resolve(__dirname, "dist"),
-            filename: devMode ? "[name].js" : "[name].[contenthash].js",
-            publicPath: devMode ? "/" : "./dist/"
-            // publicPath: "./dist/"
+            path: path.resolve(dirname, "docs"),
+            filename: devMode ? "[name].js" : "[name].[contenthash].js"
         },
         module: {
             rules: [
@@ -51,22 +53,34 @@ module.exports = (env, argv) => {
             new HtmlWebpackPlugin({
                 template: "./src/index.html",
                 minify: false,
-                filename: devMode ? "./index.html" : "../index.html"
             }),
             new MiniCssExtractPlugin({
                 filename: devMode ? '[name].css' : '[name].[contenthash].css'
             }),
             ...(devMode ? [] : [new InjectManifest({
-                swDest: '../sw.js',
-                swSrc: './src/sw.js'
+                swDest: 'sw.js',
+                swSrc: './src/sw.js',
+                exclude: [
+                    /index\.html$/,
+                    /CNAME$/,
+                    /\.nojekyll$/,
+                    /_config\.yml$/,
+                    /^.*well-known\/.*$/,
+                ]
             })]),
             new webpack.DefinePlugin({
                 __USE_SERVICE_WORKERS__: !devMode
+            }),
+            new CopyPlugin({
+                patterns: [
+                    { from: './assets', to: './assets' },
+                    { from: './manifest.json', to: './' },
+                    { from: './.well-known', to: './.well-known' },
+                    { from: './github', to: './' }
+                ],
             })
         ],
         devServer: {
-            // contentBase: path.resolve(__dirname, "src"),
-            historyApiFallback: true,
             compress: true,
             port: 8080,
             hot: true,
@@ -77,3 +91,5 @@ module.exports = (env, argv) => {
         }
     }
 };
+
+export default webConfig;
