@@ -9,7 +9,6 @@ import webpack from 'webpack'
 
 import TerserJSPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import {CleanWebpackPlugin} from 'clean-webpack-plugin';
 import {InjectManifest} from 'workbox-webpack-plugin';
 
 
@@ -26,7 +25,8 @@ const webConfig = (env, argv) => {
         entry: {main: "./src/index.js"},
         output: {
             path: path.resolve(dirname, "docs"),
-            filename: devMode ? "[name].js" : "[name].[contenthash].js"
+            filename: devMode ? "[name].js" : "[name].[contenthash].js",
+            clean: true
         },
         module: {
             rules: [
@@ -49,7 +49,6 @@ const webConfig = (env, argv) => {
             }), new CssMinimizerPlugin()],
         },
         plugins: [
-            new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 template: "./src/index.html",
                 minify: false,
@@ -85,9 +84,7 @@ const webConfig = (env, argv) => {
             port: 8080,
             hot: true,
             open: true,
-            host: addr,
-            // clientLogLevel: 'debug',
-            // watchContentBase: true,
+            host: addr
         }
     }
 };

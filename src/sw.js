@@ -1,4 +1,4 @@
-const CACHE = 'offline-fallback2';
+const CACHE = 'offline-fallback3';
 self.addEventListener('install', function (evt) {
     evt.waitUntil(precache().then(function () {
         return self.skipWaiting();
@@ -57,13 +57,6 @@ function precache() {
     return caches.open(CACHE).then(function (cache) {
         return cache.addAll([
             "./",
-            "./manifest.json",
-            "./assets/maskable_icon.png",
-            "./assets/192.png",
-            "./assets/512.png",
-            "./assets/boat7.svg",
-            "./assets/bloop.mp3",
-            "./assets/windows-98-sound-tada.mp3",
             ...filesToCache
         ]);
     });
