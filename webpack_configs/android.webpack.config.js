@@ -1,17 +1,20 @@
-import path from 'path'
+import path from 'path';
 import { fileURLToPath } from 'url';
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserJSPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import webpack from 'webpack'
+import CopyPlugin from 'copy-webpack-plugin';
+
+import webpack from 'webpack';
 
 
-module.exports = (env, argv) => {
+const aConfig = (env, argv) => {
     const dirname = path.dirname(fileURLToPath(import.meta.url));
     return {
 
-        entry: {main: "./src/index.js"},
+        entry: {main: ["./src/index.js", "./src/css/style.css"]},
         output: {
             path: path.resolve(dirname, "../android"),
             filename: "[name].[contenthash].js",
@@ -47,7 +50,16 @@ module.exports = (env, argv) => {
             }),
             new webpack.DefinePlugin({
                 __USE_SERVICE_WORKERS__: false
+            }),
+            new CopyPlugin({
+                patterns: [
+                    { from: './assets', to: './assets' },
+                    { from: './src/manifest.json', to: './' },
+                    { from: './.well-known', to: './well-known' }
+                ],
             })
         ]
     }
 };
+
+export default aConfig;

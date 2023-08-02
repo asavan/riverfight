@@ -94,12 +94,12 @@ export function showGameMessage(message) {
     printLetterByLetter(message, 70, false, 2000);
 }
 
-export function getWebSocketUrl(protocol, socketUrl, host, settings) {
+function getWebSocketUrl(protocol, socketUrl, host, settings) {
+    if (socketUrl) {
+        return socketUrl;
+    }
     if (protocol === 'https:') {
         return null;
-    }
-    if (socketUrl) {
-        return "ws://" + socketUrl;
     }
     return "ws://" + host + ":" + settings.wsPort
 }
@@ -122,4 +122,34 @@ export function launch(window, document, f) {
     }
 }
 
+function stringToBoolean(string){
+    switch(string.toLowerCase().trim()){
+        case "true": case "yes": case "1": return true;
+        case "false": case "no": case "0": case null: return false;
+        default: return Boolean(string);
+    }
+}
+
+export function parseSettings(window, document, settings) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    for (const [key, value] of urlParams) {
+        if (typeof settings[key] === "number") {
+            settings[key] = parseInt(value, 10);
+        } else if (typeof settings[key] === "boolean") {
+            settings[key] = stringToBoolean(value);
+        } else {
+            settings[key] = value;
+        }
+    }
+}
+
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+export function log(message, el) {
+    if (typeof message == 'object') {
+        el.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+    } else {
+        el.innerHTML += message + '<br />';
+    }
+}

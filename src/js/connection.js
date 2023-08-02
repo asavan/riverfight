@@ -15,7 +15,21 @@ const handlers = {
     'socket_open': stub,
     'socket_close': stub,
     'server_message': stub,
+    'socket_error': stub
 }
+
+function stringifyEvent(e) {
+  const obj = {};
+  for (let k in e) {
+    obj[k] = e[k];
+  }
+  return JSON.stringify(obj, (k, v) => {
+    if (v instanceof Node) return 'Node';
+    if (v instanceof Window) return 'Window';
+    return v;
+  }, ' ');
+}
+
 
 function on(name, f) {
     handlers[name] = f;
@@ -86,6 +100,7 @@ function connect(socketUrl, color, secondColor, settings) {
     }
     ws.onerror = function (e) {
         console.log("Websocket error");
+        handlers['socket_error']("url " + socketUrl);
     }
 }
 
@@ -138,6 +153,9 @@ function openDataChannel(ws) {
         console.log("------ DATACHANNEL OPENED ------");
         isConnected = true;
         sendNegotiation("close", {}, ws);
+        // iphone fires "onerror" on close socket
+        handlers['socket_error'] = stub;
+
         ws.close();
         handlers['open']();
     };

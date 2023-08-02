@@ -1,6 +1,6 @@
 "use strict";
 
-import {defer, removeElem, printLetterByLetter, getSocketUrl, getStaticUrl} from "./helper.js";
+import {defer, removeElem, printLetterByLetter, getSocketUrl, getStaticUrl, log} from "./helper.js";
 import connection from "./connection.js";
 import {getOtherColor} from "./core.js";
 import qrRender from "./qrcode.js";
@@ -45,6 +45,11 @@ export default function netGame(window, document, settings, urlParams) {
     if (useNetwork) {
         connection.on('socket_open', () => {
             code = addQrToPage(staticHost, document, urlParams, color);
+        });
+
+        connection.on('socket_error', (e) => {
+            const logger = document.getElementsByClassName('logger')[0];
+            log(e, logger);
         });
 
         connection.on('socket_close', () => {
