@@ -1,6 +1,6 @@
 "use strict";
 
-import {axis} from './core.js';
+import {axis} from "./core.js";
 
 export const width = 20;
 
@@ -25,7 +25,7 @@ export function hide(selector) {
 
 export function hideElem(el) {
     if (el) {
-        el.classList.add('hidden');
+        el.classList.add("hidden");
     }
 }
 
@@ -36,10 +36,10 @@ export function removeElem(el) {
 }
 
 export function createField(grid) {
-    const t = getTemplateByName('#field-template');
+    const t = getTemplateByName("#field-template");
     const f = t.content.cloneNode(true);
     const field = f.firstElementChild;
-    const text = field.querySelector('.frame-text');
+    const text = field.querySelector(".frame-text");
     for (const axi of axis) {
         const s = document.createElement("span");
         s.textContent = axi;
@@ -67,11 +67,11 @@ let printingInterval = null;
 
 export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLastSymbol) {
     let i = 0;
-    const messageAnchor = document.querySelector('.message');
+    const messageAnchor = document.querySelector(".message");
     if (isEnemyPlayer) {
-        messageAnchor.classList.add('enemy');
+        messageAnchor.classList.add("enemy");
     } else {
-        messageAnchor.classList.remove('enemy');
+        messageAnchor.classList.remove("enemy");
     }
     if (printingInterval) {
         messageAnchor.innerHTML = "";
@@ -84,7 +84,7 @@ export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLast
         } else {
             clearInterval(printingInterval);
             printingInterval = setTimeout(() => {
-                messageAnchor.innerHTML = ""
+                messageAnchor.innerHTML = "";
             }, waitAfterLastSymbol);
         }
     }, speed);
@@ -98,14 +98,14 @@ function getWebSocketUrl(protocol, socketUrl, host, settings) {
     if (socketUrl) {
         return socketUrl;
     }
-    if (protocol === 'https:') {
+    if (protocol === "https:") {
         return null;
     }
-    return "ws://" + host + ":" + settings.wsPort
+    return "ws://" + host + ":" + settings.wsPort;
 }
 
 export function getSocketUrl(location, settings) {
-    return getWebSocketUrl(location.protocol, settings.wh, location.hostname, settings)
+    return getWebSocketUrl(location.protocol, settings.wh, location.hostname, settings);
 }
 
 export function getStaticUrl(location, settings) {
@@ -113,10 +113,10 @@ export function getStaticUrl(location, settings) {
 }
 
 export function launch(window, document, f) {
-    if( document.readyState !== 'loading' ) {
+    if( document.readyState !== "loading" ) {
         f(window, document);
     } else {
-        document.addEventListener("DOMContentLoaded", function (event) {
+        document.addEventListener("DOMContentLoaded", function () {
             f(window, document);
         });
     }
@@ -124,9 +124,9 @@ export function launch(window, document, f) {
 
 function stringToBoolean(string){
     switch(string.toLowerCase().trim()){
-        case "true": case "yes": case "1": return true;
-        case "false": case "no": case "0": case null: return false;
-        default: return Boolean(string);
+    case "true": case "yes": case "1": return true;
+    case "false": case "no": case "0": case null: return false;
+    default: return Boolean(string);
     }
 }
 
@@ -147,9 +147,21 @@ export function parseSettings(window, document, settings) {
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export function log(message, el) {
-    if (typeof message == 'object') {
-        el.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+    if (typeof message == "object") {
+        el.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + "<br />";
     } else {
-        el.innerHTML += message + '<br />';
+        el.innerHTML += message + "<br />";
     }
+}
+
+export function stringifyEvent(e) {
+    const obj = {};
+    for (let k in e) {
+        obj[k] = e[k];
+    }
+    return JSON.stringify(obj, (k, v) => {
+        if (v instanceof Node) return "Node";
+        if (v instanceof Window) return "Window";
+        return v;
+    }, " ");
 }

@@ -2,17 +2,17 @@ import { WebSocketServer } from "ws";
 const wss = new WebSocketServer({port: 8088});
 const wsList = [];
 
-wss.on('connection', function (ws) {
-    console.log('WS connection established!')
+wss.on("connection", function (ws) {
+    console.log("WS connection established!");
     wsList.push(ws);
 
-    ws.on('close', function () {
+    ws.on("close", function () {
         wsList.splice(wsList.indexOf(ws), 1);
-        console.log('WS closed!')
+        console.log("WS closed!");
     });
 
-    ws.on('message', function (message) {
-        console.log('Got ws message: ' + message);
+    ws.on("message", function (message) {
+        console.log("Got ws message: " + message);
         for (let i = 0; i < wsList.length; i++) {
             // send to everybody on the site
             wsList[i].send(message);

@@ -20,8 +20,8 @@ export default function aiActions(window, document, field, initObj, settings) {
         }, 700);
     }
 
-    g.on('aiMove', onAiMove);
-    g.on('enemyMove', (n) => aiBot.setLastMove(n));
+    g.on("aiMove", onAiMove);
+    g.on("enemyMove", (n) => aiBot.setLastMove(n));
     if (isEnemyStartFirst(settings.color)) {
         onAiMove(VERDICT.MISS);
     }

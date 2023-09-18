@@ -1,13 +1,13 @@
 "use strict";
 
-import {move, width, getClickIndex, createField, showGameMessage, defer} from './helper.js';
-import {shipsCount, axis} from './core.js';
+import {move, width, getClickIndex, createField, showGameMessage, defer} from "./helper.js";
+import {shipsCount, axis} from "./core.js";
 
 export default function placement(document) {
     const myFieldPromise = defer();
 
     function getShipyard(document, grid) {
-        const s = document.createElement('div');
+        const s = document.createElement("div");
         s.classList.add("shipyard");
         grid.appendChild(s);
         return s;
@@ -60,13 +60,13 @@ export default function placement(document) {
     const ships = [];
     const grid = document.querySelector(".grid");
     const fieldHtml = createField(grid);
-    fieldHtml.classList.add('adjust-first');
+    fieldHtml.classList.add("adjust-first");
     const shipyard = getShipyard(document, grid);
 
     function ship(length) {
-        const s = document.createElement('div');
+        const s = document.createElement("div");
         s.classList.add("ship");
-        s.style.width = (length * width) + 'px';
+        s.style.width = (length * width) + "px";
         shipyard.appendChild(s);
         return {length: length, html: s};
     }
@@ -76,7 +76,7 @@ export default function placement(document) {
         ++shipsLeft;
     }
 
-    for (let [order, shipInfo] of Object.entries(shipsCount)) {
+    for (let [, shipInfo] of Object.entries(shipsCount)) {
         for (let i = 0; i < shipInfo.count; i++) {
             addShip(shipInfo.len);
         }
@@ -85,9 +85,9 @@ export default function placement(document) {
     function choose(shipsKey, n) {
         currChosen = {s: shipsKey, n: n};
         for (const shipsKey1 of ships) {
-            shipsKey1.html.classList.remove('choosen');
+            shipsKey1.html.classList.remove("choosen");
         }
-        shipsKey.html.classList.add('choosen');
+        shipsKey.html.classList.add("choosen");
     }
 
     for (const shipsKey of ships) {
@@ -101,8 +101,8 @@ export default function placement(document) {
     river.addEventListener("click", clickHandler);
 
     function onOpponentReady() {
-        fieldHtml.classList.remove('adjust-first');
-        fieldHtml.classList.add('adjust-third');
+        fieldHtml.classList.remove("adjust-first");
+        fieldHtml.classList.add("adjust-third");
         river.removeEventListener("click", clickHandler);
     }
 
@@ -118,13 +118,13 @@ export default function placement(document) {
             return false;
         }
 
-        const s = document.createElement('div');
+        const s = document.createElement("div");
         s.classList.add("ship_river");
         s.classList.add("diagonal-line");
         s.style.width = currChosen.s.html.style.width;
-        s.style.left = (currentPos * width) + 'px';
+        s.style.left = (currentPos * width) + "px";
         river.appendChild(s);
-        currChosen.s.html.classList.add('disabled');
+        currChosen.s.html.classList.add("disabled");
         currChosen = null;
         if (isReady()) {
             myFieldPromise.resolve({field, onOpponentReady});

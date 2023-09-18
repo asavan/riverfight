@@ -12,11 +12,11 @@ import battle from "./battle.js";
 function addQrToPage(staticHost, document, urlParams, color) {
     const url = new URL(staticHost);
     url.search = urlParams;
-    url.searchParams.delete('wh');
-    url.searchParams.delete('sh');
-    url.searchParams.set('color', getOtherColor(color));
+    url.searchParams.delete("wh");
+    url.searchParams.delete("sh");
+    url.searchParams.set("color", getOtherColor(color));
     const qrcontainer = document.querySelector(".qrcontainer");
-    const element = document.createElement('div');
+    const element = document.createElement("div");
     element.classList.add("qrcode");
     qrcontainer.appendChild(element);
     return qrRender(url.toString(), element);
@@ -43,16 +43,16 @@ export default function netGame(window, document, settings, urlParams) {
     }
 
     if (useNetwork) {
-        connection.on('socket_open', () => {
+        connection.on("socket_open", () => {
             code = addQrToPage(staticHost, document, urlParams, color);
         });
 
-        connection.on('socket_error', (e) => {
-            const logger = document.getElementsByClassName('logger')[0];
+        connection.on("socket_error", (e) => {
+            const logger = document.getElementsByClassName("logger")[0];
             log(e, logger);
         });
 
-        connection.on('socket_close', () => {
+        connection.on("socket_close", () => {
             removeElem(code);
         });
 
@@ -63,19 +63,19 @@ export default function netGame(window, document, settings, urlParams) {
             console.log(e);
         }
 
-        connection.on('open', () => {
+        connection.on("open", () => {
             useAi = false;
         });
 
-        connection.on('recv', (data) => {
-            protocol.parser(data, 'field', (enemyField) => {
+        connection.on("recv", (data) => {
+            protocol.parser(data, "field", (enemyField) => {
                 console.log("enemy field ready");
                 if (!isOpponentReady) {
                     enemyFieldPromise.resolve(enemyField);
                 }
                 isOpponentReady = true;
             });
-            protocol.parser(data, 'move', (n) => {
+            protocol.parser(data, "move", (n) => {
                 console.log("Enemy try to move " + n);
                 g.fireEnemy(n);
             });
@@ -100,7 +100,7 @@ export default function netGame(window, document, settings, urlParams) {
                 }
                 initObj.onOpponentReady();
                 g = battle(document, window, field, enemyField, settings);
-                g.on('playerMove', (n) => connection.sendMessage(protocol.toMove(n)));
+                g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
                 battlePromise.resolve(g);
             });
         }

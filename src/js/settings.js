@@ -6,6 +6,6 @@ export default {
     debug: true,
     wsPort : 8088,
     negotiatedId: 3,
-    color: 'blue',
+    color: "blue",
     useSound: false
-}
+};

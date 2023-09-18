@@ -62,7 +62,8 @@ export function placementAutomation(p, game) {
     let aiInited = false;
     const field = generateAiField(-1);
 
-    const secretClickHandler = async function (e) {
+    const secretClickHandler = async (e) => {
+        e.preventDefault();
         ++clickCount;
         if (clickCount > 3) {
             clickCount = 0;
@@ -77,7 +78,7 @@ export function placementAutomation(p, game) {
             }
 
         }
-    }
+    };
     secretCodeElem.addEventListener("click", secretClickHandler);
 }
 
@@ -85,7 +86,7 @@ export function placementAutomation(p, game) {
 function playerAi(game) {
     return game.getBattle().then(g => {
         const field = generateAiField(-1);
-        const aiBot = ai(field.length, g.color);
+        const aiBot = ai(field.length);
 
         function onAiMove1(verdict) {
             const n = aiBot.guess(verdict);
@@ -95,21 +96,22 @@ function playerAi(game) {
             }, 1000);
         }
 
-        g.on('meMove', onAiMove1);
-        g.on('playerMove', (n) => {
+        g.on("meMove", onAiMove1);
+        g.on("playerMove", (n) => {
             console.log("Player move " + n);
-            aiBot.setLastMove(n)
+            aiBot.setLastMove(n);
         });
         onAiMove1(VERDICT.MISS);
         return true;
     });
 }
 
-export function enableSecretMenu(game) {
+export function enableSecretMenu(window, document, game) {
     const secretCodeElem = document.querySelector(".secret-code2");
     let clickCount = 0;
     let aiInited = false;
-    const secretClickHandler = async function (e) {
+    const secretClickHandler = (e) => {
+        e.preventDefault();
         ++clickCount;
         if (clickCount >= 10) {
             window.location.href = "https://asavan.github.io/";
@@ -127,6 +129,6 @@ export function enableSecretMenu(game) {
                 playerAi(game);
             }
         }
-    }
+    };
     secretCodeElem.addEventListener("click", secretClickHandler);
 }

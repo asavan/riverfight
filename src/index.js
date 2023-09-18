@@ -3,7 +3,7 @@
 import settings from "./js/settings.js";
 import {startGame} from "./js/starter.js";
 import install from "./js/install_as_app.js";
-import {launch, parseSettings} from "./js/helper.js";
+import {parseSettings} from "./js/helper.js";
 
 function starter(window, document) {
     const queryString = window.location.search;
@@ -14,9 +14,10 @@ function starter(window, document) {
 
 starter(window, document);
 
+// eslint-disable-next-line no-undef
 if (__USE_SERVICE_WORKERS__) {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js', {scope: './'});
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./sw.js", {scope: "./"});
         install(window, document);
     }
 }

@@ -15,7 +15,7 @@ export const shipsCount = {
     0 : {len : 3, count : 1},
     1: {len : 2, count : 2},
     2: {len : 1, count : 3}
-}
+};
 
 function isShip(verdict) {
     if (verdict === VERDICT.NONE || verdict >= VERDICT.MISS) {
@@ -89,7 +89,7 @@ export function applyBothSides(field, n, f) {
     return count;
 }
 
-const colors = ['blue', 'red'];
+const colors = ["blue", "red"];
 
 export function getOtherColor(color) {
     for (const colorOther of colors) {
@@ -102,5 +102,5 @@ export function getOtherColor(color) {
 }
 
 export function isEnemyStartFirst(color) {
-    return color === 'red';
+    return color === "red";
 }

@@ -11,18 +11,18 @@ function parser(data, method, callback) {
 
 function toObjJson(v, method) {
     const value = {
-        'method': method
+        "method": method
     };
     value[method] = v;
     return JSON.stringify(value);
 }
 
 function toMove(n) {
-    return toObjJson(n, 'move');
+    return toObjJson(n, "move");
 }
 
 function toField(field) {
-    return toObjJson(field, 'field');
+    return toObjJson(field, "field");
 }
 
 export default {parser, toMove, toField};

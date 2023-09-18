@@ -1,7 +1,7 @@
 "use strict";
 
-import {getVerdict, VERDICT, applyBothSides, isEnemyStartFirst} from './core.js';
-import {move, width, getTemplateByName, createField, printLetterByLetter} from './helper.js';
+import {getVerdict, VERDICT, applyBothSides, isEnemyStartFirst} from "./core.js";
+import {move, width, getTemplateByName, createField, printLetterByLetter} from "./helper.js";
 
 
 function getEmemyRiver(grid) {
@@ -19,46 +19,46 @@ function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
     myEnemyField[n] = verdict;
     let t;
     if (res) {
-        t = getTemplateByName('#ship-template');
+        t = getTemplateByName("#ship-template");
     } else {
-        t = getTemplateByName('#dot-template2');
+        t = getTemplateByName("#dot-template2");
     }
     const f = t.content.cloneNode(true);
     const dot = f.firstElementChild;
     if (res) {
         if (isEnemy) {
-            dot.classList.add('diagonal-line-enemy');
+            dot.classList.add("diagonal-line-enemy");
         } else {
-            dot.classList.add('diagonal-line');
+            dot.classList.add("diagonal-line");
         }
     } else {
         if (isEnemy) {
-            dot.classList.add('enemy');
+            dot.classList.add("enemy");
         }
     }
     river.appendChild(f);
     // dot.style.left = (n * width + (width - 10) / 2) + 'px';
-    dot.style.left = (n * width) + 'px';
-    dot.style.width = width + 'px';
+    dot.style.left = (n * width) + "px";
+    dot.style.width = width + "px";
     return {html: dot, res: res, verdict: verdict};
 }
 
 function putDotHtml2(n, river, isEnemy) {
-    let t = getTemplateByName('#dot-template');
+    let t = getTemplateByName("#dot-template");
     const f = t.content.cloneNode(true);
     const dot = f.firstElementChild;
     if (isEnemy) {
-        dot.classList.add('enemy');
+        dot.classList.add("enemy");
     }
     river.appendChild(f);
-    dot.style.left = (n * width) + 'px';
-    dot.style.width = width + 'px';
+    dot.style.left = (n * width) + "px";
+    dot.style.width = width + "px";
 }
 
 const playSound = (elem) => {
     if (!elem) return;
     elem.play();
-}
+};
 
 const firstMessage = function (isEnemyPlayer) {
     let append;
@@ -68,7 +68,7 @@ const firstMessage = function (isEnemyPlayer) {
         append = "Ходи!";
     }
     return "Игра началась. " + append;
-}
+};
 
 function verdictToMessage(verdict, isEnemyPlayer) {
     if (verdict === VERDICT.HIT) {
@@ -95,12 +95,12 @@ export default function battle(document, window, field, fieldEnemy, settings) {
 
     printLetterByLetter(firstMessage(isEnemyPlayer), 70, isEnemyPlayer, 100000);
     const handlers = {
-        'playerMove': stub,
-        'enemyMove': stub,
-        'meMove': stub,
-        'aiMove': stub,
-        'gameover': stub
-    }
+        "playerMove": stub,
+        "enemyMove": stub,
+        "meMove": stub,
+        "aiMove": stub,
+        "gameover": stub
+    };
 
     function showEndMessage(message, subMsg) {
         const overlay = document.getElementsByClassName("overlay")[0];
@@ -112,24 +112,24 @@ export default function battle(document, window, field, fieldEnemy, settings) {
         }, false);
 
 
-        const h2 = overlay.querySelectorAll('h2')[0];
+        const h2 = overlay.querySelectorAll("h2")[0];
         h2.textContent = message;
-        const content = overlay.querySelectorAll('.content')[0];
+        const content = overlay.querySelectorAll(".content")[0];
         content.textContent = "";
         if (subMsg) {
             content.textContent = subMsg;
         }
-        overlay.classList.add('show');
+        overlay.classList.add("show");
     }
 
 
     function loose() {
-        handlers['gameover'](false);
+        handlers["gameover"](false);
         showEndMessage("Ты проиграл", "В другой раз повезет");
     }
 
     function victory() {
-        handlers['gameover'](true);
+        handlers["gameover"](true);
         showEndMessage("Победа", "А ты хорош!");
     }
 
@@ -139,11 +139,11 @@ export default function battle(document, window, field, fieldEnemy, settings) {
     }
 
     function onEnemyMove(param) {
-        return handlers['aiMove'](param);
+        return handlers["aiMove"](param);
     }
 
     function onMeMove(param) {
-        return handlers['meMove'](param);
+        return handlers["meMove"](param);
     }
 
     const grid = document.querySelector(".grid");
@@ -197,7 +197,7 @@ export default function battle(document, window, field, fieldEnemy, settings) {
             user.onOpponentHit(res.verdict);
             if (res.verdict === VERDICT.KILL) {
                 applyBothSides(user.guessedField, n, (ind) => {
-                    putDotHtml2(ind, user.htmlRiver, isEnemyPlayer)
+                    putDotHtml2(ind, user.htmlRiver, isEnemyPlayer);
                 });
                 if (settings.useSound && !isEnemyPlayer) {
                     playSound(bloop);
@@ -210,7 +210,7 @@ export default function battle(document, window, field, fieldEnemy, settings) {
         if (!isEnemyPlayer) {
             return;
         }
-        handlers['enemyMove'](n);
+        handlers["enemyMove"](n);
         fire(n);
     }
 
@@ -218,7 +218,7 @@ export default function battle(document, window, field, fieldEnemy, settings) {
         if (isEnemyPlayer) {
             return;
         }
-        handlers['playerMove'](n);
+        handlers["playerMove"](n);
         fire(n);
     }
 
@@ -239,9 +239,6 @@ export default function battle(document, window, field, fieldEnemy, settings) {
     function enableHotSeat() {
         myRiver.addEventListener("click", clickHandlerEnemy);
     }
-    function surrender() {
-        // TODO surrender on AI crash
-    }
 
     river.addEventListener("click", clickHandlerMy);
     return {
@@ -250,5 +247,5 @@ export default function battle(document, window, field, fieldEnemy, settings) {
         on: on,
         enableHotSeat: enableHotSeat,
         color: color
-    }
+    };
 }

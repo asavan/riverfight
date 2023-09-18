@@ -22,16 +22,16 @@ function simpleAiGame(window, document, settings) {
     return {myField, getBattle};
 }
 
-function automationAndInstall(game, document) {
-    enableSecretMenu(game);
+function automationAndInstall(window, document, game) {
+    enableSecretMenu(window, document, game);
     if (game && game.myField) {
         placementAutomation(game.myField, game);
     }
 
     try {
         game.getBattle().then(g => {
-            g.on("gameover", (res) => {
-                const btnAdd = document.querySelector('.butInstall');
+            g.on("gameover", () => {
+                const btnAdd = document.querySelector(".butInstall");
                 btnAdd.classList.remove("hidden2");
             });
         });
@@ -45,22 +45,22 @@ function startGame(window, document, settings, urlParams) {
     const mode = settings.currentMode;
     let game = null;
     switch (mode) {
-        case "ai":
-            game = simpleAiGame(window, document, settings);
-            automationAndInstall(game, document);
-            break;
-        case "net":
-            game = netGame(window, document, settings, urlParams);
-            automationAndInstall(game, document);
-            break;
-        case "server":
-            game = server(window, document, settings);
-            break;
-        case "hostseat":
-            // game = netGame().getBattle();
-            game = simpleAiGame(window, document, settings);
-            game.getBattle().then(g => g.enableHotSeat());
-            break;
+    case "ai":
+        game = simpleAiGame(window, document, settings);
+        automationAndInstall(window, document, game);
+        break;
+    case "net":
+        game = netGame(window, document, settings, urlParams);
+        automationAndInstall(window, document, game);
+        break;
+    case "server":
+        game = server(window, document, settings);
+        break;
+    case "hostseat":
+        // game = netGame().getBattle();
+        game = simpleAiGame(window, document, settings);
+        game.getBattle().then(g => g.enableHotSeat());
+        break;
     }
     return game;
 }

@@ -1,6 +1,6 @@
 "use strict";
 
-import {VERDICT, applyBothSides, applyToFirstNonNone} from './core.js';
+import {VERDICT, applyBothSides, applyToFirstNonNone} from "./core.js";
 
 function randomInteger(min, max) {
     let rand = min + Math.random() * (max - min);
@@ -71,12 +71,11 @@ export function generateAiField(ind) {
     return fields[ind];
 }
 
-export function ai(len, color) {
+export function ai(len) {
     let field = new Array(len).fill(VERDICT.NONE);
     let lastMove = -1;
     let prevDirection = 0;
     let prevIndex = -1;
-    let selfColor = color;
 
     function guess(field, currVerdict) {
         if (lastMove < 0) {
@@ -163,5 +162,5 @@ export function ai(len, color) {
         guess: guessPublic,
         setFieldAndDirection,
         setLastMove
-    }
+    };
 }
