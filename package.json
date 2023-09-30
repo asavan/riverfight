@@ -12,7 +12,10 @@
     "android": "webpack --config webpack_configs/android.webpack.config.js --mode production",
     "style": "npx eslint . -c linters/.eslintrc.json --ignore-path linters/.eslintignore",
     "style:fix": "npx eslint . -c linters/.eslintrc.json --ignore-path linters/.eslintignore --fix",
-    "updates": "npx ncu"
+    "style2": "npx stylelint --config linters/.stylelintrc.json \"src/**/*.css\"",
+    "style2:fix": "npx stylelint --config linters/.stylelintrc.json \"src/**/*.css\" --fix",
+    "updates": "npx ncu",
+    "updates:fix": "npx ncu -u && npm install"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",

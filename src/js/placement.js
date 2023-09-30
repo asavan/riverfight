@@ -92,6 +92,7 @@ export default function placement(document) {
 
     for (const shipsKey of ships) {
         shipsKey.html.addEventListener("click", (e) => {
+            e.preventDefault();
             const n = getClickIndex(e);
             choose(shipsKey, n);
         });
@@ -119,7 +120,7 @@ export default function placement(document) {
         }
 
         const s = document.createElement("div");
-        s.classList.add("ship_river");
+        s.classList.add("ship-river");
         s.classList.add("diagonal-line");
         s.style.width = currChosen.s.html.style.width;
         s.style.left = (currentPos * width) + "px";
@@ -133,6 +134,7 @@ export default function placement(document) {
     }
 
     function clickHandler(e) {
+        e.preventDefault();
         move(e, putShip);
     }
 

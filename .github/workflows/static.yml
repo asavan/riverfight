@@ -33,6 +33,7 @@ jobs:
           node-version: '20.x'
       - run: npm i
       - run: npm run style
+      - run: npm run style2
 
   build:
     needs: test
