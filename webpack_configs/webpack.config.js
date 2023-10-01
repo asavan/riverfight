@@ -24,7 +24,7 @@ const webConfig = (env, argv) => {
 
         entry: {main: ["./src/index.js", "./src/css/style.css"]},
         output: {
-            path: path.resolve(dirname, "docs"),
+            path: path.resolve(dirname, "../docs"),
             filename: devMode ? "[name].js" : "[name].[contenthash].js",
             clean: true
         },
