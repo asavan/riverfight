@@ -13,7 +13,7 @@ function getEmemyRiver(grid) {
 function stub() {}
 
 function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
-    let res = fieldEnemy[n];
+    const res = fieldEnemy[n];
     myEnemyField[n] = res;
     const verdict = getVerdict(fieldEnemy, myEnemyField, n);
     myEnemyField[n] = verdict;
@@ -44,7 +44,7 @@ function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
 }
 
 function putDotHtml2(n, river, isEnemy) {
-    let t = getTemplateByName("#dot-template");
+    const t = getTemplateByName("#dot-template");
     const f = t.content.cloneNode(true);
     const dot = f.firstElementChild;
     if (isEnemy) {
@@ -90,7 +90,7 @@ function verdictToMessage(verdict, isEnemyPlayer) {
 
 export default function battle(document, window, field, fieldEnemy, settings) {
     console.log("game begin!");
-    let color = settings.color;
+    const color = settings.color;
     let isEnemyPlayer = isEnemyStartFirst(color);
 
     printLetterByLetter(firstMessage(isEnemyPlayer), 70, isEnemyPlayer, 100000);

@@ -76,7 +76,7 @@ export default function placement(document) {
         ++shipsLeft;
     }
 
-    for (let [, shipInfo] of Object.entries(shipsCount)) {
+    for (const [, shipInfo] of Object.entries(shipsCount)) {
         for (let i = 0; i < shipInfo.count; i++) {
             addShip(shipInfo.len);
         }

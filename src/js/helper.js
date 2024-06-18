@@ -113,7 +113,7 @@ export function getStaticUrl(location, settings) {
 }
 
 export function launch(window, document, f) {
-    if( document.readyState !== "loading" ) {
+    if ( document.readyState !== "loading" ) {
         f(window, document);
     } else {
         document.addEventListener("DOMContentLoaded", function () {
@@ -123,7 +123,7 @@ export function launch(window, document, f) {
 }
 
 function stringToBoolean(string){
-    switch(string.toLowerCase().trim()){
+    switch (string.toLowerCase().trim()){
     case "true": case "yes": case "1": return true;
     case "false": case "no": case "0": case null: return false;
     default: return Boolean(string);
@@ -156,7 +156,7 @@ export function log(message, el) {
 
 export function stringifyEvent(e) {
     const obj = {};
-    for (let k in e) {
+    for (const k in e) {
         obj[k] = e[k];
     }
     return JSON.stringify(obj, (k, v) => {

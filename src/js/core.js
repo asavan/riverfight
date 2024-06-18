@@ -45,7 +45,7 @@ function getLen(field, n) {
 }
 
 export function getVerdict(fieldEnemy, myEnemyField, n) {
-    let res = fieldEnemy[n];
+    const res = fieldEnemy[n];
     if (!res) {
         return VERDICT.MISS;
     }

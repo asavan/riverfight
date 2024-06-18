@@ -27,7 +27,7 @@ export default function netGame(window, document, settings, urlParams) {
     const color = settings.color;
     let useAi = true;
     const socketUrl = getSocketUrl(window.location, settings);
-    let staticHost = getStaticUrl(window.location, settings);
+    const staticHost = getStaticUrl(window.location, settings);
     let code = null;
     let isOpponentReady = false;
     let g = null;
@@ -36,7 +36,7 @@ export default function netGame(window, document, settings, urlParams) {
 
     const myField = placement(document);
 
-    let useNetwork = !!socketUrl && !settings.showqrfake;
+    const useNetwork = !!socketUrl && !settings.showqrfake;
 
     if (settings.showqrfake) {
         code = addQrToPage(staticHost, document, urlParams, color);

@@ -118,7 +118,7 @@ export function enableSecretMenu(window, document, game) {
         }
         if (clickCount > 3) {
             if (aiInited) {
-                return ;
+                return;
             }
             if (game) {
                 if (aiInited) {

@@ -3,7 +3,7 @@
 import {VERDICT, applyBothSides, applyToFirstNonNone} from "./core.js";
 
 function randomInteger(min, max) {
-    let rand = min + Math.random() * (max - min);
+    const rand = min + Math.random() * (max - min);
     return Math.floor(rand);
 }
 
@@ -49,7 +49,7 @@ function getRandomIndex(field) {
 }
 
 function randomDirection() {
-    let dir = randomIndex(2);
+    const dir = randomIndex(2);
     if (dir === 0) {
         return -1;
     }

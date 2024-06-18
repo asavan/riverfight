@@ -28,8 +28,8 @@ function oneQrCode(url, code, color, qrcontainer, document) {
 
 export default function server(window, document, settings) {
     const socketUrl = getSocketUrl(window.location, settings);
-    let staticHost = getStaticUrl(window.location, settings);
-    let code = {};
+    const staticHost = getStaticUrl(window.location, settings);
+    const code = {};
     {
         const url = new URL(staticHost);
         url.searchParams.delete("currentMode");
