@@ -3,7 +3,7 @@
 import {defer, removeElem, printLetterByLetter, getSocketUrl, getStaticUrl, log} from "./helper.js";
 import connection from "./connection.js";
 import {getOtherColor} from "./core.js";
-import qrRender from "./qrcode.js";
+import { makeQrPlainEl } from "./qr_helper.js";
 import placement from "./placement.js";
 import protocol from "./protocol.js";
 import aiActions from "./aiMode.js";
@@ -19,7 +19,7 @@ function addQrToPage(staticHost, document, urlParams, color) {
     const element = document.createElement("div");
     element.classList.add("qrcode");
     qrcontainer.appendChild(element);
-    return qrRender(url.toString(), element);
+    return makeQrPlainEl(url.toString(), element);
 }
 
 

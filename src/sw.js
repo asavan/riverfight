@@ -1,63 +1,60 @@
-const CACHE = "offline-fallback4";
-self.addEventListener("install", function (evt) {
-    evt.waitUntil(precache().then(function () {
-        return self.skipWaiting();
-    }));
+/* eslint-env serviceworker */
+
+const version = __SERVICE_WORKER_VERSION__;
+const CACHE = "cache-only-" + version;
+
+self.addEventListener("install", (evt) => {
+    evt.waitUntil(precache().then(() => self.skipWaiting()));
 });
 
-self.addEventListener("activate", function (evt) {
-    evt.waitUntil(
-        caches.keys().then(function (cacheNames) {
-            return Promise.all(
-                cacheNames.map(function (cacheName) {
-                    if (cacheName !== CACHE) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        }).then(function () {
-            return self.clients.claim();
-        })
-    );
+const deleteCache = async (key) => {
+    await caches.delete(key);
+};
+
+const deleteOldCaches = async () => {
+    const cacheKeepList = [CACHE];
+    const keyList = await caches.keys();
+    const cachesToDelete = keyList.filter((key) => !cacheKeepList.includes(key));
+    await Promise.all(cachesToDelete.map(deleteCache));
+};
+
+const deleteAndClaim = async () => {
+    await deleteOldCaches();
+    await self.clients.claim();
+};
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(deleteAndClaim());
 });
 
-self.addEventListener("fetch", function (evt) {
+self.addEventListener("fetch", (evt) => {
     evt.respondWith(networkOrCache(evt.request));
-    //     .catch(function () {
-    //     return useFallback();
-    // }));
 });
-
 
 function networkOrCache(request) {
-    return fetch(request).then(function (response) {
-        return response.ok ? response : fromCache(request);
+    return fetch(request).then((response) => {
+        if (response.ok) {
+            return response;
+        }
+        return fromCache(request);
     })
-        .catch(function () {
-            return fromCache(request);
-        });
+        .catch(() => fromCache(request));
 }
 
-//function useFallback() {
-//    return caches.open(CACHE).then(function (cache) {
-//        return cache.match("./");
-//    });
-//}
-
-function fromCache(request) {
-    return caches.open(CACHE).then(function (cache) {
-        return cache.match(request, {ignoreSearch: true}).then(function (matching) {
-            return matching || Promise.reject("request-not-in-cache");
-        });
-    });
+async function fromCache(request) {
+    const cache = await caches.open(CACHE);
+    const matching = await cache.match(request, { ignoreSearch: true });
+    if (matching) {
+        return matching;
+    }
+    throw new Error("request-not-in-cache");
 }
 
-function precache() {
-    const filesToCache = self.__WB_MANIFEST.map((e) => e.url);
-    return caches.open(CACHE).then(function (cache) {
-        return cache.addAll([
-            "./",
-            ...filesToCache
-        ]);
-    });
+const filesToCache = self.__WB_MANIFEST.map((e) => e.url);
+async function precache() {
+    const cache = await caches.open(CACHE);
+    return await cache.addAll([
+        "./",
+        ...filesToCache
+    ]);
 }

@@ -2,7 +2,7 @@
 
 import connection from "./connection.js";
 import {getSocketUrl, getStaticUrl, removeElem} from "./helper.js";
-import qrRender from "./qrcode.js";
+import { makeQrPlainEl } from "./qr_helper.js";
 
 const SERVER_COLOR = "black";
 
@@ -10,8 +10,8 @@ function colorizePath(elem, color) {
     if (!elem) {
         return;
     }
-    const svgPath = elem.querySelector("path");
-    if (svgPath) {
+    const svgPaths = elem.querySelectorAll("rect[fill='#000']");
+    for (const svgPath of svgPaths) {
         svgPath.style.fill = color;
     }
 }
@@ -21,7 +21,9 @@ function oneQrCode(url, code, color, qrcontainer, document) {
     element.classList.add("qrcode");
     qrcontainer.appendChild(element);
     url.searchParams.set("color", color);
-    qrRender(url.toString(), element);
+    // qrRender(url.toString(), element);
+    const pic = color === "red" ? "./assets/boat4.svg" : "./assets/boat7.svg";
+    makeQrPlainEl(url.toString(), element, pic);
     colorizePath(element, color);
     code[color] = element;
 }
@@ -32,7 +34,7 @@ export default function server(window, document, settings) {
     const code = {};
     {
         const url = new URL(staticHost);
-        url.searchParams.delete("currentMode");
+        url.searchParams.delete("mode");
         const qrcontainer = document.querySelector(".qrcontainerserver");
         oneQrCode(url, code, "blue", qrcontainer, document);
         oneQrCode(url, code, "red", qrcontainer, document);

@@ -42,7 +42,7 @@ function automationAndInstall(window, document, game) {
 }
 
 function startGame(window, document, settings, urlParams) {
-    const mode = settings.currentMode;
+    const mode = settings.mode;
     let game = null;
     switch (mode) {
     case "ai":

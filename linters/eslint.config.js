@@ -27,6 +27,13 @@ export default [
         rules: {
             "prefer-const": ["error"],
             "require-await": ["error"],
+            "no-var": ["error"],
+            "prefer-arrow-callback": ["error"],
+            "curly": ["error"],
+            "keyword-spacing": ["error"],
+            "brace-style": ["error", "1tbs"],
+            "arrow-body-style": ["error"],
+            "space-before-blocks": ["error", "always"],
             "@stylistic/js/indent": [
                 "error",
                 4

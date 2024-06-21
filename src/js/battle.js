@@ -56,7 +56,9 @@ function putDotHtml2(n, river, isEnemy) {
 }
 
 const playSound = (elem) => {
-    if (!elem) return;
+    if (!elem) {
+        return;
+    }
     elem.play();
 };
 
@@ -106,7 +108,7 @@ export default function battle(document, window, field, fieldEnemy, settings) {
         const overlay = document.getElementsByClassName("overlay")[0];
         const close = document.getElementsByClassName("close")[0];
 
-        close.addEventListener("click", function (e) {
+        close.addEventListener("click", (e) => {
             e.preventDefault();
             overlay.classList.remove("show");
         }, false);

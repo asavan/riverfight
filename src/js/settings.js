@@ -2,7 +2,7 @@
 
 export default {
     modes: ["net", "fake", "ai", "hotseat", "server"],
-    currentMode: "net",
+    mode: "net",
     debug: true,
     wsPort : 8088,
     negotiatedId: 3,

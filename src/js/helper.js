@@ -77,7 +77,7 @@ export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLast
         messageAnchor.innerHTML = "";
         clearInterval(printingInterval);
     }
-    printingInterval = setInterval(function () {
+    printingInterval = setInterval(() => {
         if (i < message.length) {
             messageAnchor.innerHTML += message.charAt(i);
             ++i;
@@ -116,14 +116,14 @@ export function launch(window, document, f) {
     if ( document.readyState !== "loading" ) {
         f(window, document);
     } else {
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", () => {
             f(window, document);
         });
     }
 }
 
-function stringToBoolean(string){
-    switch (string.toLowerCase().trim()){
+function stringToBoolean(string) {
+    switch (string.toLowerCase().trim()) {
     case "true": case "yes": case "1": return true;
     case "false": case "no": case "0": case null: return false;
     default: return Boolean(string);
@@ -160,8 +160,12 @@ export function stringifyEvent(e) {
         obj[k] = e[k];
     }
     return JSON.stringify(obj, (k, v) => {
-        if (v instanceof Node) return "Node";
-        if (v instanceof Window) return "Window";
+        if (v instanceof Node) {
+            return "Node";
+        }
+        if (v instanceof Window) {
+            return "Window";
+        }
         return v;
     }, " ");
 }

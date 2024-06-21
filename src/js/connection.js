@@ -129,7 +129,9 @@ function sendMessage(messageBody) {
 function openDataChannel(ws) {
     const peerConnection = new RTCPeerConnection();
     peerConnection.onicecandidate = function (e) {
-        if (!peerConnection || !e || !e.candidate) return;
+        if (!peerConnection || !e || !e.candidate) {
+            return;
+        }
         sendNegotiation("candidate", e.candidate, ws);
     };
 
