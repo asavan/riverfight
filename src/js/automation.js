@@ -1,7 +1,7 @@
 "use strict";
 
 import {generateAiField, ai} from "./ai.js";
-import {delay} from "./helper.js";
+import {delay} from "./utils/timer.js";
 import {VERDICT} from "./core.js";
 
 function findPlaceToShip(field, len) {

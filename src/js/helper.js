@@ -49,20 +49,6 @@ export function createField(grid) {
     return field;
 }
 
-export function defer() {
-    let res, rej;
-
-    const promise = new Promise((resolve, reject) => {
-        res = resolve;
-        rej = reject;
-    });
-
-    promise.resolve = res;
-    promise.reject = rej;
-
-    return promise;
-}
-
 let printingInterval = null;
 
 export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLastSymbol) {
@@ -112,60 +98,10 @@ export function getStaticUrl(location, settings) {
     return settings.sh || location.href;
 }
 
-export function launch(window, document, f) {
-    if ( document.readyState !== "loading" ) {
-        f(window, document);
-    } else {
-        document.addEventListener("DOMContentLoaded", () => {
-            f(window, document);
-        });
-    }
-}
-
-function stringToBoolean(string) {
-    switch (string.toLowerCase().trim()) {
-    case "true": case "yes": case "1": return true;
-    case "false": case "no": case "0": case null: return false;
-    default: return Boolean(string);
-    }
-}
-
-export function parseSettings(window, document, settings) {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    for (const [key, value] of urlParams) {
-        if (typeof settings[key] === "number") {
-            settings[key] = parseInt(value, 10);
-        } else if (typeof settings[key] === "boolean") {
-            settings[key] = stringToBoolean(value);
-        } else {
-            settings[key] = value;
-        }
-    }
-}
-
-export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
 export function log(message, el) {
     if (typeof message == "object") {
         el.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + "<br />";
     } else {
         el.innerHTML += message + "<br />";
     }
-}
-
-export function stringifyEvent(e) {
-    const obj = {};
-    for (const k in e) {
-        obj[k] = e[k];
-    }
-    return JSON.stringify(obj, (k, v) => {
-        if (v instanceof Node) {
-            return "Node";
-        }
-        if (v instanceof Window) {
-            return "Window";
-        }
-        return v;
-    }, " ");
 }

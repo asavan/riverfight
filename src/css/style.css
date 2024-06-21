@@ -275,14 +275,14 @@ body {
     width: 300px;
 }
 
-@media (width >= 1180px) {
+@media (min-width: 1180px) {
     .qrcontainer {
         top: 0;
         right: 0;
     }
 }
 
-@media (width <= 1090px) {
+@media (max-width: 1090px) {
     .qrcontainer {
         left: 0;
         right: 0;
@@ -355,7 +355,7 @@ body {
 }
 
 
-@media (width <= 450px) {
+@media (max-width: 450px) {
     .grid {
         width: calc(100vw - 10px);
         grid-template-columns: 1fr;

@@ -4,12 +4,11 @@ import placement from "./placement.js";
 import aiActions from "./aiMode.js";
 import netGame from "./netMode.js";
 import server from "./serverMode.js";
-import {defer} from "./helper.js";
 import {enableSecretMenu, placementAutomation} from "./automation.js";
 
 function simpleAiGame(window, document, settings) {
     const myField = placement(document);
-    const battlePromise = defer();
+    const battlePromise = Promise.withResolvers();
     myField.myFieldPromise.then(
         (initObj) => {
             const g = aiActions(window, document, initObj.field, initObj, settings);
@@ -17,7 +16,7 @@ function simpleAiGame(window, document, settings) {
         });
 
     function getBattle() {
-        return battlePromise;
+        return battlePromise.promise;
     }
     return {myField, getBattle};
 }

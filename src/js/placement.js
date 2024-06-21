@@ -1,10 +1,10 @@
 "use strict";
 
-import {move, width, getClickIndex, createField, showGameMessage, defer} from "./helper.js";
-import {shipsCount, axis} from "./core.js";
+import { move, width, getClickIndex, createField, showGameMessage } from "./helper.js";
+import { shipsCount, axis } from "./core.js";
 
 export default function placement(document) {
-    const myFieldPromise = defer();
+    const myFieldPromise = Promise.withResolvers();
 
     function getShipyard(document, grid) {
         const s = document.createElement("div");
@@ -141,5 +141,5 @@ export default function placement(document) {
     function isReady() {
         return shipsLeft === 0;
     }
-    return {myFieldPromise, onOpponentReady, putShip, ships, choose};
+    return {myFieldPromise: myFieldPromise.promise, onOpponentReady, putShip, ships, choose};
 }

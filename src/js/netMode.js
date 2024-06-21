@@ -1,6 +1,6 @@
 "use strict";
 
-import {defer, removeElem, printLetterByLetter, getSocketUrl, getStaticUrl, log} from "./helper.js";
+import {removeElem, printLetterByLetter, getSocketUrl, getStaticUrl, log} from "./helper.js";
 import connection from "./connection.js";
 import {getOtherColor} from "./core.js";
 import { makeQrPlainEl } from "./qr_helper.js";
@@ -31,8 +31,8 @@ export default function netGame(window, document, settings, urlParams) {
     let code = null;
     let isOpponentReady = false;
     let g = null;
-    const enemyFieldPromise = defer();
-    const battlePromise = defer();
+    const enemyFieldPromise = Promise.withResolvers();
+    const battlePromise = Promise.withResolvers();
 
     const myField = placement(document);
 
@@ -91,7 +91,7 @@ export default function netGame(window, document, settings, urlParams) {
         } else {
             printLetterByLetter("Ждем оппонента", 70, false, 100000);
             const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
-            enemyFieldPromise.then((enemyField) => {
+            enemyFieldPromise.promise.then((enemyField) => {
                 if (!opponentAlreadyConnected) {
                     const opponentAlreadyConnected2 = connection.sendMessage(protocol.toField(field));
                     if (opponentAlreadyConnected2) {
@@ -107,7 +107,7 @@ export default function netGame(window, document, settings, urlParams) {
     });
 
     function getBattle() {
-        return battlePromise;
+        return battlePromise.promise;
     }
 
     return {myField, getBattle};
