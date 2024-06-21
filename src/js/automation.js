@@ -54,7 +54,7 @@ async function placeShips(p, field) {
     }
 }
 
-export function placementAutomation(p, game) {
+export function placementAutomation(game) {
     const secretCodeElem = document.querySelector(".secret-code");
 
     let clickCount = 0;
@@ -68,7 +68,7 @@ export function placementAutomation(p, game) {
         if (clickCount > 3) {
             clickCount = 0;
             if (!placementDone) {
-                await placeShips(p, field);
+                await placeShips(game.myField, field);
                 placementDone = true;
             } else {
                 if (!aiInited) {
@@ -120,14 +120,8 @@ export function enableSecretMenu(window, document, game) {
             if (aiInited) {
                 return;
             }
-            if (game) {
-                if (aiInited) {
-                    console.log("inited");
-                    return false;
-                }
-                aiInited = true;
-                playerAi(game);
-            }
+            aiInited = true;
+            playerAi(game);
         }
     };
     secretCodeElem.addEventListener("click", secretClickHandler);

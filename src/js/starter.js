@@ -1,5 +1,3 @@
-"use strict";
-
 import placement from "./placement.js";
 import aiActions from "./aiMode.js";
 import netGame from "./netMode.js";
@@ -8,36 +6,31 @@ import {enableSecretMenu, placementAutomation} from "./automation.js";
 
 function simpleAiGame(window, document, settings) {
     const myField = placement(document);
-    const battlePromise = Promise.withResolvers();
-    myField.myFieldPromise.then(
-        (initObj) => {
-            const g = aiActions(window, document, initObj.field, initObj, settings);
-            battlePromise.resolve(g);
-        });
+    const battlePromise = new Promise((resolve) => {
+        myField.myFieldPromise.then(
+            (initObj) => {
+                const g = aiActions(window, document, initObj, settings);
+                resolve(g);
+            });
+    });
 
     function getBattle() {
-        return battlePromise.promise;
+        return battlePromise;
     }
     return {myField, getBattle};
 }
 
 function automationAndInstall(window, document, game) {
     enableSecretMenu(window, document, game);
-    if (game && game.myField) {
-        placementAutomation(game.myField, game);
-    }
-
-    try {
-        game.getBattle().then(g => {
-            g.on("gameover", () => {
-                const btnAdd = document.querySelector(".butInstall");
+    placementAutomation(game);
+    game.getBattle().then(g => {
+        g.on("gameover", () => {
+            const btnAdd = document.querySelector(".butInstall");
+            if (btnAdd) {
                 btnAdd.classList.remove("hidden2");
-            });
+            }
         });
-
-    } catch (e) {
-        console.log(e);
-    }
+    });
 }
 
 function startGame(window, document, settings) {
@@ -56,7 +49,6 @@ function startGame(window, document, settings) {
         game = server(window, document, settings);
         break;
     case "hostseat":
-        // game = netGame().getBattle();
         game = simpleAiGame(window, document, settings);
         game.getBattle().then(g => g.enableHotSeat());
         break;

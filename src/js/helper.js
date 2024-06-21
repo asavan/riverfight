@@ -79,7 +79,7 @@ function getWebSocketUrl(protocol, socketUrl, host, settings) {
         return socketUrl;
     }
     if (protocol === "https:") {
-        return null;
+        return;
     }
     return "ws://" + host + ":" + settings.wsPort;
 }

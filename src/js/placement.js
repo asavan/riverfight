@@ -141,5 +141,5 @@ export default function placement(document) {
     function isReady() {
         return shipsLeft === 0;
     }
-    return {myFieldPromise: myFieldPromise.promise, onOpponentReady, putShip, ships, choose};
+    return {myFieldPromise: myFieldPromise.promise, putShip, ships, choose};
 }

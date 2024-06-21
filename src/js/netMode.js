@@ -22,7 +22,7 @@ function addQrToPage(staticHost, document, color) {
 
 export default function netGame(window, document, settings) {
     const color = settings.color;
-    let useAi = true;
+    let useAi = false;
     const socketUrl = getSocketUrl(window.location, settings);
     const staticHost = getStaticUrl(window.location, settings);
     let code = null;
@@ -47,6 +47,7 @@ export default function netGame(window, document, settings) {
         connection.on("socket_error", (e) => {
             const logger = document.getElementsByClassName("logger")[0];
             log(e, logger);
+            useAi = true;
         });
 
         connection.on("socket_close", () => {
@@ -77,15 +78,17 @@ export default function netGame(window, document, settings) {
                 g.fireEnemy(n);
             });
         });
+    } else {
+        useAi = true;
     }
 
     myField.myFieldPromise.then((initObj) => {
-        const field = initObj.field;
         if (useAi) {
             removeElem(code);
-            g = aiActions(window, document, field, initObj, settings);
+            g = aiActions(window, document, initObj, settings);
             battlePromise.resolve(g);
         } else {
+            const field = initObj.field;
             printLetterByLetter("Ждем оппонента", 70, false, 100000);
             const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
             enemyFieldPromise.promise.then((enemyField) => {
