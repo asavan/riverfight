@@ -1,19 +1,16 @@
 "use strict";
 
-import {removeElem, printLetterByLetter, getSocketUrl, getStaticUrl, log} from "./helper.js";
+import { printLetterByLetter, getSocketUrl, getStaticUrl, log} from "./helper.js";
 import connection from "./connection.js";
 import {getOtherColor} from "./core.js";
-import { makeQrPlainEl } from "./qr_helper.js";
+import { removeElem, makeQrPlainEl } from "./qr_helper.js";
 import placement from "./placement.js";
 import protocol from "./protocol.js";
 import aiActions from "./aiMode.js";
 import battle from "./battle.js";
 
-function addQrToPage(staticHost, document, urlParams, color) {
+function addQrToPage(staticHost, document, color) {
     const url = new URL(staticHost);
-    url.search = urlParams;
-    url.searchParams.delete("wh");
-    url.searchParams.delete("sh");
     url.searchParams.set("color", getOtherColor(color));
     const qrcontainer = document.querySelector(".qrcontainer");
     const element = document.createElement("div");
@@ -23,7 +20,7 @@ function addQrToPage(staticHost, document, urlParams, color) {
 }
 
 
-export default function netGame(window, document, settings, urlParams) {
+export default function netGame(window, document, settings) {
     const color = settings.color;
     let useAi = true;
     const socketUrl = getSocketUrl(window.location, settings);
@@ -39,12 +36,12 @@ export default function netGame(window, document, settings, urlParams) {
     const useNetwork = !!socketUrl && !settings.showqrfake;
 
     if (settings.showqrfake) {
-        code = addQrToPage(staticHost, document, urlParams, color);
+        code = addQrToPage(staticHost, document, color);
     }
 
     if (useNetwork) {
         connection.on("socket_open", () => {
-            code = addQrToPage(staticHost, document, urlParams, color);
+            code = addQrToPage(staticHost, document, color);
         });
 
         connection.on("socket_error", (e) => {

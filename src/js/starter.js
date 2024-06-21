@@ -40,16 +40,16 @@ function automationAndInstall(window, document, game) {
     }
 }
 
-function startGame(window, document, settings, urlParams) {
+function startGame(window, document, settings) {
     const mode = settings.mode;
-    let game = null;
+    let game;
     switch (mode) {
     case "ai":
         game = simpleAiGame(window, document, settings);
         automationAndInstall(window, document, game);
         break;
     case "net":
-        game = netGame(window, document, settings, urlParams);
+        game = netGame(window, document, settings);
         automationAndInstall(window, document, game);
         break;
     case "server":

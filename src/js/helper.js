@@ -29,12 +29,6 @@ export function hideElem(el) {
     }
 }
 
-export function removeElem(el) {
-    if (el) {
-        el.remove();
-    }
-}
-
 export function createField(grid) {
     const t = getTemplateByName("#field-template");
     const f = t.content.cloneNode(true);
@@ -95,7 +89,7 @@ export function getSocketUrl(location, settings) {
 }
 
 export function getStaticUrl(location, settings) {
-    return settings.sh || location.href;
+    return settings.sh || location.origin;
 }
 
 export function log(message, el) {

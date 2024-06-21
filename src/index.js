@@ -6,10 +6,8 @@ import install from "./js/install_as_app.js";
 import {parseSettings} from "./js/utils/parse-settings.js";
 
 function starter(window, document) {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
     parseSettings(window.location.search, settings);
-    startGame(window, document, settings, urlParams);
+    startGame(window, document, settings);
 }
 
 starter(window, document);
