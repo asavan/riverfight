@@ -1,6 +1,6 @@
 "use strict";
 
-import { move, width, getClickIndex, createField, showGameMessage } from "./helper.js";
+import { width, getClickIndex, createField, showGameMessage } from "./helper.js";
 import { shipsCount, axis } from "./core.js";
 
 export default function placement(document) {
@@ -76,7 +76,7 @@ export default function placement(document) {
         ++shipsLeft;
     }
 
-    for (const [, shipInfo] of Object.entries(shipsCount)) {
+    for (const shipInfo of shipsCount) {
         for (let i = 0; i < shipInfo.count; i++) {
             addShip(shipInfo.len);
         }
@@ -108,6 +108,9 @@ export default function placement(document) {
     }
 
     function putShip(n) {
+        if (n < 0) {
+            return false;
+        }
         if (currChosen == null) {
             showGameMessage("Выберите корабль");
             return false;
@@ -135,7 +138,8 @@ export default function placement(document) {
 
     function clickHandler(e) {
         e.preventDefault();
-        move(e, putShip);
+        const n = getClickIndex(e);
+        putShip(n);
     }
 
     function isReady() {

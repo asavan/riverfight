@@ -6,30 +6,25 @@ import {VERDICT} from "./core.js";
 
 function findPlaceToShip(field, len) {
     let start = -1;
-    let end = -1;
     for (let i = 0; i < field.length; i++) {
         if (field[i] === 1) {
             if (start < 0) {
                 start = i;
             }
-            end = -1;
         }
         if (field[i] === 0) {
-            if (end < 0) {
-                end = i;
-                if (start >= 0) {
-                    if (end - start === len) {
-                        return start;
-                    }
+            if (start >= 0) {
+                if (i - start === len) {
+                    return start;
                 }
-                start = -1;
-            } else {
-                end = -1;
-                start = -1;
             }
+            start = -1;
         }
     }
-    return start;
+    if (field.length - start === len) {
+        return start;
+    }
+    return -1;
 }
 
 function fillZeroes(field, putTo, length) {
@@ -62,14 +57,14 @@ export function placementAutomation(game) {
     let aiInited = false;
     const field = generateAiField(-1);
 
-    const secretClickHandler = async (e) => {
+    const secretClickHandler = (e) => {
         e.preventDefault();
         ++clickCount;
         if (clickCount > 3) {
             clickCount = 0;
             if (!placementDone) {
-                await placeShips(game.myField, field);
                 placementDone = true;
+                return placeShips(game.myField, field);
             } else {
                 if (!aiInited) {
                     playerAi(game);

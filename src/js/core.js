@@ -11,11 +11,11 @@ export const VERDICT = {
 
 export const axis = "абвгдежзиклмнопрст";
 
-export const shipsCount = {
-    0 : {len : 3, count : 1},
-    1: {len : 2, count : 2},
-    2: {len : 1, count : 3}
-};
+export const shipsCount = [
+    {len : 3, count : 1},
+    {len : 2, count : 2},
+    {len : 1, count : 3}
+];
 
 function isShip(verdict) {
     if (verdict === VERDICT.NONE || verdict >= VERDICT.MISS) {
