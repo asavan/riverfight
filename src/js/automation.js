@@ -55,7 +55,6 @@ export function placementAutomation(game) {
     let clickCount = 0;
     let placementDone = false;
     let aiInited = false;
-    const field = generateAiField(-1);
 
     const secretClickHandler = (e) => {
         e.preventDefault();
@@ -64,24 +63,22 @@ export function placementAutomation(game) {
             clickCount = 0;
             if (!placementDone) {
                 placementDone = true;
+                const field = generateAiField(-1);
                 return placeShips(game.myField, field);
             } else {
                 if (!aiInited) {
+                    aiInited = true;
                     playerAi(game);
                 }
-                aiInited = true;
             }
-
         }
     };
     secretCodeElem.addEventListener("click", secretClickHandler);
 }
 
-
 function playerAi(game) {
     return game.getBattle().then(g => {
-        const field = generateAiField(-1);
-        const aiBot = ai(field.length);
+        const aiBot = ai(g.size());
 
         function onAiMove1(verdict) {
             const n = aiBot.guess(verdict);

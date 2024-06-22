@@ -90,7 +90,10 @@ function verdictToMessage(verdict, isEnemyPlayer) {
 }
 
 
-export default function battle(document, window, field, fieldEnemy, settings) {
+export default function battle(document, field, fieldEnemy, settings) {
+    if (field.length !== fieldEnemy.length) {
+        throw "Bad size";
+    }
     console.log("game begin!");
     const color = settings.color;
     let isEnemyPlayer = isEnemyStartFirst(color);
@@ -243,11 +246,13 @@ export default function battle(document, window, field, fieldEnemy, settings) {
     }
 
     river.addEventListener("click", clickHandlerMy);
+    const size = () => field.length;
     return {
-        fireEnemy: fireEnemy,
-        firePlayer: firePlayer,
-        on: on,
-        enableHotSeat: enableHotSeat,
-        color: color
+        size,
+        fireEnemy,
+        firePlayer,
+        on,
+        enableHotSeat,
+        color
     };
 }

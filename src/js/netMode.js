@@ -85,13 +85,13 @@ export default function netGame(window, document, settings) {
     myField.myFieldPromise.then((initObj) => {
         if (useAi) {
             removeElem(code);
-            g = aiActions(window, document, initObj, settings);
+            g = aiActions(document, initObj, settings);
             battlePromise.resolve(g);
         } else {
             const field = initObj.field;
             printLetterByLetter("Ждем оппонента", 70, false, 100000);
             const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
-            enemyFieldPromise.promise.then((enemyField) => {
+            enemyFieldPromise.promise.then((fieldEnemy) => {
                 if (!opponentAlreadyConnected) {
                     const opponentAlreadyConnected2 = connection.sendMessage(protocol.toField(field));
                     if (opponentAlreadyConnected2) {
@@ -99,7 +99,7 @@ export default function netGame(window, document, settings) {
                     }
                 }
                 initObj.onOpponentReady();
-                g = battle(document, window, field, enemyField, settings);
+                g = battle(document, field, fieldEnemy, settings);
                 g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
                 battlePromise.resolve(g);
             });

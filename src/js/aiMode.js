@@ -4,12 +4,12 @@ import {ai, generateAiField} from "./ai.js";
 import battle from "./battle.js";
 import {VERDICT, isEnemyStartFirst} from "./core.js";
 
-export default function aiActions(window, document, initObj, settings) {
+export default function aiActions(document, initObj, settings) {
     const field = initObj.field;
     initObj.onOpponentReady();
     const fieldEnemy = generateAiField(-1);
     const aiBot = ai(field.length);
-    const g = battle(document, window, field, fieldEnemy, settings);
+    const g = battle(document, field, fieldEnemy, settings);
 
     function onAiMove(verdict) {
         const n = aiBot.guess(verdict);

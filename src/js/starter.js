@@ -9,7 +9,7 @@ function simpleAiGame(window, document, settings) {
     const battlePromise = new Promise((resolve) => {
         myField.myFieldPromise.then(
             (initObj) => {
-                const g = aiActions(window, document, initObj, settings);
+                const g = aiActions(document, initObj, settings);
                 resolve(g);
             });
     });
