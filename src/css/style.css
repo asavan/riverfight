@@ -234,6 +234,11 @@ body {
     user-select: none;
 }
 
+.clickable {
+    cursor: pointer;
+    user-select: none;
+}
+
 .header1 {
     text-align: center;
     text-transform: uppercase;

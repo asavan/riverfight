@@ -1,8 +1,8 @@
 "use strict";
 
-import { printLetterByLetter, getSocketUrl, getStaticUrl, log} from "../helper.js";
+import { printLetterByLetter, getSocketUrl, getStaticUrl } from "../helper.js";
 import connection from "../connection.js";
-import {getOtherColor} from "../core.js";
+import { getOtherColor } from "../core.js";
 import { removeElem, makeQrPlainEl } from "../qr_helper.js";
 import placement from "../placement.js";
 import protocol from "../protocol.js";
@@ -39,9 +39,9 @@ export default function netGame(window, document, settings) {
             code = addQrToPage(staticHost, document, color);
         });
 
-        connection.on("socket_error", (e) => {
-            const logger = document.getElementsByClassName("logger")[0];
-            log(e, logger);
+        connection.on("socket_error", () => {
+            // const logger = document.getElementsByClassName("logger")[0];
+            // log(e, logger);
             useAi = true;
         });
 

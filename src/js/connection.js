@@ -115,6 +115,7 @@ function connectToSecond() {
 
 function sendMessage(messageBody) {
     if (!dataChannel) {
+        console.log("No channel");
         return false;
     }
     if (!isConnected) {

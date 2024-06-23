@@ -93,7 +93,7 @@ export function makePlayerAi(g) {
 
     g.on("meMove", onAiMove1);
     g.on("playerMove", (n) => {
-        console.log("Player move " + n);
+        // console.log("Player move " + n);
         aiBot.setLastMove(n);
     });
     if (!g.isEnemyMove()) {

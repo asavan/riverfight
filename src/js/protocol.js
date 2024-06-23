@@ -21,8 +21,12 @@ function toMove(n) {
     return toObjJson(n, "move");
 }
 
+function toRestart(n) {
+    return toObjJson(n, "restart");
+}
+
 function toField(field) {
     return toObjJson(field, "field");
 }
 
-export default {parser, toMove, toField};
+export default {parser, toMove, toField, toRestart};

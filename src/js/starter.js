@@ -2,6 +2,7 @@ import placement from "./placement.js";
 import netGame from "./modes/netMode.js";
 import setupLocalGame from "./modes/aiMode.js";
 import server from "./modes/serverMode.js";
+import matchMode from "./modes/matchMode.js";
 import { enableSecretMenu, placementAutomation } from "./automation.js";
 
 function simpleGame(document, settings, useAi) {
@@ -43,6 +44,9 @@ function startGame(window, document, settings) {
     case "hotseat":
         game = simpleGame(document, settings, false);
         placementAutomation(game);
+        break;
+    case "match":
+        game = matchMode(window, document, settings);
         break;
     }
     return game;

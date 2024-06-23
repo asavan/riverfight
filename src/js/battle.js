@@ -3,6 +3,7 @@
 import {getVerdict, VERDICT, applyBothSides, isEnemyStartFirst} from "./core.js";
 import {move, width, getTemplateByName, createField, printLetterByLetter} from "./helper.js";
 import { assert } from "./utils/assert.js";
+import handlersFunc from "./utils/handlers.js";
 
 
 function getEmemyRiver(grid) {
@@ -10,8 +11,6 @@ function getEmemyRiver(grid) {
     enemyFieldHtml.classList.add("adjust-second");
     return enemyFieldHtml.querySelector(".river");
 }
-
-function stub() {}
 
 function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
     const res = fieldEnemy[n];
@@ -134,25 +133,17 @@ export default function battle(document, field, fieldEnemy, settings) {
     console.log("game begin!", {isEnemyPlayer});
 
     printLetterByLetter(firstMessage(isEnemyPlayer), 70, isEnemyPlayer, 100000);
-    const handlers = {
-        "playerMove": stub,
-        "enemyMove": stub,
-        "meMove": stub,
-        "aiMove": stub,
-        "gameover": stub
-    };
+    const handlers = handlersFunc([
+        "playerMove",
+        "enemyMove",
+        "meMove",
+        "aiMove",
+        "gameover"
+    ]);
 
-    function on(name, f) {
-        handlers[name] = f;
-    }
-
-    function onEnemyMove(param) {
-        return handlers["aiMove"](param);
-    }
-
-    function onMeMove(param) {
-        return handlers["meMove"](param);
-    }
+    const on = handlers.on;
+    const onEnemyMove = handlers.handler("aiMove");
+    const onMeMove = handlers.handler("meMove");
 
     const grid = document.querySelector(".grid");
     const river = getEmemyRiver(grid);
@@ -160,12 +151,12 @@ export default function battle(document, field, fieldEnemy, settings) {
     const bloop = document.getElementById("bloop");
 
     function loose() {
-        handlers["gameover"](false);
+        handlers.call("gameover", false);
         showEndMessage("Ты проиграл", "В другой раз повезет", document);
     }
 
     function victory() {
-        handlers["gameover"](true);
+        handlers.call("gameover", true);
         if (settings.useSound) {
             const tada = document.getElementById("tada");
             playSound(tada);
@@ -228,7 +219,7 @@ export default function battle(document, field, fieldEnemy, settings) {
             return;
         }
         n = ajustInput(n, field.length - 1);
-        handlers["enemyMove"](n);
+        handlers.call("enemyMove", n);
         fire(n);
     }
 
@@ -237,7 +228,7 @@ export default function battle(document, field, fieldEnemy, settings) {
             return;
         }
         n = ajustInput(n, field.length - 1);
-        handlers["playerMove"](n);
+        handlers.call("playerMove", n);
         fire(n);
     }
 

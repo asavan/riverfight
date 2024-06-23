@@ -54,17 +54,17 @@ export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLast
         messageAnchor.classList.remove("enemy");
     }
     if (printingInterval) {
-        messageAnchor.innerHTML = "";
+        messageAnchor.textContent = "";
         clearInterval(printingInterval);
     }
     printingInterval = setInterval(() => {
         if (i < message.length) {
-            messageAnchor.innerHTML += message.charAt(i);
+            messageAnchor.textContent += message.charAt(i);
             ++i;
         } else {
             clearInterval(printingInterval);
             printingInterval = setTimeout(() => {
-                messageAnchor.innerHTML = "";
+                messageAnchor.textContent = "";
             }, waitAfterLastSymbol);
         }
     }, speed);

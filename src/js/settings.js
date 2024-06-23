@@ -1,7 +1,7 @@
 "use strict";
 
 export default {
-    modes: ["net", "fake", "ai", "hotseat", "server"],
+    modes: ["net", "fake", "ai", "hotseat", "server", "match"],
     mode: "net",
     debug: true,
     wsPort : 8088,
