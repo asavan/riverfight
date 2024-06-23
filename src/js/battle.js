@@ -108,8 +108,8 @@ export default function battle(document, field, fieldEnemy, settings) {
     };
 
     function showEndMessage(message, subMsg) {
-        const overlay = document.getElementsByClassName("overlay")[0];
-        const close = document.getElementsByClassName("close")[0];
+        const overlay = document.querySelector(".overlay");
+        const close = document.querySelector(".close");
 
         close.addEventListener("click", (e) => {
             e.preventDefault();
@@ -117,16 +117,12 @@ export default function battle(document, field, fieldEnemy, settings) {
         }, false);
 
 
-        const h2 = overlay.querySelectorAll("h2")[0];
+        const h2 = overlay.querySelector("h2");
         h2.textContent = message;
-        const content = overlay.querySelectorAll(".content")[0];
-        content.textContent = "";
-        if (subMsg) {
-            content.textContent = subMsg;
-        }
+        const content = overlay.querySelector(".content");
+        content.textContent = subMsg;
         overlay.classList.add("show");
     }
-
 
     function loose() {
         handlers["gameover"](false);

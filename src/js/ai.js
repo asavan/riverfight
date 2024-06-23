@@ -25,8 +25,6 @@ function chooseRandomIndex(field) {
     return randomIndex(noneCount);
 }
 
-// let prevIndex = -1;
-
 function getRandomIndex(field) {
     let index = chooseRandomIndex(field);
     let i = 0;
@@ -41,10 +39,6 @@ function getRandomIndex(field) {
     if (i >= field.length || i < 0) {
         console.table("Error out", i, field);
     }
-    // if (prevIndex === i) {
-    //     console.table("Error repeated", i, field);
-    // }
-    // prevIndex = i;
     return i;
 }
 
@@ -148,19 +142,12 @@ export function ai(len) {
         return move;
     }
 
-    function setFieldAndDirection(f, d, lastM) {
-        field = f;
-        prevDirection = d;
-        lastMove = lastM;
-    }
-
     function setLastMove(n) {
         lastMove = n;
     }
 
     return {
         guess: guessPublic,
-        setFieldAndDirection,
         setLastMove
     };
 }
