@@ -56,34 +56,33 @@ export function setupGameover(g, document) {
     });
 }
 
-export function placementAutomation(game) {
-    const secretCodeElem = document.querySelector(".secret-code");
-
+function clickCounterEl(el, codes) {
     let clickCount = 0;
-    let placementDone = false;
-    let aiInited = false;
+    let curIndex = 0;
 
     const secretClickHandler = (e) => {
         e.preventDefault();
-        ++clickCount;
-        if (clickCount > 3) {
-            clickCount = 0;
-            if (!placementDone) {
-                placementDone = true;
-                const field = generateAiField(-1);
-                return placeShips(game.myField, field);
-            } else {
-                if (!aiInited) {
-                    aiInited = true;
-                    playerAi(game);
-                }
-            }
+        if (curIndex >= codes.length) {
+            return;
         }
+        ++clickCount;
+        const {clicks, launch} = codes[curIndex];
+        if (clickCount < clicks) {
+            return;
+        }
+
+        ++curIndex;
+        return launch();
     };
-    secretCodeElem.addEventListener("click", secretClickHandler);
+    el.addEventListener("click", secretClickHandler);
 }
 
-function makePlayerAi(g) {
+export function clickCounter(document, selector, codes) {
+    const secretCodeElem = document.querySelector(selector);
+    clickCounterEl(secretCodeElem, codes);
+}
+
+export function makePlayerAi(g) {
     const aiBot = ai(g.size());
     function onAiMove1(verdict) {
         const n = aiBot.guess(verdict);
@@ -125,22 +124,35 @@ function playerAi(game) {
 }
 
 export function enableSecretMenu(window, document, game) {
-    const secretCodeElem = document.querySelector(".secret-code2");
-    let clickCount = 0;
-    let aiInited = false;
-    const secretClickHandler = (e) => {
-        e.preventDefault();
-        ++clickCount;
-        if (clickCount >= 10) {
-            window.location.href = "https://asavan.github.io/";
-        }
-        if (clickCount > 3) {
-            if (aiInited) {
-                return;
+    const codes = [
+        {
+            clicks: 3,
+            launch: () => playerAi(game)
+        },
+        {
+            clicks: 10,
+            launch: () => {
+                window.location.href = "https://asavan.github.io/";
             }
-            aiInited = true;
-            playerAi(game);
         }
-    };
-    secretCodeElem.addEventListener("click", secretClickHandler);
+    ]
+    clickCounter(document, ".secret-code2", codes);
+}
+
+export function placementAutomation(game) {
+    const codes = [
+        {
+            clicks: 3,
+            launch: () => {
+                const field = generateAiField(-1);
+                return placeShips(game.myField, field);
+            }
+        },
+        {
+            clicks: 6,
+            launch: () => playerAi(game)
+        }
+    ]
+
+    clickCounter(document, ".secret-code", codes);
 }

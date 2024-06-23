@@ -46,8 +46,9 @@ function startGame(window, document, settings) {
     case "server":
         game = server(window, document, settings);
         break;
-    case "hostseat":
+    case "hotseat":
         game = simpleGame(document, settings, false);
+        placementAutomation(game);
         break;
     }
     return game;
