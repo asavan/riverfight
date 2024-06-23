@@ -1,27 +1,27 @@
 "use strict";
 
 import { getVerdict, VERDICT, applyBothSides, isEnemyStartFirst } from "../core.js";
-import { move, width, getTemplateByName, createField, printLetterByLetter } from "./helper.js";
+import { move, width, createField, printLetterByLetter } from "./helper.js";
 import { assert } from "../utils/assert.js";
 import handlersFunc from "../utils/handlers.js";
 
 
-function getEmemyRiver(grid) {
-    const enemyFieldHtml = createField(grid);
+function getEmemyRiver(grid, document) {
+    const enemyFieldHtml = createField(grid, document);
     enemyFieldHtml.classList.add("adjust-second");
     return enemyFieldHtml.querySelector(".river");
 }
 
-function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
+function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river, document) {
     const res = fieldEnemy[n];
     myEnemyField[n] = res;
     const verdict = getVerdict(fieldEnemy, myEnemyField, n);
     myEnemyField[n] = verdict;
     let t;
     if (res) {
-        t = getTemplateByName("#ship-template");
+        t = document.querySelector("#ship-template");
     } else {
-        t = getTemplateByName("#dot-template2");
+        t = document.querySelector("#dot-template2");
     }
     const f = t.content.cloneNode(true);
     const dot = f.firstElementChild;
@@ -43,17 +43,18 @@ function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
     return {html: dot, res: res, verdict: verdict};
 }
 
-function putDotHtml3(n, target) {
+function putDotHtml3(n, target, document) {
     return putDotHtml(n,
         target.isOpponentEnemy,
         target.realField,
         target.guessedField,
-        target.htmlRiver
+        target.htmlRiver,
+        document
     );
 }
 
-function putDotHtml2(n, river, isEnemy) {
-    const t = getTemplateByName("#dot-template");
+function putDotHtml2(n, river, isEnemy, document) {
+    const t = document.querySelector("#dot-template");
     const f = t.content.cloneNode(true);
     const dot = f.firstElementChild;
     if (isEnemy) {
@@ -132,7 +133,7 @@ export default function battle(document, field, fieldEnemy, settings) {
     let isEnemyPlayer = isEnemyStartFirst(settings.color);
     console.log("game begin!", {isEnemyPlayer});
 
-    printLetterByLetter(firstMessage(isEnemyPlayer), 70, isEnemyPlayer, 100000);
+    printLetterByLetter(firstMessage(isEnemyPlayer), 70, isEnemyPlayer, 100000, document);
     const handlers = handlersFunc([
         "playerMove",
         "enemyMove",
@@ -146,7 +147,7 @@ export default function battle(document, field, fieldEnemy, settings) {
     const onMeMove = handlers.handler("meMove");
 
     const grid = document.querySelector(".grid");
-    const river = getEmemyRiver(grid);
+    const river = getEmemyRiver(grid, document);
     const myRiver = document.querySelector(".river");
     const bloop = document.getElementById("bloop");
 
@@ -166,7 +167,7 @@ export default function battle(document, field, fieldEnemy, settings) {
 
     function onKill(target, n) {
         applyBothSides(target.guessedField, n, (ind) => {
-            putDotHtml2(ind, target.htmlRiver, target.isOpponentEnemy);
+            putDotHtml2(ind, target.htmlRiver, target.isOpponentEnemy, document);
         });
         if (settings.useSound && !target.isOpponentEnemy) {
             playSound(bloop);
@@ -193,9 +194,9 @@ export default function battle(document, field, fieldEnemy, settings) {
 
     function fire(n) {
         const target = isEnemyPlayer ? player : enemy;
-        const {verdict} = putDotHtml3(n, target);
+        const {verdict} = putDotHtml3(n, target, document);
         const message = verdictToMessage(verdict, target.isOpponentEnemy) + "!";
-        printLetterByLetter(message, 70, target.isOpponentEnemy, 100000);
+        printLetterByLetter(message, 70, target.isOpponentEnemy, 100000, document);
 
         if (verdict === VERDICT.MISS) {
             isEnemyPlayer = !isEnemyPlayer;

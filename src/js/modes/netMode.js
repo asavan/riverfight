@@ -80,7 +80,7 @@ export default function netGame(window, document, settings) {
             battlePromise.resolve(g);
         } else {
             const field = initObj.field;
-            printLetterByLetter("Ждем оппонента", 70, false, 100000);
+            printLetterByLetter("Ждем оппонента", 70, false, 100000, document);
             const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
             enemyFieldPromise.promise.then((fieldEnemy) => {
                 if (!opponentAlreadyConnected) {
@@ -93,7 +93,6 @@ export default function netGame(window, document, settings) {
                 g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
                 connection.on("recv", (data) => {
                     protocol.parser(data, "move", (n) => {
-                        console.log("Enemy try to move " + n);
                         g.fireEnemy(n);
                     });
                 });

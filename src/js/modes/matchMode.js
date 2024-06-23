@@ -1,9 +1,9 @@
 "use strict";
 
-import { printLetterByLetter, log } from "../views/helper.js";
+import { printLetterByLetter } from "../views/helper.js";
 import { getSocketUrl, getStaticUrl } from "../connection/common.js";
 import connection from "../connection/connection.js";
-import {getOtherColor} from "../core.js";
+import { getOtherColor } from "../core.js";
 import { removeElem, makeQrPlainEl } from "../views/qr_helper.js";
 import placement from "../views/placement.js";
 import protocol from "../connection/protocol.js";
@@ -45,7 +45,7 @@ function oneRound(connection, document, settings) {
 
     myField.myFieldPromise.then((initObj) => {
         const field = initObj.field;
-        printLetterByLetter("Ждем оппонента", 70, false, 100000);
+        printLetterByLetter("Ждем оппонента", 70, false, 100000, document);
         connection.sendMessage(protocol.toField(field));
         enemyFieldPromise.promise.then((fieldEnemy) => {
             const g = onGameReady(document, initObj, fieldEnemy, settings);
@@ -101,8 +101,7 @@ export default function matchGame(window, document, settings) {
     });
 
     connection.on("socket_error", (e) => {
-        const logger = document.getElementsByClassName("logger")[0];
-        log(e, logger);
+        console.error(e);
     });
 
     connection.on("socket_close", () => {

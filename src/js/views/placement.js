@@ -1,6 +1,6 @@
 "use strict";
 
-import { width, getClickIndex, createField, showGameMessage } from "./helper.js";
+import { width, getClickIndex, createField, printLetterByLetter } from "./helper.js";
 import { shipsCount, axis } from "../core.js";
 
 export default function placement(document) {
@@ -11,6 +11,10 @@ export default function placement(document) {
         s.classList.add("shipyard");
         grid.appendChild(s);
         return s;
+    }
+
+    function showGameMessage(message) {
+        printLetterByLetter(message, 70, false, 2000, document);
     }
 
     let currChosen = null;
@@ -59,7 +63,7 @@ export default function placement(document) {
 
     const ships = [];
     const grid = document.querySelector(".grid");
-    const fieldHtml = createField(grid);
+    const fieldHtml = createField(grid, document);
     fieldHtml.classList.add("adjust-first");
     const shipyard = getShipyard(document, grid);
 

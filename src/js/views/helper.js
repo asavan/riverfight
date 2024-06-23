@@ -10,27 +10,11 @@ export function getClickIndex(e) {
 
 export function move(e, f) {
     const n = getClickIndex(e);
-    // console.log("move " + n);
     f(n);
 }
 
-export function getTemplateByName(name) {
-    return document.querySelector(name);
-}
-
-export function hide(selector) {
-    const el = document.querySelector(selector);
-    hideElem(el);
-}
-
-export function hideElem(el) {
-    if (el) {
-        el.classList.add("hidden");
-    }
-}
-
-export function createField(grid) {
-    const t = getTemplateByName("#field-template");
+export function createField(grid, document) {
+    const t = document.querySelector("#field-template");
     const f = t.content.cloneNode(true);
     const field = f.firstElementChild;
     const text = field.querySelector(".frame-text");
@@ -45,7 +29,7 @@ export function createField(grid) {
 
 let printingInterval = null;
 
-export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLastSymbol) {
+export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLastSymbol, document) {
     let i = 0;
     const messageAnchor = document.querySelector(".message");
     if (isEnemyPlayer) {
@@ -53,8 +37,8 @@ export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLast
     } else {
         messageAnchor.classList.remove("enemy");
     }
+    messageAnchor.textContent = "";
     if (printingInterval) {
-        messageAnchor.textContent = "";
         clearInterval(printingInterval);
     }
     printingInterval = setInterval(() => {
@@ -68,16 +52,4 @@ export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLast
             }, waitAfterLastSymbol);
         }
     }, speed);
-}
-
-export function showGameMessage(message) {
-    printLetterByLetter(message, 70, false, 2000);
-}
-
-export function log(message, el) {
-    if (typeof message == "object") {
-        el.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + "<br />";
-    } else {
-        el.innerHTML += message + "<br />";
-    }
 }
