@@ -1,11 +1,12 @@
 "use strict";
 
-import { printLetterByLetter, getSocketUrl, getStaticUrl } from "../helper.js";
-import connection from "../connection.js";
+import { printLetterByLetter } from "../views/helper.js";
+import { getSocketUrl, getStaticUrl } from "../connection/common.js";
+import connection from "../connection/connection.js";
 import { getOtherColor } from "../core.js";
-import { removeElem, makeQrPlainEl } from "../qr_helper.js";
-import placement from "../placement.js";
-import protocol from "../protocol.js";
+import { removeElem, makeQrPlainEl } from "../views/qr_helper.js";
+import placement from "../views/placement.js";
+import protocol from "../connection/protocol.js";
 import onGameReady from "./common.js";
 import setupLocalGame from "./aiMode.js";
 

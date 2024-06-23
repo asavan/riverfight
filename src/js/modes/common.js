@@ -1,4 +1,4 @@
-import battle from "../battle.js";
+import battle from "../views/battle.js";
 
 export default function onGameReady(document, initObj, fieldEnemy, settings) {
     initObj.onOpponentReady();

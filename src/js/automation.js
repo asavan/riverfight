@@ -1,5 +1,5 @@
-import {generateAiField, ai} from "./ai.js";
-import {delay} from "./utils/timer.js";
+import { generateAiField, ai } from "./ai.js";
+import { delay } from "./utils/timer.js";
 
 function findPlaceToShip(field, len) {
     let start = -1;

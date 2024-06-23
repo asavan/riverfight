@@ -1,6 +1,6 @@
 "use strict";
 
-import {VERDICT, applyBothSides, applyToFirstNonNone} from "./core.js";
+import { VERDICT, applyBothSides, applyToFirstNonNone } from "./core.js";
 import { assert } from "./utils/assert.js";
 
 function randomInteger(min, max) {

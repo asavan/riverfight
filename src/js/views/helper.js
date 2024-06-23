@@ -1,6 +1,6 @@
 "use strict";
 
-import {axis} from "./core.js";
+import {axis} from "../core.js";
 
 export const width = 20;
 
@@ -72,24 +72,6 @@ export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLast
 
 export function showGameMessage(message) {
     printLetterByLetter(message, 70, false, 2000);
-}
-
-function getWebSocketUrl(protocol, socketUrl, host, settings) {
-    if (socketUrl) {
-        return socketUrl;
-    }
-    if (protocol === "https:") {
-        return;
-    }
-    return "ws://" + host + ":" + settings.wsPort;
-}
-
-export function getSocketUrl(location, settings) {
-    return getWebSocketUrl(location.protocol, settings.wh, location.hostname, settings);
-}
-
-export function getStaticUrl(location, settings) {
-    return settings.sh || location.origin;
 }
 
 export function log(message, el) {

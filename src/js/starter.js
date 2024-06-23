@@ -1,4 +1,4 @@
-import placement from "./placement.js";
+import placement from "./views/placement.js";
 import netGame from "./modes/netMode.js";
 import setupLocalGame from "./modes/aiMode.js";
 import server from "./modes/serverMode.js";

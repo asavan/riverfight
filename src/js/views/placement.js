@@ -1,7 +1,7 @@
 "use strict";
 
 import { width, getClickIndex, createField, showGameMessage } from "./helper.js";
-import { shipsCount, axis } from "./core.js";
+import { shipsCount, axis } from "../core.js";
 
 export default function placement(document) {
     const myFieldPromise = Promise.withResolvers();
