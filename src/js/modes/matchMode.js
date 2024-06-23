@@ -12,6 +12,7 @@ import { placementAutomation } from "../automation.js";
 function addQrToPage(staticHost, document, color) {
     const url = new URL(staticHost);
     url.searchParams.set("color", getOtherColor(color));
+    url.searchParams.set("mode", "match");
     const qrcontainer = document.querySelector(".qrcontainer");
     const element = document.createElement("div");
     element.classList.add("qrcode");
