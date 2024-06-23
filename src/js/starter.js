@@ -4,7 +4,7 @@ import netGame from "./netMode.js";
 import server from "./serverMode.js";
 import {enableSecretMenu, placementAutomation} from "./automation.js";
 
-function simpleAiGame(window, document, settings) {
+function simpleAiGame(document, settings) {
     const myField = placement(document);
     const battlePromise = new Promise((resolve) => {
         myField.myFieldPromise.then(
@@ -20,17 +20,19 @@ function simpleAiGame(window, document, settings) {
     return {myField, getBattle};
 }
 
+function setupGameover(g, document) {
+    g.on("gameover", () => {
+        const btnAdd = document.querySelector(".butInstall");
+        if (btnAdd) {
+            btnAdd.classList.remove("hidden2");
+        }
+    });
+}
+
 function automationAndInstall(window, document, game) {
     enableSecretMenu(window, document, game);
     placementAutomation(game);
-    game.getBattle().then(g => {
-        g.on("gameover", () => {
-            const btnAdd = document.querySelector(".butInstall");
-            if (btnAdd) {
-                btnAdd.classList.remove("hidden2");
-            }
-        });
-    });
+    game.getBattle().then(g => setupGameover(g, document));
 }
 
 function startGame(window, document, settings) {
@@ -38,7 +40,7 @@ function startGame(window, document, settings) {
     let game;
     switch (mode) {
     case "ai":
-        game = simpleAiGame(window, document, settings);
+        game = simpleAiGame(document, settings);
         automationAndInstall(window, document, game);
         break;
     case "net":
@@ -49,7 +51,7 @@ function startGame(window, document, settings) {
         game = server(window, document, settings);
         break;
     case "hostseat":
-        game = simpleAiGame(window, document, settings);
+        game = simpleAiGame(document, settings);
         game.getBattle().then(g => g.enableHotSeat());
         break;
     }

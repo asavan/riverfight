@@ -1,6 +1,7 @@
 "use strict";
 
 import {VERDICT, applyBothSides, applyToFirstNonNone} from "./core.js";
+import { assert } from "./utils/assert.js";
 
 function randomInteger(min, max) {
     const rand = min + Math.random() * (max - min);
@@ -18,10 +19,7 @@ function chooseRandomIndex(field) {
             ++noneCount;
         }
     }
-    if (noneCount === 0) {
-        throw "Illegal state";
-        // return -1;
-    }
+    assert(noneCount > 0, "No empty space");
     return randomIndex(noneCount);
 }
 
@@ -36,9 +34,7 @@ function getRandomIndex(field) {
             break;
         }
     }
-    if (i >= field.length || i < 0) {
-        console.table("Error out", i, field);
-    }
+    assert(i < field.length && i >= 0, "No empty space2");
     return i;
 }
 
@@ -66,7 +62,7 @@ export function generateAiField(ind) {
 }
 
 export function ai(len) {
-    let field = new Array(len).fill(VERDICT.NONE);
+    const field = new Array(len).fill(VERDICT.NONE);
     let lastMove = -1;
     let prevDirection = 0;
     let prevIndex = -1;
@@ -75,9 +71,8 @@ export function ai(len) {
         if (lastMove < 0) {
             return getRandomIndex(field);
         }
-        if (lastMove >= field.length) {
-            throw "Illegal state";
-        }
+        assert(lastMove < field.length, "In bounds");
+
         field[lastMove] = currVerdict;
         if (currVerdict === VERDICT.HIT) {
             if (prevDirection === 0) {
@@ -138,11 +133,11 @@ export function ai(len) {
             console.error("Same index", move);
         }
         prevIndex = move;
-        // console.log(selfColor, lastMove, prevDirection, field);
         return move;
     }
 
     function setLastMove(n) {
+        assert(n >=0 && n < field.length, "In bounds");
         lastMove = n;
     }
 

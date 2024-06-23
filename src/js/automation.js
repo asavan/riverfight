@@ -1,8 +1,5 @@
-"use strict";
-
 import {generateAiField, ai} from "./ai.js";
 import {delay} from "./utils/timer.js";
-import {VERDICT} from "./core.js";
 
 function findPlaceToShip(field, len) {
     let start = -1;
@@ -76,26 +73,45 @@ export function placementAutomation(game) {
     secretCodeElem.addEventListener("click", secretClickHandler);
 }
 
-function playerAi(game) {
-    return game.getBattle().then(g => {
-        const aiBot = ai(g.size());
+function makePlayerAi(g) {
+    const aiBot = ai(g.size());
+    function onAiMove1(verdict) {
+        const n = aiBot.guess(verdict);
+        setTimeout(() => {
+            g.firePlayer(n);
+        }, 700);
+    }
 
-        function onAiMove1(verdict) {
-            const n = aiBot.guess(verdict);
-            // console.log("ai move " + n);
-            setTimeout(() => {
-                g.firePlayer(n);
-            }, 1000);
-        }
-
-        g.on("meMove", onAiMove1);
-        g.on("playerMove", (n) => {
-            console.log("Player move " + n);
-            aiBot.setLastMove(n);
-        });
-        onAiMove1(VERDICT.MISS);
-        return true;
+    g.on("meMove", onAiMove1);
+    g.on("playerMove", (n) => {
+        console.log("Player move " + n);
+        aiBot.setLastMove(n);
     });
+    if (!g.isEnemyMove()) {
+        onAiMove1();
+    }
+    return g;
+}
+
+export function makeEnemyAi(g) {
+    const aiBot = ai(g.size());
+    function onAiMove(verdict) {
+        const n = aiBot.guess(verdict);
+        setTimeout(() => {
+            g.fireEnemy(n);
+        }, 700);
+    }
+
+    g.on("aiMove", onAiMove);
+    g.on("enemyMove", (n) => aiBot.setLastMove(n));
+    if (g.isEnemyMove()) {
+        onAiMove();
+    }
+    return g;
+}
+
+function playerAi(game) {
+    return game.getBattle().then(makePlayerAi);
 }
 
 export function enableSecretMenu(window, document, game) {

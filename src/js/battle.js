@@ -243,12 +243,13 @@ export default function battle(document, field, fieldEnemy, settings) {
 
     river.addEventListener("click", clickHandlerMy);
     const size = () => field.length;
+    const isEnemyMove = () => isEnemyPlayer;
     return {
         size,
         fireEnemy,
         firePlayer,
         on,
         enableHotSeat,
-        color
+        isEnemyMove
     };
 }
