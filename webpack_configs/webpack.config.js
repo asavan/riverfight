@@ -23,7 +23,8 @@ const getLocalExternalIP = () => [].concat(...Object.values(os.networkInterfaces
 
 const webConfig = (env, argv) => {
     const devMode = !argv || (argv.mode !== "production");
-    let addr = getLocalExternalIP() || "0.0.0.0";
+    console.log(getLocalExternalIP());
+    let addr = "0.0.0.0";
     const dirname = path.dirname(fileURLToPath(import.meta.url));
     return {
 

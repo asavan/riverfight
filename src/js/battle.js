@@ -2,6 +2,7 @@
 
 import {getVerdict, VERDICT, applyBothSides, isEnemyStartFirst} from "./core.js";
 import {move, width, getTemplateByName, createField, printLetterByLetter} from "./helper.js";
+import { assert } from "./utils/assert.js";
 
 
 function getEmemyRiver(grid) {
@@ -41,6 +42,15 @@ function putDotHtml(n, isEnemy, fieldEnemy, myEnemyField, river) {
     dot.style.left = (n * width) + "px";
     dot.style.width = width + "px";
     return {html: dot, res: res, verdict: verdict};
+}
+
+function putDotHtml3(n, target) {
+    return putDotHtml(n,
+        target.isOpponentEnemy,
+        target.realField,
+        target.guessedField,
+        target.htmlRiver
+    );
 }
 
 function putDotHtml2(n, river, isEnemy) {
@@ -90,13 +100,38 @@ function verdictToMessage(verdict, isEnemyPlayer) {
 }
 
 
-export default function battle(document, field, fieldEnemy, settings) {
-    if (field.length !== fieldEnemy.length) {
-        throw "Bad size";
+function ajustInput(n, maxLen) {
+    if (n > maxLen) {
+        return maxLen;
+    } else if (n < 0) {
+        return 0;
     }
-    console.log("game begin!");
-    const color = settings.color;
-    let isEnemyPlayer = isEnemyStartFirst(color);
+    return n;
+}
+
+function showEndMessage(message, subMsg, document) {
+    const overlay = document.querySelector(".overlay");
+    const close = document.querySelector(".close");
+
+    close.addEventListener("click", (e) => {
+        e.preventDefault();
+        overlay.classList.remove("show");
+    }, false);
+
+
+    const h2 = overlay.querySelector("h2");
+    h2.textContent = message;
+    const content = overlay.querySelector(".content");
+    content.textContent = subMsg;
+    overlay.classList.add("show");
+}
+
+
+export default function battle(document, field, fieldEnemy, settings) {
+    assert(field.length === fieldEnemy.length, "Bad size");
+
+    let isEnemyPlayer = isEnemyStartFirst(settings.color);
+    console.log("game begin!", {isEnemyPlayer});
 
     printLetterByLetter(firstMessage(isEnemyPlayer), 70, isEnemyPlayer, 100000);
     const handlers = {
@@ -106,34 +141,6 @@ export default function battle(document, field, fieldEnemy, settings) {
         "aiMove": stub,
         "gameover": stub
     };
-
-    function showEndMessage(message, subMsg) {
-        const overlay = document.querySelector(".overlay");
-        const close = document.querySelector(".close");
-
-        close.addEventListener("click", (e) => {
-            e.preventDefault();
-            overlay.classList.remove("show");
-        }, false);
-
-
-        const h2 = overlay.querySelector("h2");
-        h2.textContent = message;
-        const content = overlay.querySelector(".content");
-        content.textContent = subMsg;
-        overlay.classList.add("show");
-    }
-
-    function loose() {
-        handlers["gameover"](false);
-        showEndMessage("Ты проиграл", "В другой раз повезет");
-    }
-
-    function victory() {
-        handlers["gameover"](true);
-        showEndMessage("Победа", "А ты хорош!");
-    }
-
 
     function on(name, f) {
         handlers[name] = f;
@@ -151,7 +158,29 @@ export default function battle(document, field, fieldEnemy, settings) {
     const river = getEmemyRiver(grid);
     const myRiver = document.querySelector(".river");
     const bloop = document.getElementById("bloop");
-    const tada = document.getElementById("tada");
+
+    function loose() {
+        handlers["gameover"](false);
+        showEndMessage("Ты проиграл", "В другой раз повезет", document);
+    }
+
+    function victory() {
+        handlers["gameover"](true);
+        if (settings.useSound) {
+            const tada = document.getElementById("tada");
+            playSound(tada);
+        }
+        showEndMessage("Победа", "А ты хорош!", document);
+    }
+
+    function onKill(target, n) {
+        applyBothSides(target.guessedField, n, (ind) => {
+            putDotHtml2(ind, target.htmlRiver, target.isOpponentEnemy);
+        });
+        if (settings.useSound && !target.isOpponentEnemy) {
+            playSound(bloop);
+        }
+    }
 
     const player = {
         realField: field,
@@ -159,7 +188,7 @@ export default function battle(document, field, fieldEnemy, settings) {
         htmlRiver: myRiver,
         onOpponentMiss: onMeMove,
         onOpponentHit: onEnemyMove,
-        isEnemy: false
+        isOpponentEnemy: true
     };
 
     const enemy = {
@@ -168,41 +197,28 @@ export default function battle(document, field, fieldEnemy, settings) {
         htmlRiver: river,
         onOpponentMiss: onEnemyMove,
         onOpponentHit: onMeMove,
-        isEnemy: true
+        isOpponentEnemy: false
     };
 
     function fire(n) {
-        if (n >= field.length) {
-            n = field.length - 1;
-        } else if (n < 0) {
-            n = 0;
-        }
-        const user = isEnemyPlayer ? player : enemy;
-        const res = putDotHtml(n, isEnemyPlayer, user.realField, user.guessedField, user.htmlRiver);
-        const message = verdictToMessage(res.verdict, isEnemyPlayer) + "!";
-        printLetterByLetter(message, 70, isEnemyPlayer, 100000);
+        const target = isEnemyPlayer ? player : enemy;
+        const {verdict} = putDotHtml3(n, target);
+        const message = verdictToMessage(verdict, target.isOpponentEnemy) + "!";
+        printLetterByLetter(message, 70, target.isOpponentEnemy, 100000);
 
-        if (res.verdict === VERDICT.MISS) {
+        if (verdict === VERDICT.MISS) {
             isEnemyPlayer = !isEnemyPlayer;
-            user.onOpponentMiss(res.verdict);
-        } else if (res.verdict === VERDICT.WIN) {
-            if (!isEnemyPlayer) {
-                if (settings.useSound) {
-                    playSound(tada);
-                }
+            target.onOpponentMiss(verdict);
+        } else if (verdict === VERDICT.WIN) {
+            if (!target.isOpponentEnemy) {
                 victory();
             } else {
                 loose();
             }
         } else {
-            user.onOpponentHit(res.verdict);
-            if (res.verdict === VERDICT.KILL) {
-                applyBothSides(user.guessedField, n, (ind) => {
-                    putDotHtml2(ind, user.htmlRiver, isEnemyPlayer);
-                });
-                if (settings.useSound && !isEnemyPlayer) {
-                    playSound(bloop);
-                }
+            target.onOpponentHit(verdict);
+            if (verdict === VERDICT.KILL) {
+                onKill(target, n);
             }
         }
     }
@@ -211,6 +227,7 @@ export default function battle(document, field, fieldEnemy, settings) {
         if (!isEnemyPlayer) {
             return;
         }
+        n = ajustInput(n, field.length - 1);
         handlers["enemyMove"](n);
         fire(n);
     }
@@ -219,21 +236,16 @@ export default function battle(document, field, fieldEnemy, settings) {
         if (isEnemyPlayer) {
             return;
         }
+        n = ajustInput(n, field.length - 1);
         handlers["playerMove"](n);
         fire(n);
     }
 
     function clickHandlerMy(e) {
-        if (isEnemyPlayer) {
-            return;
-        }
         move(e, firePlayer);
     }
 
     function clickHandlerEnemy(e) {
-        if (!isEnemyPlayer) {
-            return;
-        }
         move(e, fireEnemy);
     }
 
