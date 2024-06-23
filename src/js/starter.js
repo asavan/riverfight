@@ -1,21 +1,15 @@
 import placement from "./placement.js";
-import aiActions from "./aiMode.js";
-import netGame from "./netMode.js";
-import server from "./serverMode.js";
-import { enableSecretMenu, placementAutomation, makeEnemyAi, setupGameover } from "./automation.js";
+import netGame from "./modes/netMode.js";
+import setupLocalGame from "./modes/aiMode.js";
+import server from "./modes/serverMode.js";
+import { enableSecretMenu, placementAutomation } from "./automation.js";
 
 function simpleGame(document, settings, useAi) {
     const myField = placement(document);
     const battlePromise = new Promise((resolve) => {
         myField.myFieldPromise.then(
             (initObj) => {
-                const g = aiActions(document, initObj, settings);
-                if (useAi) {
-                    makeEnemyAi(g);
-                } else {
-                    g.enableHotSeat();
-                }
-                setupGameover(g, document);
+                const g = setupLocalGame(document, initObj, settings, useAi);
                 resolve(g);
             });
     });

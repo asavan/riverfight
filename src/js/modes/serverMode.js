@@ -1,8 +1,8 @@
 "use strict";
 
-import connection from "./connection.js";
-import {getSocketUrl, getStaticUrl } from "./helper.js";
-import { makeQrPlainEl, removeElem } from "./qr_helper.js";
+import connection from "../connection.js";
+import {getSocketUrl, getStaticUrl } from "../helper.js";
+import { makeQrPlainEl, removeElem } from "../qr_helper.js";
 
 const SERVER_COLOR = "black";
 

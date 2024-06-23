@@ -1,14 +1,13 @@
 "use strict";
 
-import { printLetterByLetter, getSocketUrl, getStaticUrl, log} from "./helper.js";
-import connection from "./connection.js";
-import {getOtherColor} from "./core.js";
-import { removeElem, makeQrPlainEl } from "./qr_helper.js";
-import placement from "./placement.js";
-import protocol from "./protocol.js";
-import aiActions from "./aiMode.js";
-import battle from "./battle.js";
-import { makeEnemyAi, setupGameover } from "./automation.js";
+import { printLetterByLetter, getSocketUrl, getStaticUrl, log} from "../helper.js";
+import connection from "../connection.js";
+import {getOtherColor} from "../core.js";
+import { removeElem, makeQrPlainEl } from "../qr_helper.js";
+import placement from "../placement.js";
+import protocol from "../protocol.js";
+import onGameReady from "./common.js";
+import setupLocalGame from "./aiMode.js";
 
 function addQrToPage(staticHost, document, color) {
     const url = new URL(staticHost);
@@ -27,12 +26,7 @@ export default function netGame(window, document, settings) {
     const socketUrl = getSocketUrl(window.location, settings);
     const staticHost = getStaticUrl(window.location, settings);
     let code = null;
-    let isOpponentReady = false;
-    let g = null;
     const enemyFieldPromise = Promise.withResolvers();
-    const battlePromise = Promise.withResolvers();
-
-    const myField = placement(document);
 
     const useNetwork = !!socketUrl && !settings.showqrfake;
 
@@ -69,26 +63,19 @@ export default function netGame(window, document, settings) {
         connection.on("recv", (data) => {
             protocol.parser(data, "field", (enemyField) => {
                 console.log("enemy field ready");
-                if (!isOpponentReady) {
-                    enemyFieldPromise.resolve(enemyField);
-                }
-                isOpponentReady = true;
-            });
-            protocol.parser(data, "move", (n) => {
-                console.log("Enemy try to move " + n);
-                g.fireEnemy(n);
+                enemyFieldPromise.resolve(enemyField);
             });
         });
     } else {
         useAi = true;
     }
 
+    const battlePromise = Promise.withResolvers();
+    const myField = placement(document);
     myField.myFieldPromise.then((initObj) => {
         if (useAi) {
             removeElem(code);
-            g = aiActions(document, initObj, settings);
-            makeEnemyAi(g);
-            setupGameover(g, document);
+            const g = setupLocalGame(document, initObj, settings, useAi);
             battlePromise.resolve(g);
         } else {
             const field = initObj.field;
@@ -101,17 +88,20 @@ export default function netGame(window, document, settings) {
                         console.log("Smth strange");
                     }
                 }
-                initObj.onOpponentReady();
-                g = battle(document, field, fieldEnemy, settings);
+                const g = onGameReady(document, initObj, fieldEnemy, settings);
                 g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
+                connection.on("recv", (data) => {
+                    protocol.parser(data, "move", (n) => {
+                        console.log("Enemy try to move " + n);
+                        g.fireEnemy(n);
+                    });
+                });
                 battlePromise.resolve(g);
             });
         }
     });
 
-    function getBattle() {
-        return battlePromise.promise;
-    }
+    const getBattle = () => battlePromise.promise;
 
     return {myField, getBattle};
 }

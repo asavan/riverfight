@@ -135,7 +135,7 @@ export function enableSecretMenu(window, document, game) {
                 window.location.href = "https://asavan.github.io/";
             }
         }
-    ]
+    ];
     clickCounter(document, ".secret-code2", codes);
 }
 
@@ -152,7 +152,7 @@ export function placementAutomation(game) {
             clicks: 6,
             launch: () => playerAi(game)
         }
-    ]
+    ];
 
     clickCounter(document, ".secret-code", codes);
 }
