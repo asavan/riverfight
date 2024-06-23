@@ -125,10 +125,7 @@ export function ai(len) {
 
     function guessPublic(currVerdict) {
         const move = guess(field, currVerdict);
-        if (move >= field.length || move < 0) {
-            console.log(lastMove, prevDirection, field, move, currVerdict);
-            throw "Illegal state1";
-        }
+        assert(move >=0 && move < field.length, "In bounds3");
         if (move === prevIndex) {
             console.error("Same index", move);
         }

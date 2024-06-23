@@ -8,6 +8,7 @@ import placement from "./placement.js";
 import protocol from "./protocol.js";
 import aiActions from "./aiMode.js";
 import battle from "./battle.js";
+import { makeEnemyAi, setupGameover } from "./automation.js";
 
 function addQrToPage(staticHost, document, color) {
     const url = new URL(staticHost);
@@ -86,6 +87,8 @@ export default function netGame(window, document, settings) {
         if (useAi) {
             removeElem(code);
             g = aiActions(document, initObj, settings);
+            makeEnemyAi(g);
+            setupGameover(g, document);
             battlePromise.resolve(g);
         } else {
             const field = initObj.field;

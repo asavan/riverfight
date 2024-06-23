@@ -2,14 +2,20 @@ import placement from "./placement.js";
 import aiActions from "./aiMode.js";
 import netGame from "./netMode.js";
 import server from "./serverMode.js";
-import {enableSecretMenu, placementAutomation} from "./automation.js";
+import { enableSecretMenu, placementAutomation, makeEnemyAi, setupGameover } from "./automation.js";
 
-function simpleAiGame(document, settings) {
+function simpleGame(document, settings, useAi) {
     const myField = placement(document);
     const battlePromise = new Promise((resolve) => {
         myField.myFieldPromise.then(
             (initObj) => {
                 const g = aiActions(document, initObj, settings);
+                if (useAi) {
+                    makeEnemyAi(g);
+                } else {
+                    g.enableHotSeat();
+                }
+                setupGameover(g, document);
                 resolve(g);
             });
     });
@@ -20,19 +26,9 @@ function simpleAiGame(document, settings) {
     return {myField, getBattle};
 }
 
-function setupGameover(g, document) {
-    g.on("gameover", () => {
-        const btnAdd = document.querySelector(".butInstall");
-        if (btnAdd) {
-            btnAdd.classList.remove("hidden2");
-        }
-    });
-}
-
-function automationAndInstall(window, document, game) {
+function automation(window, document, game) {
     enableSecretMenu(window, document, game);
     placementAutomation(game);
-    game.getBattle().then(g => setupGameover(g, document));
 }
 
 function startGame(window, document, settings) {
@@ -40,19 +36,18 @@ function startGame(window, document, settings) {
     let game;
     switch (mode) {
     case "ai":
-        game = simpleAiGame(document, settings);
-        automationAndInstall(window, document, game);
+        game = simpleGame(document, settings, true);
+        automation(window, document, game);
         break;
     case "net":
         game = netGame(window, document, settings);
-        automationAndInstall(window, document, game);
+        automation(window, document, game);
         break;
     case "server":
         game = server(window, document, settings);
         break;
     case "hostseat":
-        game = simpleAiGame(document, settings);
-        game.getBattle().then(g => g.enableHotSeat());
+        game = simpleGame(document, settings, false);
         break;
     }
     return game;

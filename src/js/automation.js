@@ -46,6 +46,16 @@ async function placeShips(p, field) {
     }
 }
 
+
+export function setupGameover(g, document) {
+    g.on("gameover", () => {
+        const btnAdd = document.querySelector(".butInstall");
+        if (btnAdd) {
+            btnAdd.classList.remove("hidden2");
+        }
+    });
+}
+
 export function placementAutomation(game) {
     const secretCodeElem = document.querySelector(".secret-code");
 
