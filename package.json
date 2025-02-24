@@ -18,16 +18,16 @@
     "updates:fix": "npx ncu -u && npm install && npm audit fix"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin-js": "^4.0.0",
+    "@stylistic/eslint-plugin-js": "^4.0.1",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
     "dependency-cruiser": "^16.10.0",
-    "eslint": "^9.20.1",
-    "globals": "^15.15.0",
+    "eslint": "^9.21.0",
+    "globals": "^16.0.0",
     "html-webpack-plugin": "^5.6.3",
     "mini-css-extract-plugin": "^2.9.2",
-    "npm-check-updates": "^17.1.14",
+    "npm-check-updates": "^17.1.15",
     "npm-run-all": "^4.1.5",
     "stylelint": "^16.14.1",
     "stylelint-config-standard": "^37.0.0",
@@ -36,7 +36,7 @@
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
     "workbox-webpack-plugin": "^7.3.0",
-    "ws": "^8.18.0"
+    "ws": "^8.18.1"
   },
   "dependencies": {
     "@akamfoad/qrcode": "^0.3.2"
