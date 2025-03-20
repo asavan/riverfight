@@ -33,7 +33,10 @@ function fillZeroes(field, putTo, length) {
 async function placeShips(p, field) {
     const ships = p.ships;
     for (const shipsKey of ships) {
-        p.choose(shipsKey, 0);
+        const canChoose = p.choose(shipsKey, 0);
+        if (!canChoose) {
+            continue;
+        }
         await delay(500);
         const putTo = findPlaceToShip(field, shipsKey.length);
         const res = p.putShip(putTo);

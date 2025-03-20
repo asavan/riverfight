@@ -87,11 +87,15 @@ export default function placement(document) {
     }
 
     function choose(shipsKey, n) {
+        if (shipsKey.html.classList.contains("disabled")) {
+            return false;
+        }
         currChosen = {s: shipsKey, n: n};
         for (const shipsKey1 of ships) {
             shipsKey1.html.classList.remove("choosen");
         }
         shipsKey.html.classList.add("choosen");
+        return true;
     }
 
     for (const shipsKey of ships) {
