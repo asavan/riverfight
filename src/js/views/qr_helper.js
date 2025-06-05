@@ -5,8 +5,8 @@ export function bigPicture(elem) {
 }
 
 function chomp(string, c) {
-    if (string.charAt(string.length - c.length) === c) {
-        return string.substr(0, string.length - c.length);
+    if (string.endsWith(c)) {
+        return string.slice(0, -c.length);
     }
     return string;
 }

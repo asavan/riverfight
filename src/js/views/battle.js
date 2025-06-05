@@ -99,8 +99,7 @@ function verdictToMessage(verdict, isEnemyPlayer) {
     }
 }
 
-
-function ajustInput(n, maxLen) {
+function adjustInput(n, maxLen) {
     if (n > maxLen) {
         return maxLen;
     } else if (n < 0) {
@@ -219,7 +218,7 @@ export default function battle(document, field, fieldEnemy, settings) {
         if (!isEnemyPlayer) {
             return;
         }
-        n = ajustInput(n, field.length - 1);
+        n = adjustInput(n, field.length - 1);
         handlers.call("enemyMove", n);
         fire(n);
     }
@@ -228,7 +227,7 @@ export default function battle(document, field, fieldEnemy, settings) {
         if (isEnemyPlayer) {
             return;
         }
-        n = ajustInput(n, field.length - 1);
+        n = adjustInput(n, field.length - 1);
         handlers.call("playerMove", n);
         fire(n);
     }
