@@ -78,7 +78,7 @@ const webConfig = (env, argv) => {
             new CopyPlugin({
                 patterns: [
                     { from: "./assets", to: "./assets" },
-                    { from: "./src/manifest.json", to: "./" },
+                    { from: "./src/app.webmanifest", to: "./" },
                     { from: "./.well-known", to: "./.well-known" },
                     { from: "./github", to: "./" }
                 ],
