@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "ws": "node devtools/ws-server.js",
-    "start": "webpack serve --config webpack_configs/webpack.config.js --mode development",
+    "start": "webpack serve --config webpack_configs/dev.webpack.config.js --mode development",
     "all": "npm-run-all -p -r ws start",
     "android": "webpack --config webpack_configs/android.webpack.config.js --mode production",
     "build": "webpack --config webpack_configs/production.webpack.config.js --mode production",

@@ -11,11 +11,9 @@ import TerserJSPlugin from "terser-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import {InjectManifest} from "workbox-webpack-plugin";
 
-// import PACKAGE from "../package.json" with { type: "json" };
-import { createRequire } from "module";
-const PACKAGE = createRequire(import.meta.url)("../package.json");
-
-
+import PACKAGE from "../package.json" with { type: "json" };
+// import { createRequire } from "module";
+// const PACKAGE = createRequire(import.meta.url)("../package.json");
 
 const getLocalExternalIP = () => [].concat(...Object.values(os.networkInterfaces()))
     .filter(details => (details.family === "IPv4" || details.family === 4) && !details.internal)
@@ -24,7 +22,7 @@ const getLocalExternalIP = () => [].concat(...Object.values(os.networkInterfaces
 const webConfig = (env, argv) => {
     const devMode = !argv || (argv.mode !== "production");
     console.log(getLocalExternalIP());
-    let addr = "0.0.0.0";
+    let addr = getLocalExternalIP() || "0.0.0.0";
     const dirname = path.dirname(fileURLToPath(import.meta.url));
     return {
 
@@ -87,9 +85,9 @@ const webConfig = (env, argv) => {
             })
         ],
         devServer: {
-            compress: true,
+            // compress: true,
             port: 8080,
-            hot: true,
+            // hot: true,
             open: true,
             host: addr
         }
