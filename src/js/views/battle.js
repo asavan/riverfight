@@ -6,7 +6,7 @@ import { assert } from "../utils/assert.js";
 import handlersFunc from "../utils/handlers.js";
 
 
-function getEmemyRiver(grid, document) {
+function getEnemyRiver(grid, document) {
     const enemyFieldHtml = createField(grid, document);
     enemyFieldHtml.classList.add("adjust-second");
     return enemyFieldHtml.querySelector(".river");
@@ -146,7 +146,7 @@ export default function battle(document, field, fieldEnemy, settings) {
     const onMeMove = handlers.handler("meMove");
 
     const grid = document.querySelector(".grid");
-    const river = getEmemyRiver(grid, document);
+    const river = getEnemyRiver(grid, document);
     const myRiver = document.querySelector(".river");
     const bloop = document.getElementById("bloop");
 
