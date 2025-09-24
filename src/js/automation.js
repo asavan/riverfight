@@ -1,5 +1,6 @@
 import { generateAiField, ai } from "./ai.js";
-import { delay } from "./utils/timer.js";
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function findPlaceToShip(field, len) {
     let start = -1;

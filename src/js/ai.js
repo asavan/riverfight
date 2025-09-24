@@ -1,7 +1,15 @@
 "use strict";
 
 import { VERDICT, applyBothSides, applyToFirstNonNone } from "./core.js";
-import { assert } from "./utils/assert.js";
+
+function assert(b, message) {
+    if (b) {
+        return;
+    }
+    console.error(message);
+    console.trace(message);
+    throw message;
+}
 
 function randomInteger(min, max) {
     const rand = min + Math.random() * (max - min);

@@ -2,8 +2,7 @@
 
 import { getVerdict, VERDICT, applyBothSides, isEnemyStartFirst } from "../core.js";
 import { move, width, createField, printLetterByLetter } from "./helper.js";
-import { assert } from "../utils/assert.js";
-import handlersFunc from "../utils/handlers.js";
+import {assert, handlersFunc} from "netutils";
 
 
 function getEnemyRiver(grid, document) {
