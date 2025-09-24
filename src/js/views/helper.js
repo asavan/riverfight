@@ -23,7 +23,7 @@ export function createField(grid, document) {
         s.textContent = axi;
         text.appendChild(s);
     }
-    grid.appendChild(f).firstElementChild;
+    grid.appendChild(field);
     return field;
 }
 

@@ -2,8 +2,7 @@
 
 import settings from "./js/settings.js";
 import { startGame } from "./js/starter.js";
-import install from "./js/views/install_as_app.js";
-import { parseSettings } from "./js/utils/parse-settings.js";
+import { install, parseSettings } from "netutils";
 
 function starter(window, document) {
     parseSettings(window.location.search, settings);

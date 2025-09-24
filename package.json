@@ -23,6 +23,7 @@
     "ws": "8.18.3"
   },
   "dependencies": {
-    "@akamfoad/qrcode": "^0.3.2"
+    "@akamfoad/qrcode": "^0.3.2",
+    "netutils": "github:asavan/netutils#0c1313541db3aa9b44dabbeb64b0733f4ef6b0a5"
   }
 }
