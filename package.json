@@ -1,6 +1,6 @@
 {
   "name": "river-fight-web",
-  "version": "1.3.6",
+  "version": "1.4.0",
   "private": true,
   "description": "A web part of the game",
   "type": "module",
@@ -12,15 +12,13 @@
     "build": "webpack --config webpack_configs/production.webpack.config.js --mode production",
     "style": "npx eslint . -c linters/eslint.config.js",
     "style:fix": "npx eslint . -c linters/eslint.config.js --fix",
-    "style2": "npx stylelint --config linters/.stylelintrc.json \"src/**/*.css\"",
-    "style2:fix": "npx stylelint --config linters/.stylelintrc.json \"src/**/*.css\" --fix",
+    "style2": "npx stylelint --config linters/stylelint.config.js \"src/**/*.css\"",
+    "style2:fix": "npx stylelint --config linters/stylelint.config.js \"src/**/*.css\" --fix",
     "updates": "npx ncu",
     "updates:fix": "npx ncu -u && npm install && npm audit fix"
   },
   "devDependencies": {
-    "devdeps": "github:asavan/dev-deps#91db453dda4f3a61a410bb2f18fbfa80b65867e8",
-    "npm-run-all": "^4.1.5",
-    "ws": "8.18.3"
+    "netdeps": "github:asavan/net-deps#d0697445f82a02226e53919633dd30494577f79e"
   },
   "dependencies": {
     "@akamfoad/qrcode": "^0.3.2",
