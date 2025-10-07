@@ -21,7 +21,6 @@
     "netdeps": "github:asavan/net-deps#d0697445f82a02226e53919633dd30494577f79e"
   },
   "dependencies": {
-    "@akamfoad/qrcode": "^0.3.2",
-    "netutils": "github:asavan/netutils#0c1313541db3aa9b44dabbeb64b0733f4ef6b0a5"
+    "netutils": "github:asavan/netutils#307a14c13add36c3ad08a13fa1f37b2134d2fbae"
   }
 }

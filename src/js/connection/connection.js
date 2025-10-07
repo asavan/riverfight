@@ -76,13 +76,10 @@ function connect(socketUrl, color, secondColor, settings) {
         }
     }
 
-    ws.onmessage = function (e) {
+    ws.onmessage = async function (e) {
         if (e.data instanceof Blob) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                processText(reader.result);
-            };
-            reader.readAsText(e.data);
+            const text = await e.data.text();
+            processText(text);
         } else {
             processText(e.data);
         }
