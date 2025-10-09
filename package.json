@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "ws": "node devtools/ws-server.js",
-    "start": "webpack serve --config webpack_configs/dev.webpack.config.js --mode development",
+    "start": "webpack serve --config webpack_configs/webpack.config.js --mode development",
     "all": "npm-run-all -p -r ws start",
     "android": "webpack --config webpack_configs/android.webpack.config.js --mode production",
     "build": "webpack --config webpack_configs/production.webpack.config.js --mode production",
@@ -18,9 +18,9 @@
     "updates:fix": "npx ncu -u && npm install && npm audit fix"
   },
   "devDependencies": {
-    "netdeps": "github:asavan/net-deps#d0697445f82a02226e53919633dd30494577f79e"
+    "netdeps": "github:asavan/net-deps#v0.0.3"
   },
   "dependencies": {
-    "netutils": "github:asavan/netutils#307a14c13add36c3ad08a13fa1f37b2134d2fbae"
+    "netutils": "github:asavan/netutils#v0.0.8"
   }
 }
