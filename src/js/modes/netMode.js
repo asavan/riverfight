@@ -1,10 +1,10 @@
 "use strict";
 
-import { printLetterByLetter } from "../views/helper.js";
-import { getSocketUrl, getStaticUrl } from "../connection/common.js";
+import {printLetterByLetter} from "../views/helper.js";
+import {getSocketUrl, getStaticUrl} from "../connection/common.js";
 import connection from "../connection/connection.js";
-import { getOtherColor } from "../core.js";
-import { removeElem, makeQrPlainEl } from "../views/qr_helper.js";
+import {getOtherColor} from "../core.js";
+import {makeQrPlainEl, removeElem} from "../views/qr_helper.js";
 import placement from "../views/placement.js";
 import protocol from "../connection/protocol.js";
 import onGameReady from "./common.js";
@@ -19,7 +19,6 @@ function addQrToPage(staticHost, document, color) {
     qrcontainer.appendChild(element);
     return makeQrPlainEl(url.toString(), element);
 }
-
 
 export default function netGame(window, document, settings) {
     const color = settings.color;
@@ -71,37 +70,33 @@ export default function netGame(window, document, settings) {
         useAi = true;
     }
 
-    const battlePromise = Promise.withResolvers();
     const myField = placement(document);
-    myField.myFieldPromise.then((initObj) => {
+    const setupGame = async () => {
+        const initObj = await myField.ready();
         if (useAi) {
             removeElem(code);
-            const g = setupLocalGame(document, initObj, settings, useAi);
-            battlePromise.resolve(g);
-        } else {
-            const field = initObj.field;
-            printLetterByLetter("Ждем оппонента", 70, false, 100000, document);
-            const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
-            enemyFieldPromise.promise.then((fieldEnemy) => {
-                if (!opponentAlreadyConnected) {
-                    const opponentAlreadyConnected2 = connection.sendMessage(protocol.toField(field));
-                    if (opponentAlreadyConnected2) {
-                        console.log("Smth strange");
-                    }
-                }
-                const g = onGameReady(document, initObj, fieldEnemy, settings);
-                g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
-                connection.on("recv", (data) => {
-                    protocol.parser(data, "move", (n) => {
-                        g.fireEnemy(n);
-                    });
-                });
-                battlePromise.resolve(g);
-            });
+            return setupLocalGame(document, initObj, settings, useAi);
         }
-    });
-
-    const getBattle = () => battlePromise.promise;
-
+        const field = initObj.field;
+        printLetterByLetter("Ждем оппонента", 70, false, 100000, document);
+        const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
+        const fieldEnemy = await enemyFieldPromise;
+        if (!opponentAlreadyConnected) {
+            const opponentAlreadyConnected2 = connection.sendMessage(protocol.toField(field));
+            if (opponentAlreadyConnected2) {
+                console.log("Smth strange");
+            }
+        }
+        const g = onGameReady(document, initObj, fieldEnemy, settings);
+        g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
+        connection.on("recv", (data) => {
+            protocol.parser(data, "move", (n) => {
+                g.fireEnemy(n);
+            });
+        });
+        return g;
+    };
+    const battlePromise = setupGame();
+    const getBattle = () => battlePromise;
     return {myField, getBattle};
 }

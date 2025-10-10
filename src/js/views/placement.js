@@ -153,5 +153,6 @@ export default function placement(document) {
     function isReady() {
         return shipsLeft === 0;
     }
-    return {myFieldPromise: myFieldPromise.promise, putShip, ships, choose};
+    const ready = () => myFieldPromise.promise;
+    return {putShip, ships, choose, ready};
 }

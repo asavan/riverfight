@@ -7,13 +7,11 @@ import { enableSecretMenu, placementAutomation } from "./automation.js";
 
 function simpleGame(document, settings, useAi) {
     const myField = placement(document);
-    const battlePromise = new Promise((resolve) => {
-        myField.myFieldPromise.then(
-            (initObj) => {
-                const g = setupLocalGame(document, initObj, settings, useAi);
-                resolve(g);
-            });
-    });
+    const waitForField = async () => {
+        const initObj = await myField.ready();
+        return setupLocalGame(document, initObj, settings, useAi);
+    };
+    const battlePromise = waitForField();
 
     function getBattle() {
         return battlePromise;
@@ -39,17 +37,16 @@ function startGame(window, document, settings) {
         automation(window, document, game);
         break;
     case "server":
-        game = server(window, document, settings);
+        server(window, document, settings);
         break;
     case "hotseat":
         game = simpleGame(document, settings, false);
         placementAutomation(game);
         break;
     case "match":
-        game = matchMode(window, document, settings);
+        matchMode(window, document, settings);
         break;
     }
-    return game;
 }
 
 export {startGame};

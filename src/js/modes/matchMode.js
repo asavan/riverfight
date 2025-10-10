@@ -31,8 +31,51 @@ function cleanup(document) {
     overlay.classList.remove("show");
 }
 
+async function setupRound(connection, document, settings, myField, enemyFieldPromise) {
+    const initObj = await myField.ready();
+    const field = initObj.field;
+    printLetterByLetter("Ждем оппонента", 70, false, 100000, document);
+    connection.sendMessage(protocol.toField(field));
+    const fieldEnemy = await enemyFieldPromise;
+    const g = onGameReady(document, initObj, fieldEnemy, settings);
+    g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
+    connection.on("recv", (data) => {
+        protocol.parser(data, "move", (n) => {
+            // console.log("Enemy try to move " + n);
+            g.fireEnemy(n);
+        });
+    });
+    g.on("gameover", () => {
+        const rightCode = document.querySelector(".secret-code2");
+        const oldValue = rightCode.textContent;
+        rightCode.textContent = "🔃";
+        const controller = new AbortController();
+        const { signal } = controller;
+        rightCode.classList.add("clickable");
+        rightCode.addEventListener("click", (e) => {
+            e.preventDefault();
+            rightCode.textContent = oldValue;
+            rightCode.classList.remove("clickable");
+            controller.abort();
+            connection.sendMessage(protocol.toRestart(settings.color));
+            settings.color = getOtherColor(settings.color);
+            requestAnimationFrame(() => oneRound(connection, document, settings));
+        }, { signal });
+
+        connection.on("recv", (data) => {
+            protocol.parser(data, "restart", (color) => {
+                rightCode.textContent = oldValue;
+                rightCode.classList.remove("clickable");
+                controller.abort();
+                settings.color = color;
+                requestAnimationFrame(() => oneRound(connection, document, settings));
+            });
+        });
+    });
+    return g;
+}
+
 function oneRound(connection, document, settings) {
-    const battlePromise = Promise.withResolvers();
     cleanup(document);
     const myField = placement(document);
     const enemyFieldPromise = Promise.withResolvers();
@@ -43,50 +86,8 @@ function oneRound(connection, document, settings) {
         });
     });
 
-    myField.myFieldPromise.then((initObj) => {
-        const field = initObj.field;
-        printLetterByLetter("Ждем оппонента", 70, false, 100000, document);
-        connection.sendMessage(protocol.toField(field));
-        enemyFieldPromise.promise.then((fieldEnemy) => {
-            const g = onGameReady(document, initObj, fieldEnemy, settings);
-            g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
-            connection.on("recv", (data) => {
-                protocol.parser(data, "move", (n) => {
-                    // console.log("Enemy try to move " + n);
-                    g.fireEnemy(n);
-                });
-            });
-            g.on("gameover", () => {
-                const rightCode = document.querySelector(".secret-code2");
-                const oldValue = rightCode.textContent;
-                rightCode.textContent = "🔃";
-                const controller = new AbortController();
-                const { signal } = controller;
-                rightCode.classList.add("clickable");
-                rightCode.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    rightCode.textContent = oldValue;
-                    rightCode.classList.remove("clickable");
-                    controller.abort();
-                    connection.sendMessage(protocol.toRestart(settings.color));
-                    settings.color = getOtherColor(settings.color);
-                    requestAnimationFrame(() => oneRound(connection, document, settings));
-                }, { signal });
-
-                connection.on("recv", (data) => {
-                    protocol.parser(data, "restart", (color) => {
-                        rightCode.textContent = oldValue;
-                        rightCode.classList.remove("clickable");
-                        controller.abort();
-                        settings.color = color;
-                        requestAnimationFrame(() => oneRound(connection, document, settings));
-                    });
-                });
-            });
-            battlePromise.resolve(g);
-        });
-    });
-    const getBattle = () => battlePromise.promise;
+    const battlePromise = setupRound(connection, document, settings, myField, enemyFieldPromise.promise);
+    const getBattle = () => battlePromise;
     const game = {myField, getBattle};
     placementAutomation(game);
 }
