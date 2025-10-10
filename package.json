@@ -1,6 +1,6 @@
 {
   "name": "river-fight-web",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "description": "A web part of the game",
   "type": "module",
@@ -17,6 +17,11 @@
     "updates": "npx ncu",
     "updates:fix": "npx ncu -u && npm install && npm audit fix"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asavan/riverfight.git"
+  },
+  "homepage": "https://asavan.github.io/riverfight/",
   "devDependencies": {
     "netdeps": "github:asavan/net-deps#v0.0.3"
   },
