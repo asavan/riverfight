@@ -1,2 +1,1 @@
-import {stylelintConf} from "devdeps";
-export default stylelintConf;
+export {stylelintConf as default} from "devdeps";
