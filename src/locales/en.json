@@ -1,0 +1,18 @@
+{
+  "game": "River fight",
+  "axis": "abcdefghijklmnopqr",
+  "move": "Move!",
+  "hit": "Hit",
+  "kill": "Kill",
+  "miss": "Miss",
+  "begin": "The game has begun. ",
+  "prepare": "Prepare to die!",
+  "lost": "Wasted",
+  "win": "Win",
+  "wait": "Wait for opponent...",
+  "choose": "Select a ship",
+  "closely": "Too closely",
+  "good": "You good!",
+  "next": "Next time you'll be lucky",
+  "loose2": "You loose"
+}

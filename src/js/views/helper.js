@@ -13,24 +13,28 @@ export function move(e, f) {
     f(n);
 }
 
-export function createField(grid, document) {
+export function createField(grid, document, translator) {
     const t = document.querySelector("#field-template");
     const f = t.content.cloneNode(true);
     const field = f.firstElementChild;
     const text = field.querySelector(".frame-text");
-    for (const axi of axis) {
-        const s = document.createElement("span");
-        s.textContent = axi;
-        text.appendChild(s);
-    }
+    const axisPromise = translator.t("axis");
+    axisPromise.then(axis => {
+        for (const axi of axis) {
+            const s = document.createElement("span");
+            s.textContent = axi;
+            text.appendChild(s);
+        }
+    });
     grid.appendChild(field);
     return field;
 }
 
 let printingInterval = null;
 
-export function printLetterByLetter(message, speed, isEnemyPlayer, waitAfterLastSymbol, document) {
+export async function printLetterByLetter(messagePromise, speed, isEnemyPlayer, waitAfterLastSymbol, document) {
     let i = 0;
+    const message = await messagePromise;
     const messageAnchor = document.querySelector(".message");
     if (isEnemyPlayer) {
         messageAnchor.classList.add("enemy");

@@ -1,6 +1,6 @@
 {
     "name": "Речной бой",
-	"short_name": "riverfight",
+    "short_name": "riverfight",
     "icons": [
         {
             "src": "./images/maskable_icon.png",

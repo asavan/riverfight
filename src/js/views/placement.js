@@ -2,9 +2,22 @@
 
 import { width, getClickIndex, createField, printLetterByLetter } from "./helper.js";
 import { shipsCount, axis } from "../core.js";
+import translator from "../translation.js";
 
-export default function placement(document) {
+export default function placement(document, transExternal) {
     const myFieldPromise = Promise.withResolvers();
+
+    const trans = transExternal ?? translator();
+
+
+    const gameName = document.querySelector(".gamename");
+    if (gameName) {
+        const newNamePromise = trans.t("game");
+        newNamePromise.then(name => {
+           gameName.textContent = name;
+        });
+        document.documentElement.lang = trans.getLang();
+    }
 
     function getShipyard(document, grid) {
         const s = document.createElement("div");
@@ -63,7 +76,7 @@ export default function placement(document) {
 
     const ships = [];
     const grid = document.querySelector(".grid");
-    const fieldHtml = createField(grid, document);
+    const fieldHtml = createField(grid, document, trans);
     fieldHtml.classList.add("adjust-first");
     const shipyard = getShipyard(document, grid);
 
@@ -120,13 +133,13 @@ export default function placement(document) {
             return false;
         }
         if (currChosen == null) {
-            showGameMessage("Выберите корабль");
+            showGameMessage(trans.t("choose"));
             return false;
         }
 
         const currentPos = n - currChosen.n;
         if (!place(field, currentPos, currChosen.s.length)) {
-            showGameMessage("Тесно!");
+            showGameMessage(trans.t("closely"));
             return false;
         }
 

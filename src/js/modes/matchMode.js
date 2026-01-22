@@ -1,5 +1,3 @@
-"use strict";
-
 import { printLetterByLetter } from "../views/helper.js";
 import { getSocketUrl, getStaticUrl } from "../connection/common.js";
 import connection from "../connection/connection.js";
@@ -9,6 +7,7 @@ import placement from "../views/placement.js";
 import protocol from "../connection/protocol.js";
 import onGameReady from "./common.js";
 import { placementAutomation } from "../automation.js";
+import translator from "../translation.js";
 
 function addQrToPage(staticHost, document, color) {
     const url = new URL(staticHost);
@@ -31,10 +30,10 @@ function cleanup(document) {
     overlay.classList.remove("show");
 }
 
-async function setupRound(connection, document, settings, myField, enemyFieldPromise) {
+async function setupRound(connection, document, settings, myField, enemyFieldPromise, trans) {
     const initObj = await myField.ready();
     const field = initObj.field;
-    printLetterByLetter("Ждем оппонента", 70, false, 100000, document);
+    printLetterByLetter(trans.t("wait"), 70, false, 100000, document);
     connection.sendMessage(protocol.toField(field));
     const fieldEnemy = await enemyFieldPromise;
     const g = onGameReady(document, initObj, fieldEnemy, settings);
@@ -77,7 +76,8 @@ async function setupRound(connection, document, settings, myField, enemyFieldPro
 
 function oneRound(connection, document, settings) {
     cleanup(document);
-    const myField = placement(document);
+    const trans = translator();
+    const myField = placement(document, trans);
     const enemyFieldPromise = Promise.withResolvers();
     connection.on("recv", (data) => {
         protocol.parser(data, "field", (enemyField) => {
@@ -86,7 +86,8 @@ function oneRound(connection, document, settings) {
         });
     });
 
-    const battlePromise = setupRound(connection, document, settings, myField, enemyFieldPromise.promise);
+    const battlePromise = setupRound(connection, document, settings,
+        myField, enemyFieldPromise.promise, trans);
     const getBattle = () => battlePromise;
     const game = {myField, getBattle};
     placementAutomation(game);

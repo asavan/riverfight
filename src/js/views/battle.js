@@ -3,10 +3,11 @@
 import { getVerdict, VERDICT, applyBothSides, isEnemyStartFirst } from "../core.js";
 import { move, width, createField, printLetterByLetter } from "./helper.js";
 import {assert, handlersFunc} from "netutils";
+import translator from "../translation.js";
 
 
-function getEnemyRiver(grid, document) {
-    const enemyFieldHtml = createField(grid, document);
+function getEnemyRiver(grid, document, translator) {
+    const enemyFieldHtml = createField(grid, document, translator);
     enemyFieldHtml.classList.add("adjust-second");
     return enemyFieldHtml.querySelector(".river");
 }
@@ -71,31 +72,37 @@ const playSound = (elem) => {
     elem.play();
 };
 
-const firstMessage = function (isEnemyPlayer) {
+const firstMessage = async function (isEnemyPlayer, translator) {
     let append;
     if (isEnemyPlayer) {
-        append = "Сейчас прилетит!";
+        append = await translator.t("prepare");
     } else {
-        append = "Ходи!";
+        append = await translator.t("move");
     }
-    return "Игра началась. " + append;
+    const msg = await translator.t("begin");
+    return msg + append;
 };
 
-function verdictToMessage(verdict, isEnemyPlayer) {
+function verdictToMessage(verdict, isEnemyPlayer, translator) {
     if (verdict === VERDICT.HIT) {
-        return "Ранил";
+        return translator.t("hit");
     }
 
     if (verdict === VERDICT.KILL) {
-        return "Убил";
+        return translator.t("kill");
     }
 
     if (verdict === VERDICT.MISS) {
-        return "Мимо";
+        return translator.t("miss");
     }
     if (verdict === VERDICT.WIN) {
-        return isEnemyPlayer ? "Потрачено" : "Победа";
+        return isEnemyPlayer ? translator.t("loose") : translator.t("win");
     }
+}
+
+async function verdictToMessageExcl(verdict, isEnemyPlayer, translator) {
+    const msg = await verdictToMessage(verdict, isEnemyPlayer, translator);
+    return msg + "!";
 }
 
 function adjustInput(n, maxLen) {
@@ -107,7 +114,7 @@ function adjustInput(n, maxLen) {
     return n;
 }
 
-function showEndMessage(message, subMsg, document) {
+async function showEndMessage(messagePromise, subMsgPromise, document) {
     const overlay = document.querySelector(".overlay");
     const close = document.querySelector(".close");
 
@@ -116,22 +123,24 @@ function showEndMessage(message, subMsg, document) {
         overlay.classList.remove("show");
     }, false);
 
-
     const h2 = overlay.querySelector("h2");
+    const message = await messagePromise;
     h2.textContent = message;
     const content = overlay.querySelector(".content");
+    const subMsg = await subMsgPromise;
     content.textContent = subMsg;
     overlay.classList.add("show");
 }
 
-
 export default function battle(document, field, fieldEnemy, settings) {
     assert(field.length === fieldEnemy.length, "Bad size");
+
+    const trans = translator();
 
     let isEnemyPlayer = isEnemyStartFirst(settings.color);
     console.log("game begin!", {isEnemyPlayer});
 
-    printLetterByLetter(firstMessage(isEnemyPlayer), 70, isEnemyPlayer, 100000, document);
+    printLetterByLetter(firstMessage(isEnemyPlayer, trans), 70, isEnemyPlayer, 100000, document);
     const handlers = handlersFunc([
         "playerMove",
         "enemyMove",
@@ -145,22 +154,22 @@ export default function battle(document, field, fieldEnemy, settings) {
     const onMeMove = handlers.handler("meMove");
 
     const grid = document.querySelector(".grid");
-    const river = getEnemyRiver(grid, document);
+    const river = getEnemyRiver(grid, document, trans);
     const myRiver = document.querySelector(".river");
     const bloop = document.getElementById("bloop");
 
-    function loose() {
+    function loose(translator) {
         handlers.call("gameover", false);
-        showEndMessage("Ты проиграл", "В другой раз повезет", document);
+        showEndMessage(translator.t("loose2"), translator.t("next"), document);
     }
 
-    function victory() {
+    function victory(translator) {
         handlers.call("gameover", true);
         if (settings.useSound) {
             const tada = document.getElementById("tada");
             playSound(tada);
         }
-        showEndMessage("Победа", "А ты хорош!", document);
+        showEndMessage(translator.t("win"), translator.t("good"), document);
     }
 
     function onKill(target, n) {
@@ -193,17 +202,17 @@ export default function battle(document, field, fieldEnemy, settings) {
     function fire(n) {
         const target = isEnemyPlayer ? player : enemy;
         const {verdict} = putDotHtml3(n, target, document);
-        const message = verdictToMessage(verdict, target.isOpponentEnemy) + "!";
-        printLetterByLetter(message, 70, target.isOpponentEnemy, 100000, document);
+        const messagePromise = verdictToMessageExcl(verdict, target.isOpponentEnemy, trans);
+        printLetterByLetter(messagePromise, 70, target.isOpponentEnemy, 100000, document);
 
         if (verdict === VERDICT.MISS) {
             isEnemyPlayer = !isEnemyPlayer;
             target.onOpponentMiss(verdict);
         } else if (verdict === VERDICT.WIN) {
             if (!target.isOpponentEnemy) {
-                victory();
+                victory(trans);
             } else {
-                loose();
+                loose(trans);
             }
         } else {
             target.onOpponentHit(verdict);

@@ -9,6 +9,7 @@ import placement from "../views/placement.js";
 import protocol from "../connection/protocol.js";
 import onGameReady from "./common.js";
 import setupLocalGame from "./aiMode.js";
+import translator from "../translation.js";
 
 function addQrToPage(staticHost, document, color) {
     const url = new URL(staticHost);
@@ -70,7 +71,8 @@ export default function netGame(window, document, settings) {
         useAi = true;
     }
 
-    const myField = placement(document);
+    const trans = translator();
+    const myField = placement(document, trans);
     const setupGame = async () => {
         const initObj = await myField.ready();
         if (useAi) {
@@ -78,7 +80,7 @@ export default function netGame(window, document, settings) {
             return setupLocalGame(document, initObj, settings, useAi);
         }
         const field = initObj.field;
-        printLetterByLetter("Ждем оппонента", 70, false, 100000, document);
+        printLetterByLetter(trans.t("wait"), 70, false, 100000, document);
         const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
         const fieldEnemy = await enemyFieldPromise;
         if (!opponentAlreadyConnected) {
