@@ -23,7 +23,9 @@
   },
   "homepage": "https://asavan.github.io/riverfight/",
   "devDependencies": {
-    "netdeps": "github:asavan/net-deps#v0.0.3"
+    "baseline-browser-mapping": "^2.9.17",
+    "netdeps": "github:asavan/net-deps#v0.0.3",
+    "devdeps": "github:asavan/dev-deps#f77a42e08bfe62cdc297f486b38cb27baa22feb1"
   },
   "dependencies": {
     "netutils": "github:asavan/netutils#v0.0.8"

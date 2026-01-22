@@ -14,7 +14,7 @@ export default function placement(document, transExternal) {
     if (gameName) {
         const newNamePromise = trans.t("game");
         newNamePromise.then(name => {
-           gameName.textContent = name;
+            gameName.textContent = name;
         });
         document.documentElement.lang = trans.getLang();
     }

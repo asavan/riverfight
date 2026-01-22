@@ -1,12 +1,12 @@
 export default function translator(externalLang) {
-    const langs = {}
+    const langs = {};
     let currentLang = externalLang ?? "en";
 
     const detect = () => {
         if (navigator.language === "ru-RU") {
             currentLang = "ru";
         }
-    }
+    };
 
     const getLang = () => currentLang;
 
@@ -21,25 +21,25 @@ export default function translator(externalLang) {
         if (lang === "ru") {
             module = await import("../locales/ru.json", {
                 with: {
-                    type: 'json'
+                    type: "json"
                 }
             });
         } else {
             module = await import("../locales/en.json", {
                 with: {
-                    type: 'json'
+                    type: "json"
                 }
             });
         }
         const dict = module.default;
         langs[lang] = dict;
         return dict[key];
-    }
+    };
 
     const t = (key) => getString(key, currentLang);
     return {
         t,
         detect,
         getLang
-    }
+    };
 }

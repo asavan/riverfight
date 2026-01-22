@@ -1,7 +1,3 @@
-"use strict";
-
-import {axis} from "../core.js";
-
 export const width = 20;
 
 export function getClickIndex(e) {
