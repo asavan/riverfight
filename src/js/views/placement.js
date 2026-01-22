@@ -1,15 +1,10 @@
 "use strict";
 
 import { width, getClickIndex, createField, printLetterByLetter } from "./helper.js";
-import { shipsCount, axis } from "../core.js";
-import translator from "../translation.js";
+import {shipsCount, axisLen} from "../core.js";
 
-export default function placement(document, transExternal) {
+export default function placement(document, trans) {
     const myFieldPromise = Promise.withResolvers();
-
-    const trans = transExternal ?? translator();
-
-
     const gameName = document.querySelector(".gamename");
     if (gameName) {
         const newNamePromise = trans.t("game");
@@ -33,7 +28,7 @@ export default function placement(document, transExternal) {
     let currChosen = null;
     let shipsLeft = 0;
 
-    const field = new Array(axis.length).fill(0);
+    const field = new Array(axisLen).fill(0);
 
     function canPlace(field, currPos, len) {
         if (currPos < 0) {

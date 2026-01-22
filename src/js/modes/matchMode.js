@@ -7,7 +7,6 @@ import placement from "../views/placement.js";
 import protocol from "../connection/protocol.js";
 import onGameReady from "./common.js";
 import { placementAutomation } from "../automation.js";
-import translator from "../translation.js";
 
 function addQrToPage(staticHost, document, color) {
     const url = new URL(staticHost);
@@ -58,7 +57,7 @@ async function setupRound(connection, document, settings, myField, enemyFieldPro
             controller.abort();
             connection.sendMessage(protocol.toRestart(settings.color));
             settings.color = getOtherColor(settings.color);
-            requestAnimationFrame(() => oneRound(connection, document, settings));
+            requestAnimationFrame(() => oneRound(connection, document, settings, trans));
         }, { signal });
 
         connection.on("recv", (data) => {
@@ -67,16 +66,15 @@ async function setupRound(connection, document, settings, myField, enemyFieldPro
                 rightCode.classList.remove("clickable");
                 controller.abort();
                 settings.color = color;
-                requestAnimationFrame(() => oneRound(connection, document, settings));
+                requestAnimationFrame(() => oneRound(connection, document, settings, trans));
             });
         });
     });
     return g;
 }
 
-function oneRound(connection, document, settings) {
+function oneRound(connection, document, settings, trans) {
     cleanup(document);
-    const trans = translator();
     const myField = placement(document, trans);
     const enemyFieldPromise = Promise.withResolvers();
     connection.on("recv", (data) => {
@@ -93,7 +91,7 @@ function oneRound(connection, document, settings) {
     placementAutomation(game);
 }
 
-export default function matchGame(window, document, settings) {
+export default function matchGame(window, document, settings, trans) {
     const color = settings.color;
     const socketUrl = getSocketUrl(window.location, settings);
     const staticHost = getStaticUrl(window.location, settings);
@@ -110,9 +108,18 @@ export default function matchGame(window, document, settings) {
         removeElem(code);
     });
 
+    const gameName = document.querySelector(".gamename");
+    if (gameName) {
+        const newNamePromise = trans.t("game");
+        newNamePromise.then(name => {
+            gameName.textContent = name;
+        });
+        document.documentElement.lang = trans.getLang();
+    }
+
     connection.connect(socketUrl, color, getOtherColor(color), settings);
     connection.on("open", () => {
         removeElem(code);
-        return oneRound(connection, document, settings);
+        return oneRound(connection, document, settings, trans);
     });
 }

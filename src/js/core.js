@@ -1,5 +1,3 @@
-"use strict";
-
 export const VERDICT = {
     NONE: 0,
     HIT: 1,
@@ -9,7 +7,8 @@ export const VERDICT = {
     IMPOSSIBLE_BY_RULES: 5
 };
 
-export const axis = "абвгдежзиклмнопрст";
+// export const axis = "абвгдежзиклмнопрст";
+export const axisLen = 18;
 
 export const shipsCount = [
     {len : 3, count : 1},

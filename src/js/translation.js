@@ -1,38 +1,52 @@
 export default function translator(externalLang) {
     const langs = {};
-    let currentLang = externalLang ?? "en";
+    let currentLang = externalLang;
+    let currentLoad = null;
 
     const detect = () => {
         if (navigator.language === "ru-RU") {
             currentLang = "ru";
+        } else {
+            currentLang = "en";
         }
     };
 
     const getLang = () => currentLang;
 
-    detect();
-
-    const getString = async (key, lang) => {
+    const loadLang = async (lang) => {
         if (langs[lang]) {
-            const dict = langs[lang];
-            return dict[key];
+            return;
         }
-        let module;
+        if (currentLoad) {
+            return currentLoad;
+        }
         if (lang === "ru") {
-            module = await import("../locales/ru.json", {
+            currentLoad = await import("../locales/ru.json", {
                 with: {
                     type: "json"
                 }
             });
         } else {
-            module = await import("../locales/en.json", {
+            currentLoad = await import("../locales/en.json", {
                 with: {
                     type: "json"
                 }
             });
         }
-        const dict = module.default;
+        const dict = currentLoad.default;
         langs[lang] = dict;
+        currentLoad = null;
+    };
+
+    if (!currentLang) {
+        detect();
+    }
+
+    loadLang(getLang());
+
+    const getString = async (key, lang) => {
+        await loadLang(lang);
+        const dict = langs[lang];
         return dict[key];
     };
 

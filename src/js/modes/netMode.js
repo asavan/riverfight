@@ -9,7 +9,6 @@ import placement from "../views/placement.js";
 import protocol from "../connection/protocol.js";
 import onGameReady from "./common.js";
 import setupLocalGame from "./aiMode.js";
-import translator from "../translation.js";
 
 function addQrToPage(staticHost, document, color) {
     const url = new URL(staticHost);
@@ -21,7 +20,7 @@ function addQrToPage(staticHost, document, color) {
     return makeQrPlainEl(url.toString(), element);
 }
 
-export default function netGame(window, document, settings) {
+export default function netGame(window, document, settings, trans) {
     const color = settings.color;
     let useAi = false;
     const socketUrl = getSocketUrl(window.location, settings);
@@ -71,7 +70,6 @@ export default function netGame(window, document, settings) {
         useAi = true;
     }
 
-    const trans = translator();
     const myField = placement(document, trans);
     const setupGame = async () => {
         const initObj = await myField.ready();

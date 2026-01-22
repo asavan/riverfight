@@ -1,5 +1,3 @@
-"use strict";
-
 export default {
     modes: ["net", "fake", "ai", "hotseat", "server", "match"],
     mode: "net",
@@ -7,5 +5,6 @@ export default {
     wsPort : 8088,
     negotiatedId: 3,
     color: "blue",
+    lang: "",
     useSound: false
 };
