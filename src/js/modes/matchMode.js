@@ -27,6 +27,10 @@ function cleanup(document) {
 
     const overlay = document.querySelector(".overlay");
     overlay.classList.remove("show");
+
+    const oldElement = document.querySelector(".secret-code");
+    const newElement = oldElement.cloneNode(true); // true to clone children as well
+    oldElement.parentNode.replaceChild(newElement, oldElement);
 }
 
 async function setupRound(connection, document, settings, myField, enemyFieldPromise, trans) {
@@ -57,6 +61,7 @@ async function setupRound(connection, document, settings, myField, enemyFieldPro
             controller.abort();
             connection.sendMessage(protocol.toRestart(settings.color));
             settings.color = getOtherColor(settings.color);
+            console.log("restart by click");
             requestAnimationFrame(() => oneRound(connection, document, settings, trans));
         }, { signal });
 
@@ -66,6 +71,7 @@ async function setupRound(connection, document, settings, myField, enemyFieldPro
                 rightCode.classList.remove("clickable");
                 controller.abort();
                 settings.color = color;
+                console.log("restart by packet");
                 requestAnimationFrame(() => oneRound(connection, document, settings, trans));
             });
         });
@@ -76,16 +82,16 @@ async function setupRound(connection, document, settings, myField, enemyFieldPro
 function oneRound(connection, document, settings, trans) {
     cleanup(document);
     const myField = placement(document, trans);
-    const enemyFieldPromise = Promise.withResolvers();
+    const enemyFieldPromiseWR = Promise.withResolvers();
     connection.on("recv", (data) => {
         protocol.parser(data, "field", (enemyField) => {
-            console.log("enemy field ready");
-            enemyFieldPromise.resolve(enemyField);
+            console.log("enemy field ready", enemyField);
+            enemyFieldPromiseWR.resolve(enemyField);
         });
     });
 
     const battlePromise = setupRound(connection, document, settings,
-        myField, enemyFieldPromise.promise, trans);
+        myField, enemyFieldPromiseWR.promise, trans);
     const getBattle = () => battlePromise;
     const game = {myField, getBattle};
     placementAutomation(game);

@@ -1,5 +1,3 @@
-"use strict";
-
 import {printLetterByLetter} from "../views/helper.js";
 import {getSocketUrl, getStaticUrl} from "../connection/common.js";
 import connection from "../connection/connection.js";
@@ -26,7 +24,7 @@ export default function netGame(window, document, settings, trans) {
     const socketUrl = getSocketUrl(window.location, settings);
     const staticHost = getStaticUrl(window.location, settings);
     let code = null;
-    const enemyFieldPromise = Promise.withResolvers();
+    const enemyFieldPromiseWR = Promise.withResolvers();
 
     const useNetwork = !!socketUrl && !settings.showqrfake;
 
@@ -62,8 +60,8 @@ export default function netGame(window, document, settings, trans) {
 
         connection.on("recv", (data) => {
             protocol.parser(data, "field", (enemyField) => {
-                console.log("enemy field ready");
-                enemyFieldPromise.resolve(enemyField);
+                console.log("enemy field ready", enemyField);
+                enemyFieldPromiseWR.resolve(enemyField);
             });
         });
     } else {
@@ -80,7 +78,7 @@ export default function netGame(window, document, settings, trans) {
         const field = initObj.field;
         printLetterByLetter(trans.t("wait"), 70, false, 100000, document);
         const opponentAlreadyConnected = connection.sendMessage(protocol.toField(field));
-        const fieldEnemy = await enemyFieldPromise;
+        const fieldEnemy = await enemyFieldPromiseWR.promise;
         if (!opponentAlreadyConnected) {
             const opponentAlreadyConnected2 = connection.sendMessage(protocol.toField(field));
             if (opponentAlreadyConnected2) {

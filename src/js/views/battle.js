@@ -96,7 +96,7 @@ function verdictToMessage(verdict, isEnemyPlayer, translator) {
         return translator.t("miss");
     }
     if (verdict === VERDICT.WIN) {
-        return isEnemyPlayer ? translator.t("loose") : translator.t("win");
+        return isEnemyPlayer ? translator.t("lost") : translator.t("win");
     }
 }
 
