@@ -73,7 +73,7 @@ export default function netGame(window, document, settings, trans) {
         const initObj = await myField.ready();
         if (useAi) {
             removeElem(code);
-            return setupLocalGame(document, initObj, settings, useAi);
+            return setupLocalGame(document, initObj, settings, useAi, trans);
         }
         const field = initObj.field;
         printLetterByLetter(trans.t("wait"), 70, false, 100000, document);
@@ -85,7 +85,7 @@ export default function netGame(window, document, settings, trans) {
                 console.log("Smth strange");
             }
         }
-        const g = onGameReady(document, initObj, fieldEnemy, settings);
+        const g = onGameReady(document, initObj, fieldEnemy, settings, trans);
         g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
         connection.on("recv", (data) => {
             protocol.parser(data, "move", (n) => {

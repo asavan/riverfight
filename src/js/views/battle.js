@@ -1,10 +1,6 @@
-"use strict";
-
 import { getVerdict, VERDICT, applyBothSides, isEnemyStartFirst } from "../core.js";
 import { move, width, createField, printLetterByLetter } from "./helper.js";
 import {assert, handlersFunc} from "netutils";
-import translator from "../translation.js";
-
 
 function getEnemyRiver(grid, document, translator) {
     const enemyFieldHtml = createField(grid, document, translator);
@@ -132,10 +128,8 @@ async function showEndMessage(messagePromise, subMsgPromise, document) {
     overlay.classList.add("show");
 }
 
-export default function battle(document, field, fieldEnemy, settings) {
+export default function battle(document, field, fieldEnemy, settings, trans) {
     assert(field.length === fieldEnemy.length, "Bad size");
-
-    const trans = translator();
 
     let isEnemyPlayer = isEnemyStartFirst(settings.color);
     console.log("game begin!", {isEnemyPlayer});

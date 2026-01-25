@@ -39,7 +39,7 @@ async function setupRound(connection, document, settings, myField, enemyFieldPro
     printLetterByLetter(trans.t("wait"), 70, false, 100000, document);
     connection.sendMessage(protocol.toField(field));
     const fieldEnemy = await enemyFieldPromise;
-    const g = onGameReady(document, initObj, fieldEnemy, settings);
+    const g = onGameReady(document, initObj, fieldEnemy, settings, trans);
     g.on("playerMove", (n) => connection.sendMessage(protocol.toMove(n)));
     connection.on("recv", (data) => {
         protocol.parser(data, "move", (n) => {

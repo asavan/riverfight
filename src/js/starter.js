@@ -10,7 +10,7 @@ function simpleGame(document, settings, useAi, trans) {
     const myField = placement(document, trans);
     const waitForField = async () => {
         const initObj = await myField.ready();
-        return setupLocalGame(document, initObj, settings, useAi);
+        return setupLocalGame(document, initObj, settings, useAi, trans);
     };
     const battlePromise = waitForField();
 
