@@ -1,5 +1,6 @@
 import placement from "./views/placement.js";
 import netGame from "./modes/netMode.js";
+import netTest from "./modes/netTest.js";
 import setupLocalGame from "./modes/aiMode.js";
 import server from "./modes/serverMode.js";
 import matchMode from "./modes/matchMode.js";
@@ -47,6 +48,9 @@ function startGame(window, document, settings) {
         break;
     case "match":
         matchMode(window, document, settings, trans);
+        break;
+    case "nettest":
+        netTest(window, document, settings, trans);
         break;
     }
 }

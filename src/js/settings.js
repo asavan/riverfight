@@ -1,5 +1,5 @@
 export default {
-    modes: ["net", "fake", "ai", "hotseat", "server", "match"],
+    modes: ["net", "fake", "ai", "hotseat", "server", "match", "nettest"],
     mode: "net",
     debug: true,
     wsPort : 8088,
