@@ -19,10 +19,10 @@ export function makeQrPlainEl(staticHost, el, pic = "./assets/boat7.svg") {
     console.log("enemy url", urlStr);
     const image = {
         source: pic,
-            width: "20%",
-            height: "15%",
-            x: "center",
-            y: "center",
+        width: "20%",
+        height: "15%",
+        x: "center",
+        y: "center",
     };
     return makeQrElement(urlStr, el, image);
 }

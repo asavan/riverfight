@@ -1,10 +1,21 @@
 import layer from "./layer.js";
 
 
-export default async function protocol(chan, logger) {
-    const topLayer = layer("", logger);
-    const dataChan = await chan.ready();
-    if (dataChan) {
-
+export default function protocol(dataChan, logger) {
+    if (!dataChan) {
+        logger.error("No chan");
+        return;
     }
+    const sender = {
+        send : (data) => {
+            const str = JSON.stringify(data);
+            dataChan.send(str);
+        }
+    };
+    const topLayer = layer("", logger, sender);
+    dataChan.onmessage = (data) => {
+        const obj = JSON.parse(data);
+        topLayer.onData(obj);
+    };
+    return topLayer;
 }

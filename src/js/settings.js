@@ -6,5 +6,6 @@ export default {
     negotiatedId: 3,
     color: "blue",
     lang: "",
+    channelType: "socket",
     useSound: false
 };
