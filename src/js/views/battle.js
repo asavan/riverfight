@@ -144,8 +144,8 @@ export default function battle(document, field, fieldEnemy, settings, trans) {
     ]);
 
     const on = handlers.on;
-    const onEnemyMove = handlers.handler("aiMove");
-    const onMeMove = handlers.handler("meMove");
+    const onEnemyMove = handlers.getAction("aiMove");
+    const onMeMove = handlers.getAction("meMove");
 
     const grid = document.querySelector(".grid");
     const river = getEnemyRiver(grid, document, trans);

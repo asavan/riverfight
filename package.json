@@ -28,6 +28,6 @@
     "devdeps": "github:asavan/dev-deps#f77a42e08bfe62cdc297f486b38cb27baa22feb1"
   },
   "dependencies": {
-    "netutils": "github:asavan/netutils#v0.1.4"
+    "netutils": "github:asavan/netutils#v0.1.5"
   }
 }
